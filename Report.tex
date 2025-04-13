@@ -4,7 +4,8 @@
 \usepackage{todonotes} % to be removed, used for adding markers for references needed
 \usepackage{marginfix}
 
-\usepackage{acronym} % addition for acronyms page
+\usepackage[nohyperlinks]{acronym} % addition for acronyms page
+\usepackage{hyperref}
 
 \addbibresource{bibliography.bib}
 \author{Mischa}
@@ -45,69 +46,69 @@
   \acro{DM}{Diffusion Model}
   \acro{LDM}{Latent Diffusion Model}
   \acro{RGB}{Red, Green, Blue}
+  \acro{LSB}{Least Significant Bit}
+  \acro{DCT}{Discrete Cosine Transform}
+  \acro{DFT}{Discrete Fourier Transform}
+  \acro{DWT}{Discrete Wavelet Transform}
+  \acro{LPM}{Log-Polar Mapping}
+  \acro{MSE}{Mean Squared Error}
+  \acro{PSNR}{Peak Signal-to-Noise-Ratio}
+  \acro{SSIM}{Structural Similarity Index Measure}
+  \acro{NCC}{Normalised Cross-Correlation}
 \end{acronym}
 
 \begin{summary}  
-% \ac{AI}
-% \ac{GenAI}
-% \ac{GAIM}
-% \ac{GAII}
-% \ac{VAE}
-% \ac{GAN}
-% \ac{DM}
-% \ac{LDM}
-% \ac{RGB}
 \end{summary}
 
 \chapter{Introduction}
 \label{cha:Introduction}
-\ac{GAIM}s such as Midjourney, DALL-E \cite{rameshZeroShotTexttoImageGeneration2021}, and Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} are capable of generating highly realistic images. While these technologies have enabled new possibilities in fields such as content creation, design prototyping, and automation, they also raise significant ethical concerns. A key issue is the potential misuse of these models for generating malicious or misleading content to deceive the public \cite{ferraraGenAIHumanityNefarious2024}. Current ruling by the US Copyright Office makes \ac{GAII}s illegible for copyright protections \cite{CopyrightRegistrationGuidance2023}.
+\acp{GAIM} such as Midjourney, DALL-E \cite{rameshZeroShotTexttoImageGeneration2021}, and Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} are capable of generating highly realistic images. While these technologies have enabled new possibilities in fields such as content creation, design prototyping, and automation, they also raise significant ethical concerns. A key issue is the potential misuse of these models for generating malicious or misleading content to deceive the public \cite{ferraraGenAIHumanityNefarious2024}. Current ruling by the US Copyright Office makes \acp{GAII} illegible for copyright protections \cite{CopyrightRegistrationGuidance2023}.
 
-In response to these concerns, watermarking has emerged as a promising solution for establishing authenticity, attribution, and traceability in GAIIs. The US White House recommended watermarking as part of its 2023 Executive order on \ac{AI} governance \cite{houseExecutiveOrderSafe2023}. Similarly, the EU's AI Act 2024 mandates that providers of AI systems generating synthetic content embed invisible watermarks \cite{RegulationEU20242024}. Leading tech companies have adopted watermarking methods: Microsoft watermarks images created in Bing \cite{BingPreviewRelease2023}, Google watermarks its \ac{GenAI} images using their SynthID \cite{IdentifyingAIgeneratedImages2024}, and Stability AI watermarks outputs from Stable Diffusion \cite{CompVisStablediffusion2024}.
+In response to these concerns, watermarking has emerged as a promising solution for establishing authenticity, attribution, and traceability in \acp{GAII}. The US White House recommended watermarking as part of its 2023 Executive order on \ac{AI} governance \cite{houseExecutiveOrderSafe2023}. Similarly, the EU's AI Act 2024 mandates that providers of AI systems generating synthetic content embed invisible watermarks \cite{RegulationEU20242024}. Leading tech companies have adopted watermarking methods: Microsoft watermarks images created in Bing \cite{BingPreviewRelease2023}, Google watermarks its \ac{GenAI} images using their SynthID \cite{IdentifyingAIgeneratedImages2024}, and Stability AI watermarks outputs from Stable Diffusion \cite{CompVisStablediffusion2024}.
 
 Digital watermarking involves embedding hidden information within digital content, a practice that dates back to physical media such as watermarked paper and photographs. This same need translated to digital media, particularly to protect intellectual property and prevent unauthorised use. Foundational work by Cox et al. \cite{coxDigitalWatermarking2001} established core principles for digital watermarking, emphasizing resistance to common manipulations such as compression, resizing.
 
-The widespread adoption of \ac{GAIM}s intensifies concerns about content authenticity, copyright infringement, and attribution. As generative models such as \ac{GAN}s, \ac{VAE}s, and \ac{DM}s advance, the boundaries between human-created and \ac{AI}-generated content are increasingly blurred. Artists have expressed concerns about unauthorised use of their work in \ac{AI} training datasets \todo{citation needed}, resulting in \ac{AI}-generated images mimicking their styles without appropriate attribution or compensation \todo{citation needed}. This has lead to calls for greater transparency and accountability in the creation and use of \ac{AI}-generated content.
+The widespread adoption of \acp{GAIM} intensifies concerns about content authenticity, copyright infringement, and attribution. As generative models such as \acp{GAN}, \acp{VAE}, and \acp{DM} advance, the boundaries between human-created and \ac{AI}-generated content are increasingly blurred. Artists have expressed concerns about unauthorised use of their work in \ac{AI} training datasets \todo{citation needed}, resulting in \ac{AI}-generated images mimicking their styles without appropriate attribution or compensation \todo{citation needed}. This has lead to calls for greater transparency and accountability in the creation and use of \ac{AI}-generated content.
 
 Adversarial image poisoning methods such as Glaze \cite{shanGlazeProtectingArtists2023} and Nightshade \cite{shanNightshadePromptSpecificPoisoning2024} further showcase the desire for more transparency regarding image training data. These methods both use adversarial perturbations (tiny changes to the input) to change a given models perception of the original image \cite{kurakinAdversarialExamplesPhysical2017}.
 
-This project aims to explore the integration of digital watermarking techniques with \ac{GAIM}s to address issues of authenticity, attribution, traceability and copyright protection. Digital watermarking involves embedding information into digital media, enabling retrieval through specific algorithms while preserving the visual quality of the image. Secondly, the project aims to evaluate the effectiveness of said watermarking implementation through rigorous testing and analysis. Including assessing the robustness of the watermarks against various attacks, such as compression, noise addition, and cropping as well as its capacity for embedding meaningful amounts of data without compromising the visual quality of generated images
+This project aims to explore the integration of digital watermarking techniques with \acp{GAIM} to address issues of authenticity, attribution, traceability and copyright protection. Digital watermarking involves embedding information into digital media, enabling retrieval through specific algorithms while preserving the visual quality of the image. Secondly, the project aims to evaluate the effectiveness of said watermarking implementation through rigorous testing and analysis. Including assessing the robustness of the watermarks against various attacks, such as compression, noise addition, and cropping as well as its capacity for embedding meaningful amounts of data without compromising the visual quality of generated images.
 
 
 \chapter{Literature Review}
 \section{Background}
 
 \subsection{Generative Models in AI Image Generation}
-Generative images have revolutionised the AI field by enabling the creation of new data that closely resembles the training data. The three primary generative models used in AI image generation being: Generative Adversarial Networks (GANs), Variational Autoencoders (VAEs), and Diffusion Models.
+Generative images have revolutionised the \ac{AI} field by enabling the creation of new data that closely resembles the training data. The three primary generative models used in \ac{AI} image generation being: \acp{GAN}, \acp{VAE}, and \acp{DM}.
 
 % \subsubsection{Variational Autoencoders (VAEs)}
-\textbf{Variational Autoencoders} \\
-VAEs were first defined in 2013 by Kingma et al. \cite{kingmaAutoEncodingVariationalBayes2022} and Rezende et al. \cite{rezendeStochasticBackpropagationApproximate2014} VAEs are probabilistic generative models that learn a latent space representation of input data. They consist of an encoder and a decoder, which work together to reconstruct input data from a compressed latent space. Watermarking in VAEs could involve perturbing latent space to insert information \cite{guoFreqMarkInvisibleImage2024}
+\subsubsection{Variational Autoencoders (VAEs)}
+\acp{VAE} were first defined in 2013 by Kingma et al. \cite{kingmaAutoEncodingVariationalBayes2022} and Rezende et al. \cite{rezendeStochasticBackpropagationApproximate2014}. \acp{VAE} are probabilistic generative models that learn a latent space representation of input data. They consist of an encoder and a decoder, which work together to reconstruct input data from a compressed latent space. Watermarking in \acp{VAE} could involve perturbing latent space to insert information \cite{guoFreqMarkInvisibleImage2024}.
 
 \subsubsection{Generative Adversarial Networks}
-GANs, proposed by Goodfellow et al. \cite{goodfellowGenerativeAdversarialNetworks2014} in 2014. GANs consist of two neural networks: A generator, and a discriminator. The generator takes an input of random noise and generates an image by reassembling the real data distribution; The discriminator seeks to differentiate between real and generated images. The competing nature of the model helps in improving the quality of images generated over time. However, images generated are sensitive to perturbations \cite{alfarraRobustnessQualityMeasures2022}. Therefore, adding a watermark could degrade the quality of the image
+\acp{GAN}, proposed by Goodfellow et al. \cite{goodfellowGenerativeAdversarialNetworks2014} in 2014. \acp{GAN} consist of two neural networks: A generator, and a discriminator. The generator takes an input of random noise and generates an image by reassembling the real data distribution; The discriminator seeks to differentiate between real and generated images. The competing nature of the model helps in improving the quality of images generated over time. However, images generated are sensitive to perturbations \cite{alfarraRobustnessQualityMeasures2022}. Therefore, adding a watermark could degrade the quality of the image.
 
 \subsubsection{Diffusion Models}
-Diffusion Models were first introduced in 2015 by Sohl-Dickstein et al. \cite{sohl-dicksteinDeepUnsupervisedLearning2015} and popularised in 2020 by Ho et al. \cite{hoDenoisingDiffusionProbabilistic2020} Unlike GANs and VAEs, diffusion models generate images by iteratively denoising a random noise pattern, producing high quality images with fine details. The challenge in watermarking diffusion models lies in ensuring the watermark does not interfere with the denoising process in order to preserve image quality. \ac{LDM}s such as stable diffusion, extend the concept of diffusion by performing the denoising process in a latent space rather than directly in pixel space, allowing for more efficient training and inference, as well as improved image quality \cite{rombachHighResolutionImageSynthesis2022}. In LDMs, a VAE is used to compress the image to into a lower-dimensional latent space, which is then denoised iteratively to generate the final image.
+\acp{DM} were first introduced in 2015 by Sohl-Dickstein et al. \cite{sohl-dicksteinDeepUnsupervisedLearning2015} and popularised in 2020 by Ho et al. \cite{hoDenoisingDiffusionProbabilistic2020}. Unlike \acp{GAN} and \acp{VAE}, \acp{DM} generate images by iteratively denoising a random noise pattern, producing high quality images with fine details. The challenge in watermarking \acp{DM} lies in ensuring the watermark does not interfere with the denoising process in order to preserve image quality. \acp{LDM} such as Stable Diffusion, extend the concept of diffusion by performing the denoising process in a latent space rather than directly in pixel space, allowing for more efficient training and inference, as well as improved image quality \cite{rombachHighResolutionImageSynthesis2022}. In \acp{LDM}, a \ac{VAE} is used to compress the image to into a lower-dimensional latent space, which is then denoised iteratively to generate the final image.
 
 
 \subsection{Need for watermarking in AI era}
-\textbf{Preventing Training Data Contamination}.
-Lots of GAIMs rely on publicly available data scraped on the internet for training. When models are inadvertently trained on their own or other image models outputs, "model collapse" can happen, where repetitive cycles of training degrade the quality of generated content \cite{bohacekNepotisticallyTrainedGenerativeAI2023}. Watermarking GAIIs can mitigate this risk by marking synthetic outputs, enabling the dataset curation process to filter out these images for training.
+\subsection{Preventing Training Data Contamination}
+Lots of \acp{GAIM} rely on publicly available data scraped on the internet for training. When models are inadvertently trained on their own or other image models outputs, "model collapse" can happen, where repetitive cycles of training degrade the quality of generated content \cite{bohacekNepotisticallyTrainedGenerativeAI2023}. Watermarking \acp{GAII} can mitigate this risk by marking synthetic outputs, enabling the dataset curation process to filter out these images for training.
 
 
-\textbf{Attribution and Traceability}.
-Watermarks can act as unique identifiers for GAIIs. This co
+\subsection{Attribution and Traceability}
+Watermarks can act as unique identifiers for \acp{GAII}.
 
 Depending on implementation, watermarks could act as unique identifiers to identify the: model/platform, training data, user and time of generation for a given image. Providing greater accountability, especially relating to concerns of images being trained on licensed data.
 
 The Coalition for Content Provenance and Authenticity (C2PA) is a cross industry initiative formed by major tech companies, including Microsoft, Arm, Intel and Adobe, aiming to establish a standard framework for certifying the origin and history of digital content. \cite{ContentCredentialsC2PA} \todo{finish}
 
-Watermarking GAIIs has several critical applications, particularly in the realm of copyright protection, ownership, authenticity, and traceability.
+Watermarking \acp{GAII} has several critical applications, particularly in the realm of copyright protection, ownership, authenticity, and traceability.
 
 An effective watermarking implementation would provide a means for \todo{finish}
 
-A particularly interesting aspect of GAII watermarking is attribution, the ability to trace back the creator of a given image \cite{jiangWatermarkbasedDetectionAttribution2024}
+A particularly interesting aspect of \ac{GAII} watermarking is attribution, the ability to trace back the creator of a given image \cite{jiangWatermarkbasedDetectionAttribution2024}
 
 
 \section{Watermarking Techniques}
@@ -115,7 +116,7 @@ A particularly interesting aspect of GAII watermarking is attribution, the abili
 Spatial domain watermarking involves embedding watermarks directly into the pixel values. These methods are straightforward, easy to implement, and computationally efficient. However, are typically less resistant to attacks such as compression and transformations.
 
 \subsubsection{Least Significant Bit (LSB) Modification}
-A common technique to embed a watermark information into randomly chosen pixels LSB. The LSB is changed as to not affect the image quality as it contains less important information. However, it is trivial for an attacker to change all LSB bits to 1 to modify the watermark. To address the problems with LSB watermarking, improvements have been made. One such improvement embeds data not only to the LSB but also higher planes. Moreover, a 2-3-3 embedding technique \cite{manjulaNovelHashBased2015} distributes the watermark across the \ac{RGB} channels of a pixel. This approach results in minimal perceptual distortion while achieving better embedding capacity and robustness.
+A common technique to embed a watermark information into randomly chosen pixels' \ac{LSB}. The \ac{LSB} is changed as to not affect the image quality as it contains less important information. However, it is trivial for an attacker to change all \ac{LSB} bits to 1 to modify the watermark. To address the problems with \ac{LSB} watermarking, improvements have been made. One such improvement embeds data not only to the \ac{LSB} but also higher planes. Moreover, a 2-3-3 embedding technique \cite{manjulaNovelHashBased2015} distributes the watermark across the \ac{RGB} channels of a pixel. This approach results in minimal perceptual distortion while achieving better embedding capacity and robustness.
 
 \subsubsection{Patch-based or Block-Based techniques}
 Proposed by Bender et al. \cite{benderTechniquesDataHiding1996} This method involves randomly picking $n$ pairs of image points $A,B$ where the image data in $A$ is darkened, while is brightened in $B$. This method offers decent robustness in exchange for capacity. \cite{saqibSpatialFrequencyDomain2017}
@@ -124,43 +125,44 @@ Proposed by Bender et al. \cite{benderTechniquesDataHiding1996} This method invo
 These techniques embed watermark information within the frequency domain of an image after a transformation. The transformation spreads the watermark information throughout the image in ways that are less perceptible to the human eye and harder to remove with common attacks.
 
 \subsubsection{Discrete Cosine Transform}
-DCT watermarking embeds watermark information into an images frequency coefficients after transforming it from the spatial to the frequency domain. This leverages energy compaction, where the majority of an image's visual information is represented by lower-frequency coefficients, while higher-frequency coefficients capture finer image details. A common approach is block-based DCT, where the image is divided into smaller non-overlapping blocks, DCT is then applied to each block. Mid-frequency coefficients are typically chosen, balancing imperceptibility and robustness. Modifying low-frequency coefficients can lead to more noticeable distortions, while high-frequency coefficients are more susceptible to compression and noise attacks. Block-based DCT is particularly suitable for JPEG compression, a prevalent image compression technique which is also block-based \cite{wallaceJPEGStillPicture1991}. By embedding watermarks in DCT coefficients compatible with JPEG's compression algorithm, the watermark can survive compression without significant degradation \cite{borsImageWatermarkingUsing1996}. Alternatively, global DCT applies the transformation to the entire image rather than individual blocks. This offers greater robustness against attacks, but is more computationally intensive and less compatible with block-based compression techniques such as JPEG.
+\ac{DCT} watermarking embeds watermark information into an images frequency coefficients after transforming it from the spatial to the frequency domain. This leverages energy compaction, where the majority of an image's visual information is represented by lower-frequency coefficients, while higher-frequency coefficients capture finer image details. A common approach is block-based \ac{DCT}, where the image is divided into smaller non-overlapping blocks, \ac{DCT} is then applied to each block. Mid-frequency coefficients are typically chosen, balancing imperceptibility and robustness. Modifying low-frequency coefficients can lead to more noticeable distortions, while high-frequency coefficients are more susceptible to compression and noise attacks. Block-based \ac{DCT} is particularly suitable for JPEG compression, a prevalent image compression technique which is also block-based \cite{wallaceJPEGStillPicture1991}. By embedding watermarks in \ac{DCT} coefficients compatible with JPEG's compression algorithm, the watermark can survive compression without significant degradation \cite{borsImageWatermarkingUsing1996}. Alternatively, global \ac{DCT} applies the transformation to the entire image rather than individual blocks. This offers greater robustness against attacks, but is more computationally intensive and less compatible with block-based compression techniques such as JPEG.
 
-The robustness of DCT-based watermarking comes from the ability to embed data in perceptually significant regions of an image, therefore being less likely to be removed by common image processing operations. However, DCT based watermarking methods struggle with maintaining robustness against geometric attacks such as scaling and rotation due to inherently not accounting for spatial transformations \cite{fazliRobustImageWatermarking2016}. From this hybrid techniques combining DCT with other transformations have arisen \cite{abdulrahmanNovelHybridDCT2019}.
+The robustness of \ac{DCT}-based watermarking comes from the ability to embed data in perceptually significant regions of an image, therefore being less likely to be removed by common image processing operations. However, \ac{DCT} based watermarking methods struggle with maintaining robustness against geometric attacks such as scaling and rotation due to inherently not accounting for spatial transformations \cite{fazliRobustImageWatermarking2016}. From this hybrid techniques combining \ac{DCT} with other transformations have arisen \cite{abdulrahmanNovelHybridDCT2019}.
 
 \subsubsection{Discrete Fourier Transform}
-Similar to DCT watermarking, DFT embeds watermark information into an images frequency domain by transforming it from the spatial domain to the frequency domain, but using the Discrete Fourier Transform which decomposes an image into sinusoidal components of varying frequencies, represented as complex-valued coefficients corresponding to magnitude and phase. These coefficients describe the global frequency characteristics of the image, making DFT-based watermarking inherently robust against various image processing operations and certain geometric transformations.
+Similar to \ac{DCT} watermarking, \ac{DFT} embeds watermark information into an images frequency domain by transforming it from the spatial domain to the frequency domain, but using the \ac{DFT} which decomposes an image into sinusoidal components of varying frequencies, represented as complex-valued coefficients corresponding to magnitude and phase. These coefficients describe the global frequency characteristics of the image, making \ac{DFT}-based watermarking inherently robust against various image processing operations and certain geometric transformations.
 
-Log-Polar Mapping (LPM) transforms the image into log-polar coordinates before applying DFT. This mapping converts scaling and rotation into linear translations in the frequency domain, enabling efficient watermark extraction after significant geometric transformations \cite{zhengRSTinvariantDigitalImage2003}. 
+\ac{LPM} transforms the image into log-polar coordinates before applying \ac{DFT}. This mapping converts scaling and rotation into linear translations in the frequency domain, enabling efficient watermark extraction after significant geometric transformations \cite{zhengRSTinvariantDigitalImage2003}.
 
 \subsubsection{Discrete Wavelet Transform}
-A DWT is any wavelet transform that decomposes a signal into wavelets, offering local analysis in both the time and frequency domains. Unlike DFT, which analyses global frequency count, and DCT which can operate globally or block-based, DWT inherently supports multi-resolution analysis by examining signals at different scales. This dual localisation makes DWT particularly effective for image watermarking, as it can capture coarse and fine image details simultaneously.
+A \ac{DWT} is any wavelet transform that decomposes a signal into wavelets, offering local analysis in both the time and frequency domains. Unlike \ac{DFT}, which analyses global frequency count, and \ac{DCT} which can operate globally or block-based, \ac{DWT} inherently supports multi-resolution analysis by examining signals at different scales. This dual localisation makes \ac{DWT} particularly effective for image watermarking, as it can capture coarse and fine image details simultaneously.
 
 \subsection{State-of-the-Art Watermarking Techniques for AI-Generated Images}
-\textbf{HiDDeN} \\
+\subsubsection{HiDDeN}
 One promising advancement in watermarking is the HiDDeN framework \cite{zhuHiDDeNHidingData2018}. HiDDeN leverages the sensitivity of deep neural networks to small perturbations in input images to encode information, making it a robust solution for watermarking.
 
 The HiDDeN framework comprises three main components: an encoder, a decoder, and an adversary network. The encoder receives an image and a message string, outputting an encoded image that incorporates the watermark. The decoder attempts to reconstruct the original message from the encoded image, while the adversary network predicts whether a given image contains an encoded watermark, providing adversarial loss to enhance the quality of the encoded images.
 
 The adversarial training enhances the watermark's resilience against numerous attacks. The deep leaning approach allows for a more flexible watermark embedding,
 
-\textbf{Tree-Ring} \\
-Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} is a pre-generation watermarking method for DMs. The watermark is encoded in Fourier space and is decoded by inverting the diffusion process to receive the noise vector which can be compared against the embedded signal.  \todo{}
+\subsubsection{Tree-Ring}
+Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} is a pre-generation watermarking method for \acp{DM}. The watermark is encoded in Fourier space and is decoded by inverting the diffusion process to receive the noise vector which can be compared against the embedded signal.  \todo{Finish description}
 
-\textbf{Stable Signature} \\
-Stable Signature \cite{fernandezStableSignatureRooting2023b} is a watermarking approach specifically for LDMs. Stable signature embeds the watermark directly into the latent space of a model, rather than the pixel space, making it more resilient to post-processing transformations.
+\subsubsection{Stable Signature}
+Stable Signature \cite{fernandezStableSignatureRooting2023b} is a watermarking approach specifically for \acp{LDM}. Stable signature embeds the watermark directly into the latent space of a model, rather than the pixel space, making it more resilient to post-processing transformations.
 
 
 
-\section{Watermarking optimisations and enhancements}
+\section{Watermarking Optimisations and Enhancements}
 \subsection{Perceptual Masking}
 Perceptual masking exploits the characteristics of human vision by embedding watermarks into regions of an image where the changes will be less noticeable. For example. areas with high texture or edges rather than flat or uniform areas.
 
-\section{Watermarking Challenges}
+\section{Watermarking Challenges} 
 \subsection{Attacks on Watermarks}
 
 
-\section{Metrics for evaluation}
+\section{Metrics for Evaluation}
+Performance metrics such as \ac{MSE}, \ac{PSNR}, \ac{SSIM}, \ac{NCC} are commonly used to evaluate the imperceptibility and quality of watermarked images.
 Performance metrics such as Mean Squared Error (MSE), Peak Signal-to-Noise-Ratio (PSNR), Structural Similarity Index Measure (SSIM), Normalised Cross-Correlation (NCC) are commonly used to evaluate the imperceptibility and quality of watermarked images.
 
 
@@ -207,7 +209,7 @@ Performance metrics such as Mean Squared Error (MSE), Peak Signal-to-Noise-Ratio
 \chapter{Another apendix}
 
 
-
+\sloppy % relax spacing between words
 \printbibliography
 
 \end{document}
