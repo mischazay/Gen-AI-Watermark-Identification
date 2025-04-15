@@ -113,6 +113,10 @@
 \setlength{\parskip}{12pt}
 %\setlength{\parskip}{\baselineskip}
 
+% Configure list environments to reduce indentation
+\usepackage{enumitem}
+\setlist{leftmargin=*}  % Set all lists to have no extra left margin
+
 \date{\fbox{\Huge DRAFT PROCESSED \today}}
 
 \titlehead{ \hfill Department of Computer Science\\\vspace{32pt}
