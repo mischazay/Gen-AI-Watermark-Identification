@@ -38,6 +38,8 @@
 % 2015Apr24 Converted from BibTeX to BibLaTeX
 % 2016Dec05 Brought up to date with latest Koma Script
 % 2020Nov05 Removed paragraph indent and increased paragraph spacing
+% 2024Nov25 Fixed a compilation error shown in Overleaf, due to a stray opening brace
+% 2025Apr15 Added an environment for the ethics statement
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{UoYCSproject}[2016/12/05 Jeremy Jacob]
@@ -46,7 +48,7 @@
 %\PassOptionsToPackage{twoside=false}{typearea}
 \LoadClass[fontsize=12pt,a4paper,abstracton,twoside=false,numbers=noenddot]{scrreprt}
 \RequirePackage{scrhack}
-\RequirePackage[toc,page]{appendix}{}
+\RequirePackage[toc,page]{appendix}
 \RequirePackage{graphicx}
 
 \RequirePackage[T1]{fontenc} % prevents < in text mode turning into
@@ -102,6 +104,14 @@
 \newenvironment{summary}
     {\addchap{Executive Summary}
     \label{cha:exesummary}
+    }
+    { 
+    \clearpage
+    }
+
+\newenvironment{ethics}
+    {\addchap{Statement of Ethics}
+    \label{cha:statethics}
     }
     { 
     \clearpage
