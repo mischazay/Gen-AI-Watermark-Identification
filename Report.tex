@@ -99,7 +99,6 @@ Generative images have revolutionised the \ac{AI} field by enabling the creation
 \subsubsection{Diffusion Models}
 \acp{DM} were first introduced in 2015 by Sohl-Dickstein et al. \cite{sohl-dicksteinDeepUnsupervisedLearning2015} and popularised in 2020 by Ho et al. \cite{hoDenoisingDiffusionProbabilistic2020}. Unlike \acp{GAN} and \acp{VAE}, \acp{DM} generate images by iteratively denoising a random noise pattern, producing high quality images with fine details. The challenge in watermarking \acp{DM} lies in ensuring the watermark does not interfere with the denoising process in order to preserve image quality. \acp{LDM} such as Stable Diffusion, extend the concept of diffusion by performing the denoising process in a latent space rather than directly in pixel space, allowing for more efficient training and inference, as well as improved image quality \cite{rombachHighResolutionImageSynthesis2022}. In \acp{LDM}, a \ac{VAE} is used to compress the image to into a lower-dimensional latent space, which is then denoised iteratively to generate the final image.
 
-
 \subsection{Need for watermarking in AI era}
 \subsection{Preventing Training Data Contamination}
 Lots of \acp{GAIM} rely on publicly available data scraped on the internet for training. When models are inadvertently trained on their own or other image models outputs, "model collapse" can happen, where repetitive cycles of training degrade the quality of generated content \cite{bohacekNepotisticallyTrainedGenerativeAI2023}. Watermarking \acp{GAII} can mitigate this risk by marking synthetic outputs, enabling the dataset curation process to filter out these images for training.
@@ -145,6 +144,9 @@ Similar to \ac{DCT} watermarking, \ac{DFT} embeds watermark information into an 
 \subsubsection{Discrete Wavelet Transform}
 A \ac{DWT} is any wavelet transform that decomposes a signal into wavelets, offering local analysis in both the time and frequency domains. Unlike \ac{DFT}, which analyses global frequency count, and \ac{DCT} which can operate globally or block-based, \ac{DWT} inherently supports multi-resolution analysis by examining signals at different scales. This dual localisation makes \ac{DWT} particularly effective for image watermarking, as it can capture coarse and fine image details simultaneously.
 
+\subsubsection{Applications to AI-Generated Images}
+Traditional frequency domain methods (DCT, DWT) represent conventional image watermarking approaches that operate in the frequency domain. While well-established and widely used for natural images, these techniques are generic post-processing methods that don't specifically leverage the properties of the AI generation processes. Their application remains relatively unexplored in recent LDM-specific literature compared to direct latent modification approaches that are purposefully designed for AI-generated content.
+
 \subsection{State-of-the-Art Watermarking Techniques for AI-Generated Images}
 \subsubsection{HiDDeN}
 One promising advancement in watermarking is the HiDDeN framework \cite{zhuHiDDeNHidingData2018}. HiDDeN leverages the sensitivity of deep neural networks to small perturbations in input images to encode information, making it a robust solution for watermarking.
@@ -152,6 +154,9 @@ One promising advancement in watermarking is the HiDDeN framework \cite{zhuHiDDe
 The HiDDeN framework comprises three main components: an encoder, a decoder, and an adversary network. The encoder receives an image and a message string, outputting an encoded image that incorporates the watermark. The decoder attempts to reconstruct the original message from the encoded image, while the adversary network predicts whether a given image contains an encoded watermark, providing adversarial loss to enhance the quality of the encoded images.
 
 The adversarial training enhances the watermark's resilience against numerous attacks. The deep leaning approach allows for a more flexible watermark embedding,
+
+\subsubsection{Post-Generation Methods}
+While Methods like HiDDeN \cite{zhuHiDDeNHidingData2018} and FreqMark \cite{guoFreqMarkInvisibleImage2024} demonstrate impressive results, they are primarily designed as post-generation solutions that can be applied to any image, regardless of its source. This makes them less specifically tailored to the unique characteristics and requirements of AI-generated content.
 
 \subsubsection{Tree-Ring}
 Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} is a pre-generation watermarking method for \acp{DM}. The watermark is encoded in Fourier space and is decoded by inverting the diffusion process to receive the noise vector which can be compared against the embedded signal.  \todo{Finish description}
@@ -182,12 +187,8 @@ This chapter outlines the methodology for investigating and implementing digital
 
 \section{Watermarking Approach Selection}
 \label{sec:WatermarkingApproachSelection}
-The primary goal is to embed imperceptible watermarks that facilitate traceability and attribution. Based on the literature review, several approaches are viable, particularly those designed for or adaptable to \acp{DM}/\acp{LDM}:
-\begin{itemize}
-    \item \textbf{Latent Space Modification:} Techniques like Gaussian Shading \cite{yangGaussianShadingProvable2024}, Stable Signature \cite{fernandezStableSignatureRooting2023b}, Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023}, LaWa \cite{rezaeiLaWaUsingLatent2024}, ZoDiac \cite{zhangAttackResilientImageWatermarking2024}, and WMAdapter \cite{ciWMAdapterAddingWaterMark2024} propose embedding the watermark within the latent space during the image generation process (in-generation). This approach is specifically designed for AI image generation, as it integrates directly with the generative model's architecture and workflow. By embedding the watermark during the generation process itself, these methods can leverage the model's understanding of image structure and semantics, potentially leading to more robust watermark integration compared to post-generation methods.
-    \item \textbf{Deep Learning Steganography:} While Methods like HiDDeN \cite{zhuHiDDeNHidingData2018} and FreqMark \cite{guoFreqMarkInvisibleImage2024} demonstrate impressive results, they are primarily designed as post-generation solutions that can be applied to any image, regardless of its source. This makes them less specifically tailored to the unique characteristics and requirements of AI-generated content.
-    \item \textbf{Frequency Domain Adaptation:} Traditional methods (DCT, DWT) represent conventional image watermarking approaches that operate in the frequency domain. While well-established and widely used for natural images, these techniques are generic post-processing methods that don't specifically leverage the properties of the AI generation processes. Their application remains relatively unexplored in recent LDM-specific literature compared to direct latent modification approaches that are purposefully designed for AI-generated content.
-\end{itemize}
+The primary goal is to embed imperceptible watermarks that facilitate traceability and attribution. Based on the literature review, several approaches are viable, particularly those designed for or adaptable to \acp{DM}/\acp{LDM}.
+Latent space modification techniques like Gaussian Shading \cite{yangGaussianShadingProvable2024}, Stable Signature \cite{fernandezStableSignatureRooting2023b}, Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023}, LaWa \cite{rezaeiLaWaUsingLatent2024}, ZoDiac \cite{zhangAttackResilientImageWatermarking2024}, and WMAdapter \cite{ciWMAdapterAddingWaterMark2024} propose embedding the watermark within the latent space during the image generation process (in-generation). This approach is specifically designed for AI image generation, as it integrates directly with the generative model's architecture and workflow. By embedding the watermark during the generation process itself, these methods can leverage the model's understanding of image structure and semantics, potentially leading to more robust watermark integration compared to post-generation methods.
 
 The final selection of the watermarking technique is based on the following criteria:
 \begin{enumerate}
