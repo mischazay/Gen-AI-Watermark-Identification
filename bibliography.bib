@@ -40,6 +40,38 @@
   keywords = {generative-ai,watermark,watermarking}
 }
 
+@online{anWAVESBenchmarkingRobustness2024,
+  title = {{{WAVES}}: {{Benchmarking}} the {{Robustness}} of {{Image Watermarks}}},
+  shorttitle = {{{WAVES}}},
+  author = {An, Bang and Ding, Mucong and Rabbani, Tahseen and Agrawal, Aakriti and Xu, Yuancheng and Deng, Chenghao and Zhu, Sicheng and Mohamed, Abdirisak and Wen, Yuxin and Goldstein, Tom and Huang, Furong},
+  date = {2024-06-07},
+  eprint = {2401.08573},
+  eprinttype = {arXiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2401.08573},
+  url = {http://arxiv.org/abs/2401.08573},
+  urldate = {2025-07-08},
+  abstract = {In the burgeoning age of generative AI, watermarks act as identifiers of provenance and artificial content. We present WAVES (Watermark Analysis Via Enhanced Stress-testing), a benchmark for assessing image watermark robustness, overcoming the limitations of current evaluation methods. WAVES integrates detection and identification tasks and establishes a standardized evaluation protocol comprised of a diverse range of stress tests. The attacks in WAVES range from traditional image distortions to advanced, novel variations of diffusive, and adversarial attacks. Our evaluation examines two pivotal dimensions: the degree of image quality degradation and the efficacy of watermark detection after attacks. Our novel, comprehensive evaluation reveals previously undetected vulnerabilities of several modern watermarking algorithms. We envision WAVES as a toolkit for the future development of robust watermarks. The project is available at https://wavesbench.github.io/},
+  pubstate = {prepublished},
+  keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Cryptography and Security,Computer Science - Machine Learning}
+}
+
+@online{arabiSEALSemanticAware2025,
+  title = {{{SEAL}}: {{Semantic Aware Image Watermarking}}},
+  shorttitle = {{{SEAL}}},
+  author = {Arabi, Kasra and Witter, R. Teal and Hegde, Chinmay and Cohen, Niv},
+  date = {2025-04-09},
+  eprint = {2503.12172},
+  eprinttype = {arXiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2503.12172},
+  url = {http://arxiv.org/abs/2503.12172},
+  urldate = {2025-07-08},
+  abstract = {Generative models have rapidly evolved to generate realistic outputs. However, their synthetic outputs increasingly challenge the clear distinction between natural and AI-generated content, necessitating robust watermarking techniques. Watermarks are typically expected to preserve the integrity of the target image, withstand removal attempts, and prevent unauthorized replication onto unrelated images. To address this need, recent methods embed persistent watermarks into images produced by diffusion models using the initial noise. Yet, to do so, they either distort the distribution of generated images or rely on searching through a long dictionary of used keys for detection. In this paper, we propose a novel watermarking method that embeds semantic information about the generated image directly into the watermark, enabling a distortion-free watermark that can be verified without requiring a database of key patterns. Instead, the key pattern can be inferred from the semantic embedding of the image using locality-sensitive hashing. Furthermore, conditioning the watermark detection on the original image content improves robustness against forgery attacks. To demonstrate that, we consider two largely overlooked attack strategies: (i) an attacker extracting the initial noise and generating a novel image with the same pattern; (ii) an attacker inserting an unrelated (potentially harmful) object into a watermarked image, possibly while preserving the watermark. We empirically validate our method's increased robustness to these attacks. Taken together, our results suggest that content-aware watermarks can mitigate risks arising from image-generative models.},
+  pubstate = {prepublished},
+  keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Cryptography and Security,Computer Science - Machine Learning}
+}
+
 @article{begumDigitalImageWatermarking2020,
   title = {Digital {{Image Watermarking Techniques}}: {{A Review}}},
   shorttitle = {Digital {{Image Watermarking Techniques}}},
@@ -638,6 +670,22 @@
   abstract = {Multimedia technology usages is increasing day by day and to provide authorized data and protecting the secret information from unauthorized use is highly difficult and involves a complex process. By using the watermarking technique, only authorized user can use the data. Digital watermarking is a widely used technology for the protection of digital data. Digital watermarking deals with the embedding of secret data into actual information. Digital watermarking techniques are classified into three major categories, and they were based on domain, type of document (text, image, music or video) and human perception. Performance of the watermarked images is analysed using Peak signal to noise ratio, mean square error and bit error rate. Watermarking of images has been researched profoundly for its specialized and modern achievability in all media applications such as copyrights protection, medical reports (MRI scan and X-ray), annotation and privacy control. This paper reviews the watermarking technique and its merits and demerits.},
   langid = {english},
   keywords = {Artificial Intelligence,BER,DCT,DWT,Fragile watermarking,Hybrid watermarking,LSB,MSE,PSNR,Robust watermarking,SVD,Watermarking}
+}
+
+@online{panthiWatermarkingDiffusionModel2025,
+  title = {Watermarking in {{Diffusion Model}}: {{Gaussian Shading}} with {{Exact Diffusion Inversion}} via {{Coupled Transformations}} ({{EDICT}})},
+  shorttitle = {Watermarking in {{Diffusion Model}}},
+  author = {Panthi, Krishna},
+  date = {2025-01-15},
+  eprint = {2501.08604},
+  eprinttype = {arXiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2501.08604},
+  url = {http://arxiv.org/abs/2501.08604},
+  urldate = {2025-07-08},
+  abstract = {This paper introduces a novel approach to enhance the performance of Gaussian Shading, a prevalent watermarking technique, by integrating the Exact Diffusion Inversion via Coupled Transformations (EDICT) framework. While Gaussian Shading traditionally embeds watermarks in a noise latent space, followed by iterative denoising for image generation and noise addition for watermark recovery, its inversion process is not exact, leading to potential watermark distortion. We propose to leverage EDICT's ability to derive exact inverse mappings to refine this process. Our method involves duplicating the watermark-infused noisy latent and employing a reciprocal, alternating denoising and noising scheme between the two latents, facilitated by EDICT. This allows for a more precise reconstruction of both the image and the embedded watermark. Empirical evaluation on standard datasets demonstrates that our integrated approach yields a slight, yet statistically significant improvement in watermark recovery fidelity. These results highlight the potential of EDICT to enhance existing diffusion-based watermarking techniques by providing a more accurate and robust inversion mechanism. To the best of our knowledge, this is the first work to explore the synergy between EDICT and Gaussian Shading for digital watermarking, opening new avenues for research in robust and high-fidelity watermark embedding and extraction.},
+  pubstate = {prepublished},
+  keywords = {Computer Science - Computer Vision and Pattern Recognition}
 }
 
 @online{rameshZeroShotTexttoImageGeneration2021,
