@@ -120,12 +120,48 @@
 
 \usepackage[top=2.5cm, bottom=4cm, left=4cm, right=4cm]{geometry}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{12pt}
+%\setlength{\parskip}{12pt}
 %\setlength{\parskip}{\baselineskip}
 
 % Configure list environments to reduce indentation
 \usepackage{enumitem}
 \setlist{leftmargin=*}  % Set all lists to have no extra left margin
+
+% Reduce spacing for headings
+\setlength{\parskip}{0pt}
+\setlength{\partopsep}{0pt}
+\raggedbottom
+
+% Chapter headings
+\RedeclareSectionCommand[
+  beforeskip=0pt,
+  afterskip=0.001pt
+]{chapter}
+
+\RedeclareSectionCommand[
+  beforeskip=4pt,
+  afterskip=0.00001pt
+]{section}
+
+\RedeclareSectionCommand[
+  beforeskip=4pt,
+  afterskip=0.00001pt
+]{subsection}
+
+\RedeclareSectionCommand[
+  beforeskip=6pt,
+  afterskip=0.00001pt
+]{subsubsection}
+
+% \RedeclareSectionCommand[
+%   beforeskip=4pt,
+%   afterskip=0.00001pt
+% ]{paragraph}
+
+% \RedeclareSectionCommand[
+%   beforeskip=4pt,
+%   afterskip=0.00001pt
+% ]{subparagraph}
 
 \date{\fbox{\Huge DRAFT PROCESSED \today}}
 
