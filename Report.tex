@@ -55,6 +55,8 @@
   \acro{PSNR}{Peak Signal-to-Noise-Ratio}
   \acro{SSIM}{Structural Similarity Index Measure}
   \acro{NCC}{Normalised Cross-Correlation}
+  \acro{BER}{Bit Error Rate}
+  \acro{FID}{Fréchet Inception Distance}
 \end{acronym}
 
 \begin{summary}
@@ -63,24 +65,42 @@
 
 
 \begin{ethics}
-
+% moved from methodology
+The development and evaluation will adhere to ethical guidelines. Data used for generation prompts will be sourced appropriately. The watermark payload design will consider privacy implications, particularly if user identifiers are included. The potential for misuse of the watermarking technology itself (e.g., attempts to forge watermarks) is acknowledged, although developing countermeasures against such misuse is beyond the scope of this project's implementation phase. The focus remains on providing a reliable mechanism for traceability and attribution as mandated by emerging regulations \cite{houseExecutiveOrderSafe2023, RegulationEU20242024}.
 \end{ethics}
 
 
 \chapter{Introduction}
 \label{cha:Introduction}
 \section{Motivation and Problem Statement}
-\acp{GAIM} such as Midjourney, DALL-E \cite{rameshZeroShotTexttoImageGeneration2021}, and Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} are capable of generating highly realistic images. While these technologies have enabled new possibilities in fields such as content creation, design prototyping, and automation, they also raise significant ethical concerns. A key issue is the potential misuse of these models for generating malicious or misleading content to deceive the public \cite{ferraraGenAIHumanityNefarious2024}. Furthermore, current rulings by the US Copyright Office makes purely \ac{AI}-generated images ineligible for copyright protection \cite{CopyrightRegistrationGuidance2023}.
+The proliferation of powerful \acp{GAIM} such as Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022}, DALL-E \cite{rameshZeroShotTexttoImageGeneration2021}, and Midjourney mark a significant technological leap, unlocking new possibilities in fields like content creation, design prototyping, and automation. However, the ease with which these models can generate highly realistic synthetic media introduces critical ethical and practical challenges, including the spread of misinformation \cite{ferraraGenAIHumanityNefarious2024}, copyright infringement, and a general erosion of trust in digital content. Furthermore, current rulings by the US Copyright Office render purely \ac{AI}-generated images ineligible for copyright protection \cite{CopyrightRegistrationGuidance2023}.
 
-In response to these concerns, digital watermarking has emerged as a promising solution for establishing authenticity, attribution, and traceability in \acp{GAII}. This approach aligns with recommendations from governmental bodies, such as the US White House's 2023 Executive Order on \ac{AI} governance \cite{houseExecutiveOrderSafe2023} and the EU's AI Act 2024, which mandates invisible watermarks for synthetic content \cite{RegulationEU20242024}. Consequently, leading tech companies have begun implementing watermarking methods; notable examples include Microsoft's watermarking in Bing Image Creator \cite{BingPreviewRelease2023}, Google's SynthID for its \ac{GenAI} outputs \cite{IdentifyingAIgeneratedImages2024}, and Stability AI's watermarking for Stable Diffusion models \cite{CompVisStablediffusion2024}.
+In response, a clear consensus is forming around the need for establishing authenticity, attribution, and traceability mechanisms for synthetic media. Governmental bodies, including the White House through its 2023 Executive Order on \ac{AI} \cite{houseExecutiveOrderSafe2023} and the European Union via its 2024 AI Act \cite{RegulationEU20242024}, have mandated the use of techniques like invisible watermarking for synthetic content. Consequently, leading technology companies have begun integrating such solutions; notable examples include Google's SynthID \cite{IdentifyingAIgeneratedImages2024}, Microsoft's watermarking in Bing Image Creator \cite{BingPreviewRelease2023}, and Stability AI's watermarking methods for its models \cite{CompVisStablediffusion2024}.
 
-The need for robust watermarking is further underscored by the concerns surrounding the training data used by \acp{GAIM}. The widespread adoption of these models intensifies issues of copyright infringement and attribution, as the lines between human-created and \ac{AI}-generated content blur. Artists, in particular, have voiced concerns about the unauthorised use of their work in training datasets \todo{artist concerns citation}, leading to \ac{AI}-generated images that mimic their unique styles without appropriate credit or compensation \todo{citation needed}. This situation fuels calls for greater transparency and accountability. Defensive techniques like adversarial image poisoning (e.g., Glaze \cite{shanGlazeProtectingArtists2023} and Nightshade \cite{shanNightshadePromptSpecificPoisoning2024}), which subtly alter images to disrupt model training \cite{kurakinAdversarialExamplesPhysical2017}, highlight the strong desire within the creative community for control over how their work is used. While digital watermarking has historical roots in protecting physical and digital media \cite{coxDigitalWatermarking2001}, its application to the unique context of generative AI presents new challenges and opportunities, creating a clear need for research into effective and robust integrated watermarking solutions specifically evaluated for AI-generated images.
+The urgency for effective watermarking is further underscored by concerns surrounding the data used to train \acp{GAIM}. Artists have voiced concerns about the unauthorised use of their work \todo{artist concerns citation}, leading to \ac{AI}-generated images that mimic their unique styles without credit or compensation \todo{citation needed}. This has fueled the development of defensive techniques like Glaze \cite{shanGlazeProtectingArtists2023} and Nightshade \cite{shanNightshadePromptSpecificPoisoning2024}, which disrupt model training \cite{kurakinAdversarialExamplesPhysical2017}, highlighting the creative community's demand for control. While digital watermarking has a long history \cite{coxDigitalWatermarking2001}, its application to generative AI presents new challenges requires solutions that are integrated directly into the generation process. This project addresses the critical need for such a method, one that is imperceptible, robust against manipulation, capable of carrying attribution data without degrading image quality, and integrated within the generation process itself.
 
-\section{Project Overview}
-The primary aim of this project is to investigate and evaluate the integration of digital watermarking techniques with \ac{AI} image generation models, addressing the critical issues of authenticity, attribution, traceability, and copyright protection. The core objectives involve identifying, through literature review, suitable watermarking approaches for integration during the generation process, implementing a chosen technique within a representative \ac{AI} generation framework, and evaluating its effectiveness. Central research questions concern the achievable balance between watermark imperceptibility, robustness against standard common digital attacks, e.g. compression \& noise, and the capacity for embedding meaningful attribution data without compromising image quality. The project focus on watermarks embedded during generation (in-generation) rather than post-generation methods. The key contribution of this project lies in providing a practical implementation and detailed evaluation of such an integrated watermarking solution, offering insights into the trade-offs (robustness, imperceptibility, capacity) crucial for the development of responsible \ac{AI} image generation systems.
+\section{Project Aims \& Scope}
+The primary aim of this project is to investigate and evaluate the integration of digital watermarking within \ac{AI} image generation models to address the critical issues of \textbf{authenticity, attribution, traceability, and copyright protection}. To this end, the project will conduct a thorough evaluation of the Gaussian Shading watermarking algorithm, a state-of-the-art, training-free technique designed for \acp{LDM}.
+
+To achieve this, the following objectives have been set:
+\begin{enumerate}
+    \item To conduct a focused review of modern watermarking techniques to identify the current state-of-the-art, justify the selection of Gaussian Shading, and position it within the field.
+    \item To implement the Gaussian Shading algorithm within a standard \ac{GAIM} framework, specifically Stable Diffusion v2.1.
+    \item To design and execute a comprehensive evaluation framework to test the watermark's imperceptibility and its robustness against a suite of common digital attacks.
+    \item To analyse the results, assessing the crucial trade-offs between robustness, imperceptibility, and data capacity, and compare against published benchmarks to critically assess the performance and viability of Gaussian Shading as a practical watermarking solution.
+\end{enumerate}
+
+This project seeks to answer the following research questions:
+\begin{itemize}
+    \item To what extent can the Gaussian Shading method provide robust watermarking against a standard set of digital attacks, including compression, noise, and geometric transformations?
+    \item What is the trade-off between watermark robustness and image quality? Can the method's "performance-lossless" claim be substantiated using metrics like \ac{PSNR}, \ac{SSIM}, and \ac{FID}?
+    \item How does the performance of Gaussian Shading compare to other leading in-generation watermarking techniques.
+\end{itemize}
+
+The key contribution of this project is a rigorous and independent empirical evaluation of the Gaussian Shading watermarking method. By providing detailed performance data and a direct comparison to established benchmarks, this work offers valuable insights for the development of responsible and traceable \ac{GAII} generation systems.
 
 \section{Dissertation Structure}
-The remainder of this dissertation is organised as follows: Chapter 2 provides a detailed review of the background literature on generative models and various digital watermarking techniques in order for the reader to better understand the projects domain. Chapter 3 outlines the methodology employed, detailing the selection criteria for the specific generative model and watermarking algorithm, the implementation plan, and the comprehensive evaluation framework designed to test imperceptibility, robustness, and capacity. Chapter 4 describes the specifics of the implementation process, including the system architecture and any challenges encountered. Chapter 5 presents and critically analyses the results obtained from the evaluation experiments. Finally, Chapter 6 concludes the dissertation by summarising the key findings in relation to the research questions, discussing the limitations of the study, and suggesting potential directions for future work in this field.
+The remainder of this dissertation is organised as follows: Chapter 2 reviews the literature on generative models and watermarking, focusing on the state-of-the-art techniques that lead to the selection of Gaussian Shading. Chapter 3 details the methodology, system architecture, and the specific framework used for implementation and evaluation. Chapter 4 presents the results of the empirical evaluation, analysing the imperceptibility and robustness of the implemented solution. Finally, Chapter 5 concludes the dissertation, summarising the findings in relation to the research questions, discussing the study's limitations, and potential directions for future work.
 
 
 \chapter{Literature Review}
@@ -208,7 +228,9 @@ These metrics provide the foundation for the experimental evaluation framework d
 \chapter{Methodology}
 \label{cha:Methodology}
 
-This chapter outlines the methodology for investigating and implementing digital watermarking within \ac{AI}-generated images, focusing on traceability and attribution. Given the prevalence and capabilities of modern generative techniques, \acp{LDM} are selected as the primary architecture. Specifically, Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} is chosen due to its open-source nature \cite{CompVisStablediffusion2024}, widespread use, and existing research on watermarking within its framework \cite{fernandezStableSignatureRooting2023b, zhaoRecipeWatermarkingDiffusion2023a, zhangAttackResilientImageWatermarking2024}. \acp{LDM} operate by denoising data in a compressed latent space, offering potentially more robust integration points for watermarking compared to pixel-space methods \cite{fernandezStableSignatureRooting2023b, rezaeiLaWaUsingLatent2024}. % Potentially detail the upcoming subsections of the methodology here.
+This chapter details the approach taken to investigate, implement, and evaluate a watermarking solution for \ac{GAII}'s. It covers the research strategy, system architecture, specific implementation choices, and the framework designed to test the final system's performance.
+
+Given the prevalence and capabilities of modern generative techniques, \acp{LDM} are selected as the primary architecture. Specifically, Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} is chosen due to its open-source nature \cite{CompVisStablediffusion2024}, widespread use, and existing research on watermarking within its framework \cite{fernandezStableSignatureRooting2023b, zhaoRecipeWatermarkingDiffusion2023a, zhangAttackResilientImageWatermarking2024}. \acp{LDM} operate by denoising data in a compressed latent space, offering potentially more robust integration points for watermarking compared to pixel-space methods \cite{fernandezStableSignatureRooting2023b, rezaeiLaWaUsingLatent2024}. % Potentially detail the upcoming subsections of the methodology here.
 
 \section{Watermarking Approach Selection}
 \label{sec:WatermarkingApproachSelection}
@@ -268,22 +290,18 @@ The results will be compared against baseline performance reported in the litera
 
 \section{Tools and Environment}
 \begin{itemize}
-    \item \textbf{Programming Language:} Python 3.x
-    \item \textbf{Core Libraries:} PyTorch, Hugging Face Diffusers, NumPy, Pandas, Matplotlib, Scikit-image, OpenCV.
+    \item \textbf{Environment:} Python 3.8, using PyTorch for tensor operations,Hugging Face Diffusers library for the Stable Diffusion pipeline. Other libraries include NumPy for numerical operations and Pillow for image processing.
     \item \textbf{Watermarking Specific Libraries:} No specific external libraries are strictly required for Gaussian Shading beyond the core ML stack, as the implementation primarily involves modifying the sampling logic within the existing framework using PyTorch and standard libraries (e.g., for stream ciphers if not built-in).
     \item \textbf{Hardware:} Access to GPU resources (e.g., NVIDIA GPU via local machine or cloud service like Google Colab) is required for efficient model execution and potential fine-tuning.
 \end{itemize}
 
-\section{Ethical Considerations}
-The development and evaluation will adhere to ethical guidelines. Data used for generation prompts will be sourced appropriately. The watermark payload design will consider privacy implications, particularly if user identifiers are included. The potential for misuse of the watermarking technology itself (e.g., attempts to forge watermarks) is acknowledged, although developing countermeasures against such misuse is beyond the scope of this project's implementation phase. The focus remains on providing a reliable mechanism for traceability and attribution as mandated by emerging regulations \cite{houseExecutiveOrderSafe2023, RegulationEU20242024}.
 
-
-\begin{figure}[htb]
-\begin{center}
-\includegraphics[height=3cm]{"./assets/UOY-Logo-Stacked-shield-Black"}
-\end{center}
-\caption{A figure containing UoY logo and its caption.}
-\end{figure}
+% \begin{figure}[htb]
+% \begin{center}
+% \includegraphics[height=3cm]{"./assets/UOY-Logo-Stacked-shield-Black"}
+% \end{center}
+% \caption{A figure containing UoY logo and its caption.}
+% \end{figure}
 
 % \begin{table}[htb]
 % \caption{ A table with its caption.}
@@ -299,12 +317,40 @@ The development and evaluation will adhere to ethical guidelines. Data used for 
 % \end{center}
 % \end{table}
 
+\subsection{Evaluation Metrics}
+The following metrics are used to quantify performance:
+\begin{itemize}
+    \item \textbf{Peak Signal-to-Noise-Ratio (PSNR):} Measures the ratio between the maximum possible power of a signal and the power of corrupting noise that affects the fidelity of its representation. Used to quantify imperceptibility.
+    \item \textbf{Structural Similarity Index Measure (SSIM):} Measures the similarity between two images, assessing perceptual difference in terms of structure, luminance, and contrast. Used to quantify imperceptibility.
+    \item \textbf{Bit Error Rate (BER):} The number of bit errors divided by the total number of transferred bits. This is the primary metric for robustness. A lower BER is better.
+    \item \textbf{Fréchet Inception Distance (FID):} Measures the similarity of two datasets of images. Used to assess if the distribution of watermarked images has shifted from the original model's output distribution.
+\end{itemize}
+
 
 \chapter{Results}
 
 
-\chapter{Conclusion and Future Work}
+\chapter{Conclusion}
 \label{cha:conclusion}
+% Potentially needs to be rethought to be more concise
+
+
+%This chapter summarises the findings of the project, revisits the research questions, and discusses the implications of the results. It also acknowledges the limitations of the study and proposes potential avenues for future research.
+
+\section{Summary of Findings}
+%This section will summarise the key results from Chapter 4, directly answering the research questions posed in the introduction. It will provide a concise overview of the measured performance of Gaussian Shading in terms of imperceptibility and robustness.
+
+\section{Achievement of Objectives}
+%This section will reflect on the project objectives outlined in Chapter 1, detailing how each was met through the research, implementation, and evaluation process.
+
+\section{Limitations of the Study}
+%This section will critically assess the limitations of the project. This may include the scope of the attacks tested, the specific version of the generative model used, or the constraints of the evaluation dataset.
+
+\section{Future Work}
+%Building on the findings and limitations, this section will propose concrete directions for future research. This could include testing against more advanced adversarial attacks, evaluating the technique on different generative architectures (e.g., SDXL), or exploring methods to increase payload capacity without sacrificing robustness.
+
+\section{Final Remarks}
+%This section will offer concluding thoughts on the importance of robust watermarking for the future of responsible AI and the potential role of techniques like Gaussian Shading in achieving this goal.
 
 
 \appendix

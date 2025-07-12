@@ -125,7 +125,7 @@
 
 % Configure list environments to reduce indentation
 \usepackage{enumitem}
-\setlist{leftmargin=*}  % Set all lists to have no extra left margin
+\setlist{leftmargin=*, itemsep=0pt, parsep=0pt, topsep=0pt, after=\vspace{4pt}} % Set all lists to have no extra left margin and no extra spacing between items
 
 % Reduce spacing for headings
 \setlength{\parskip}{0pt}
