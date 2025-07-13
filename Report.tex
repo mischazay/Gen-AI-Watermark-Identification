@@ -5,6 +5,7 @@
 \usepackage{marginfix}
 
 \usepackage[nohyperlinks]{acronym} % addition for acronyms page
+\usepackage{amsmath} % for equation environments
 \usepackage{hyperref}
 
 \addbibresource{bibliography.bib}
@@ -170,7 +171,7 @@ The adversarial training enhances the watermark's resilience against numerous at
 Recent advancements have focused on integrating watermarks directly into the generative process of \acp{DM} and \acp{LDM}, offering greater robustness and imperceptibility compared to traditional post-processing methods.
 
 \subsubsection{Tree-Ring}
-Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} is a notable in-generation technique for \acp{DM}. It operates by embedding a watermark signal into the initial noise vector ($z_T$) before the diffusion process begins. The core idea is that the deterministic nature of DDIM inversion allows for the retrieval of the initial noise vector from the final generated image. By comparing the recovered noise with the known watermark signal, the presence of the watermark can be detected. While effective for detection, its original design is primarily for a 1-bit watermark, which limits its viability for use other than binary watermark detection.
+Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} is a notable in-generation technique for \acp{DM}. It operates by embedding a watermark signal into the initial noise vector ($z_{T}$) before the diffusion process begins. The core idea is that the deterministic nature of DDIM inversion allows for the retrieval of the initial noise vector from the final generated image. By comparing the recovered noise with the known watermark signal, the presence of the watermark can be detected. While effective for detection, its original design is primarily for a 1-bit watermark, which limits its viability for use other than binary watermark detection.
 
 \subsubsection{Stable Signature}
 Stable Signature \cite{fernandezStableSignatureRooting2023b} is a watermarking approach designed specifically for \acp{LDM}. Instead of modifying the initial noise, this method fine-tunes the model's autoencoder (VAE). The VAE's decoder is trained to embed a specific watermark pattern into the generated image's pixel space while the encoder is trained to be robust to its presence. By embedding the watermark directly into the model's architecture, Stable Signature aims to create a watermark that is deeply integrated with the image's content and thus more resilient to post-processing attacks.
@@ -216,7 +217,7 @@ Watermarks are susceptible to a wide range of attacks, which can be broadly cate
 A robust watermarking system must be able to withstand a combination of these attacks to be considered effective in real-world scenarios.
 
 \subsection{Metrics for Evaluation}
-\todo{maybe mention: Mean Squared Error (MSE), Normalised Cross-Correlation (NCC)}
+\todo{maybe mention MSE, NCC}
 To objectively assess the performance of a watermarking technique, a set of standard metrics is used to measure three key properties:
 \begin{itemize}
     \item \textbf{Imperceptibility:} This measures the visual distortion introduced by the watermark. It is commonly quantified using metrics like \ac{PSNR} and \ac{SSIM}. Higher values indicate that the watermarked image is visually closer to the original, meaning the watermark is less perceptible.
@@ -228,103 +229,243 @@ These metrics provide the foundation for the experimental evaluation framework d
 \chapter{Methodology}
 \label{cha:Methodology}
 
-This chapter details the approach taken to investigate, implement, and evaluate a watermarking solution for \ac{GAII}'s. It covers the research strategy, system architecture, specific implementation choices, and the framework designed to test the final system's performance.
+This chapter details the approach taken to investigate, implement, and evaluate the Gaussian Shading watermarking technique for \acp{GAII}. It covers the research strategy, the selection of the specific watermarking technique from available literature, a detailed experimental design, and the comprehensive framework for evaluation. The methodology will provide a rigorous assessment that enables direct comparison with state-of-the-art techniques while operating within the feasibility constraints of an undergraduate project.
 
-Given the prevalence and capabilities of modern generative techniques, \acp{LDM} are selected as the primary architecture. Specifically, Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} is chosen due to its open-source nature \cite{CompVisStablediffusion2024}, widespread use, and existing research on watermarking within its framework \cite{fernandezStableSignatureRooting2023b, zhaoRecipeWatermarkingDiffusion2023a, zhangAttackResilientImageWatermarking2024}. \acp{LDM} operate by denoising data in a compressed latent space, offering potentially more robust integration points for watermarking compared to pixel-space methods \cite{fernandezStableSignatureRooting2023b, rezaeiLaWaUsingLatent2024}. % Potentially detail the upcoming subsections of the methodology here.
+\section{Research Approach}
+\label{sec:ResearchApproach}
 
-\section{Watermarking Approach Selection}
-\label{sec:WatermarkingApproachSelection}
-The primary goal is to embed imperceptible watermarks that facilitate traceability and attribution. Based on the literature review, several approaches are viable, particularly those designed for or adaptable to \acp{DM}/\acp{LDM}.
-Latent space modification techniques like Gaussian Shading \cite{yangGaussianShadingProvable2024}, Stable Signature \cite{fernandezStableSignatureRooting2023b}, Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023}, LaWa \cite{rezaeiLaWaUsingLatent2024}, ZoDiac \cite{zhangAttackResilientImageWatermarking2024}, and WMAdapter \cite{ciWMAdapterAddingWaterMark2024} propose embedding the watermark within the latent space during the image generation process (in-generation). This approach is specifically designed for AI image generation, as it integrates directly with the generative model's architecture and workflow. By embedding the watermark during the generation process itself, these methods can leverage the model's understanding of image structure and semantics, potentially leading to more robust watermark integration compared to post-generation methods.
+This study employs a \textbf{quantitative empirical evaluation} methodology to assess the performance of Gaussian Shading watermarking. The approach is aligned with established benchmarks in the watermarking literature, specifically following the evaluation protocols used by Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} and Stable Signature \cite{fernandezStableSignatureRooting2023b}, enabling direct comparison without requiring re-implementation of competing methods.
 
-The final selection of the watermarking technique is based on the following criteria:
+The selection of \acp{LDM} as the primary architecture is justified by their current dominance in high quality image generation and the availability of open-source implementations \todo{cite?}. Specifically, Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} is chosen due to its open-source nature \cite{CompVisStablediffusion2024}, widespread adoption in research, and existing watermarking literature within its framework \cite{fernandezStableSignatureRooting2023b, zhaoRecipeWatermarkingDiffusion2023a, zhangAttackResilientImageWatermarking2024}.
+
+\section{Watermarking Technique Selection}
+\label{sec:WatermarkingTechniqueSelection}
+
+The primary goal is to embed imperceptible watermarks that facilitate traceability and attribution. Based on the literature review, several approaches are viable, particularly those designed for or adaptable to \acp{LDM}. Latent space modification techniques like Stable Signature \cite{fernandezStableSignatureRooting2023b}, Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023}, LaWa \cite{rezaeiLaWaUsingLatent2024}, ZoDiac \cite{zhangAttackResilientImageWatermarking2024}, and WMAdapter \cite{ciWMAdapterAddingWaterMark2024} propose embedding the watermark within the latent space during the image generation process. This approach is specifically designed for AI image generation, as it integrates directly with the generative model's architecture and workflow.
+
+The final selection of the watermarking technique was based on the following criteria:
 \begin{enumerate}
-    \item \textbf{Suitability for LDM Integration:} How readily can the technique be integrated into the Stable Diffusion architecture (e.g., VAE modification, U-Net fine-tuning)?
-    \item \textbf{Robustness Potential:} Theoretical and empirical evidence from literature regarding resistance to common image manipulations (compression, noise, resizing) and potentially model-based attacks.
-    \item \textbf{Capacity for Attribution Data:} Ability to embed a sufficient payload (e.g., unique identifier, timestamp) for traceability purposes \cite{jiangWatermarkbasedDetectionAttribution2024}.
-    \item \textbf{Imperceptibility:} Maintaining high visual quality of the generated images (measured by PSNR, SSIM).
+    \item \textbf{Suitability for LDM Integration:} How readily the technique can be integrated into the Stable Diffusion architecture.
+    \item \textbf{Robustness Potential:} Theoretical and empirical evidence from literature regarding resistance to common image manipulations.
+    \item \textbf{Capacity for Attribution Data:} Ability to embed a sufficient payload for traceability purposes \cite{jiangWatermarkbasedDetectionAttribution2024}.
+    \item \textbf{Imperceptibility:} Maintaining high visual quality of the generated images.
     \item \textbf{Implementation Feasibility:} Availability of reference implementations or clarity of the proposed algorithm within the project timeframe.
 \end{enumerate}
-Based on these criteria, Gaussian Shading \cite{yangGaussianShadingProvable2024} is selected as the watermarking technique for implementation. Its approach modifies the initial latent sampling process within the \ac{LDM} architecture, offering direct integration during generation (Criterion 1). A key advantage is its provably performance-lossless nature, meaning it does not require model fine-tuning and aims to preserve the original model's output quality and distribution (Criteria 1, 4, 5). The original paper reports high robustness against common distortions and good capacity (Criteria 2 \& 3), making it a strong candidate for embedding attribution data without compromising the user experience or requiring additional training resources. While other latent space methods like Stable Signature \cite{fernandezStableSignatureRooting2023b} or Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} (originally designed primarily for 1-bit capacity, limiting its suitability for detailed attribution data under Criterion 3) also offer strong integration, Gaussian Shading's advantage for this project lies with it being performance-lossless without needing model fine-tuning or architectural changes (Criterion 5). This simplifies implementation and ensures the watermark minimally impacts the generative capabilities of the base Stable Diffusion model (Criterion 4), compared to approaches that might require adjustments to the VAE or U-Net.
 
-\section{Implementation Plan}
-\label{sec:ImplementationPlan}
-The implementation will proceed as follows:
+Based on these criteria, Gaussian Shading \cite{yangGaussianShadingProvable2024} was selected. Its approach modifies the initial latent sampling process, offering direct integration (Criterion 1). A key advantage is its provably performance-lossless nature, meaning it does not require model fine-tuning and aims to preserve the original model's output quality (Criteria 1, 4, 5). The original paper reports high robustness and good capacity (Criteria 2 \& 3), making it a strong candidate. While other latent space methods like Stable Signature \cite{fernandezStableSignatureRooting2023b} or Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} (originally designed primarily for 1-bit capacity, limiting its suitability for detailed attribution data under Criterion 3) also offer strong integration, Gaussian Shading's advantage for this project lies with it being performance-lossless without needing model fine-tuning or architectural changes (Criterion 5). This simplifies implementation and ensures the watermark minimally impacts the generative capabilities of the base Stable Diffusion model (Criterion 4), compared to approaches that might require adjustments to the VAE or U-Net.
+
+
+\section{Experimental Design}
+\label{sec:ExperimentalDesign}
+
+\subsection{Standard Evaluation Protocol}
+\label{subsec:StandardEvaluationProtocol}
+
+To ensure reproducible and comparable results, the evaluation follows a standardised protocol:
+
+\begin{itemize}
+    \item \textbf{Generative Model:} Stable Diffusion v2.1-base (\texttt{stabilityai/stable-diffusion-2-1-base})
+    \item \textbf{Image Resolution:} 512×512 pixels (standard for SD v2.1)
+    \item \textbf{Guidance Scale:} 7.5 (classifier-free guidance strength)
+    \item \textbf{Inference Steps:} 50 (using DPMSolver++ scheduler)
+    \item \textbf{Precision:} Float16 for memory efficiency
+    \item \textbf{Batch Size:} 1 (for reproducibility and memory constraints)
+\end{itemize}
+
+These parameters align with established benchmarks and ensure compatibility with the RTX 2070 Super GPU constraints (8GB VRAM) while maintaining generation quality.
+
+\subsection{Dataset Selection and Justification}
+\label{subsec:DatasetSelection}
+
+The evaluation employs a two-tier dataset strategy to balance comprehensive evaluation with computational feasibility:
+
+\textbf{Primary Dataset - COCO-5K Subset:}
+\begin{itemize}
+    \item \textbf{Source:} 1000 prompts from MS-COCO validation set
+    \item \textbf{Purpose:} \ac{FID} calculation and baseline quality assessment
+    \item \textbf{Rationale:} Enables direct comparison with Tree-Ring's published \ac{FID} results
+    \item \textbf{Format:} Using identical \texttt{meta\_data.json} structure as Tree-Ring evaluation
+\end{itemize}
+
+\textbf{Secondary Dataset - Diverse Prompt Evaluation:}
+\begin{itemize}
+    \item \textbf{Source:} 200 prompts from \texttt{Gustavosta/Stable-Diffusion-Prompts}
+    \item \textbf{Purpose:} Robustness evaluation across attack configurations
+    \item \textbf{Selection Criteria:} Diverse prompt categories (portraits, landscapes, objects, abstract)
+    \item \textbf{Rationale:} Provides sufficient statistical power while remaining computationally feasible
+\end{itemize}
+
+The reduced dataset size (200 vs. 1000+ in some studies) is justified by the undergraduate project scope and hardware constraints, while maintaining statistical validity through proper experimental design.
+
+\subsection{Watermark Configuration}
+\label{subsec:WatermarkConfiguration}
+
+The watermark implementation follows the Gaussian Shading specification:
+\begin{itemize}
+    \item \textbf{Capacity:} 256 bits
+    \item \textbf{Payload Content:} For empirical testing, the payload is a random binary string for each generation to facilitate robust Bit Error Rate (BER) analysis. In a practical application, this payload would be structured to contain attribution data such as a unique generation ID, a model identifier, or a timestamp.
+    \item \textbf{Error Correction:} To enhance robustness in a real-world scenario, the payload would incorporate error correction codes (e.g., BCH codes) before the embedding process.
+    \item \textbf{Encryption:} ChaCha20 stream cipher with a random key/nonce per image.
+    \item \textbf{Diffusion Parameters:} \texttt{channel\_copy = 1}, \texttt{hw\_copy = 8}, as per the standard configuration in \cite{yangGaussianShadingProvable2024}.
+    \item \textbf{False Positive Rate:} Target detection threshold set for an FPR of $10^{-6}$.
+\end{itemize}
+
+\section{System Architecture}
+\label{sec:SystemArchitecture}
+
+The Gaussian Shading watermarking system operates through two primary pipelines:
+
+\textbf{Watermark Embedding Pipeline:}
 \begin{enumerate}
-    \item \textbf{Environment Setup:} Configure a Python environment with necessary libraries including PyTorch, Diffusers (for Stable Diffusion), and potentially specific libraries for the chosen watermarking technique (e.g., LIEF if needed, libraries for image processing, evaluation metrics). Utilise available GPU resources for model training/fine-tuning and generation.
-    \item \textbf{Model Acquisition:} Obtain a pre-trained Stable Diffusion model (e.g., v1.5, v2.1, or SDXL) as the base generative model.
-    \item \textbf{Watermark Payload Definition:} Define the structure and content of the watermark message. For traceability and attribution, this could include a unique generation ID, a model identifier, and potentially a timestamp or user identifier (considering ethical implications). Error correction codes (e.g., BCH codes) will be incorporated to enhance robustness during extraction. \todo{Finalise watermark payload structure and size.}
-    \item \textbf{Embedding Implementation:} Implement the watermark embedding mechanism based on the selected technique. This might involve:
-        \begin{itemize}
-            \item \textbf{Latent Sampling Modification:} Following the Gaussian Shading approach \cite{yangGaussianShadingProvable2024}, the initial latent variable $z_T$ sampling step will be modified. This involves: (i) Diffusing the watermark bits $s$ across the latent dimensions to get $s_d$. (ii) Randomising $s_d$ using a stream cipher (e.g., ChaCha20) with a secret key $K$ to get $m$. (iii) Sampling $z_T$ based on $m$ using the Gaussian quantile function and uniform random sampling (distribution-preserving sampling). This replaces the standard random sampling of $z_T \sim \mathcal{N}(0, I)$.
-        \end{itemize}
-    \item \textbf{Extraction Implementation:} Implement the corresponding watermark extraction algorithm. As per Gaussian Shading, this involves: (i) Using the standard VAE encoder to get $z_0'$ from the input image $X'$. (ii) Applying DDIM inversion to estimate the initial latent $z_T'$. (iii) Using the inverse sampling logic (Gaussian CDF) to extract the randomised watermark estimate $m'$ from $z_T'$. (iv) Decrypting $m'$ with the key $K$ to get $s_d'$. (v) Applying a reduction/voting mechanism to recover the final watermark estimate $s'$ from the diffused copies in $s_d'$.
-    \item \textbf{Generation Pipeline:} Integrate the modified latent sampling process into the standard text-to-image generation pipeline of Stable Diffusion. The standard ODE sampler (e.g., DPMSolver) and VAE decoder are used without modification after the initial $z_T$ is sampled using the Gaussian Shading method.
+    \item Text prompt processing via CLIP text encoder.
+    \item The watermark message $s$ is diffused across the latent dimensions to get $s_{d}$.
+    \item The diffused watermark $s_{d}$ is randomised using a ChaCha20 stream cipher with a secret key $K$ to get $m$.
+    \item The initial latent $z_{T}$ is sampled based on $m$ using the Gaussian quantile function and uniform random sampling (distribution-preserving sampling), replacing the standard random sampling of $z_{T} \sim \mathcal{N}(0, I)$.
+    \item The standard diffusion denoising process is applied to $z_{T}$ for 50 steps.
+    \item The VAE decoder is used to decode the denoised latent $z_{T}$ to the watermarked image.
 \end{enumerate}
+
+\textbf{Watermark Extraction Pipeline:}
+\begin{enumerate}
+    \item VAE encoding of suspected watermarked image to get an initial latent representation $z_{0}'$.
+    \item DDIM inversion is applied to estimate the initial latent noise $z_{T}'$.
+    \item The inverse sampling logic (Gaussian CDF) is used to extract the randomised watermark estimate $m'$ from $z_{T}'$.
+    \item The message $m'$ is decrypted with the key $K$ to get the diffused watermark estimate $s_{d}'$.
+    \item A reduction/voting mechanism is applied to recover the final watermark estimate $s'$ from the diffused copies in $s_{d}'$.
+    \item Binary classification (watermarked vs. non-watermarked) based on the recovered bits.
+\end{enumerate}
+
+\section{Implementation Details}
+\label{sec:ImplementationDetails}
+
+\subsection{Technical Environment}
+\label{subsec:TechnicalEnvironment}
+
+\begin{itemize}
+    \item \textbf{Hardware:} NVIDIA RTX 2070 Super (8GB VRAM)
+    \item \textbf{Software Stack:} Python 3.8, PyTorch 1.13+, Diffusers 0.11.1
+    \item \textbf{Dependencies:} transformers, accelerate, scipy, PIL, numpy
+    \item \textbf{Cryptography:} pycryptodome for ChaCha20 implementation
+\end{itemize}
+
+The RTX 2070 Super constraint necessitates memory-efficient implementation strategies, including float16 precision and sequential processing rather than batch generation.
+
+\subsection{Gaussian Shading Implementation}
+\label{subsec:GaussianShadingImplementation}
+
+The implementation follows the algorithm specification from \cite{yangGaussianShadingProvable2024}:
+
+\textbf{Distribution-Preserving Sampling:}
+\begin{equation}
+z_{T} \sim \mathcal{N}(0, I) \text{ (standard)}
+\end{equation}
+\begin{equation}
+z_{T}^{(w)} = \Phi^{-1}(U \cdot \Phi(z_{T}) + (1-U) \cdot \Phi(z_{T}^{(ref)})) \text{ (watermarked)}
+\end{equation}
+
+where $\Phi$ is the standard normal CDF, $U$ is uniform random, and $z_{T}^{(ref)}$ encodes the encrypted watermark bits.
+
+\textbf{DDIM Inversion for Extraction:}
+The extraction process uses deterministic DDIM inversion with 50 steps to estimate the initial latent, enabling watermark recovery through the inverse sampling process.
 
 \section{Evaluation Framework}
 \label{sec:EvaluationFramework}
-To assess the effectiveness of the implemented watermarking scheme, a comprehensive evaluation will be conducted, focusing on the core requirements for digital watermarks: imperceptibility, robustness, and capacity.
-\begin{itemize}
-    \item \textbf{Dataset:} A standard dataset (e.g., MS-COCO captions, or a subset relevant to common AI generation prompts) will be used to generate a diverse set of watermarked images using various text prompts. A corresponding set of non-watermarked images will be generated for comparison. \todo{Specify dataset and number of images.}
-    \item \textbf{Imperceptibility Assessment:}
-        \begin{itemize}
-            \item Quantitative metrics: \ac{PSNR} and \ac{SSIM} will be calculated between original (non-watermarked) and watermarked images. Higher values indicate better imperceptibility.
-            \item Qualitative assessment: Visual inspection of watermarked images to identify any perceptual artifacts.
-        \end{itemize}
-    \item \textbf{Robustness Testing:} Watermarked images will be subjected to a range of common image processing attacks and distortions:
-        \begin{itemize}
-            \item Lossy Compression: JPEG compression at various quality factors (e.g., 90, 70, 50).
-            \item Noise Addition: Gaussian noise, Salt-and-pepper noise.
-            \item Geometric Transformations: Resizing, cropping, rotation.
-            \item Filtering: Gaussian blur.
-            % \item \textbf{Regeneration Attacks:} Evaluate robustness against regeneration using alternative VAEs and diffusion models (e.g., Stable Diffusion v1.4 if using v2.1 for generation). % Less critical for GS?
-            \item \todo{Consider adding other relevant attacks from literature/benchmarks, e.g., specific adversarial attacks, combo distortions.}
-        \end{itemize}
-        The watermark will be extracted after each attack, and the Bit Error Rate (BER) between the original and extracted watermark payload will be calculated. Lower BER indicates higher robustness. Detection accuracy (whether the watermark presence is correctly identified) will also be measured.
-    \item \textbf{Capacity Evaluation:} The size of the successfully embedded and extracted watermark payload (in bits) defines the capacity. This will be evaluated in conjunction with imperceptibility and robustness trade-offs.
-    \item \textbf{False Positive Rate:} The watermark detector will be run on a set of non-watermarked images (both real-world images and AI-generated images from the base model without watermarking) to determine the rate at which it incorrectly detects a watermark. A low false positive rate is crucial for reliable attribution.
-    \item \textbf{Computational Cost:} The overhead introduced by the watermarking process (embedding and extraction time) will be measured.
-\end{itemize}
-The results will be compared against baseline performance reported in the literature for the chosen or similar watermarking techniques.
 
-\section{Tools and Environment}
-\begin{itemize}
-    \item \textbf{Environment:} Python 3.8, using PyTorch for tensor operations,Hugging Face Diffusers library for the Stable Diffusion pipeline. Other libraries include NumPy for numerical operations and Pillow for image processing.
-    \item \textbf{Watermarking Specific Libraries:} No specific external libraries are strictly required for Gaussian Shading beyond the core ML stack, as the implementation primarily involves modifying the sampling logic within the existing framework using PyTorch and standard libraries (e.g., for stream ciphers if not built-in).
-    \item \textbf{Hardware:} Access to GPU resources (e.g., NVIDIA GPU via local machine or cloud service like Google Colab) is required for efficient model execution and potential fine-tuning.
-\end{itemize}
+\subsection{Attack Suite Configuration}
+\label{subsec:AttackSuiteConfiguration}
 
+The robustness evaluation employs a comprehensive attack suite designed to test common image processing operations:
 
-% \begin{figure}[htb]
-% \begin{center}
-% \includegraphics[height=3cm]{"./assets/UOY-Logo-Stacked-shield-Black"}
-% \end{center}
-% \caption{A figure containing UoY logo and its caption.}
-% \end{figure}
+\begin{table}[htb]
+\caption{Attack Configuration Parameters}
+\label{tab:attack_parameters}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Attack Type} & \textbf{Parameters} & \textbf{Configurations} \\
+\hline
+JPEG Compression & Quality Factor & 90, 75, 50, 25 \\
+\hline
+Gaussian Noise & Standard Deviation & 0.01, 0.03, 0.05 \\
+\hline
+Gaussian Blur & Kernel Radius & 2, 4 \\
+\hline
+Brightness Adjustment & Multiplication Factor & 0.5, 2.0 \\
+\hline
+Random Crop & Retention Ratio & 0.8 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
 
-% \begin{table}[htb]
-% \caption{ A table with its caption.}
-% \begin{center}
-% \begin{tabular}{|p{0.3\textwidth}|p{0.6\textwidth}|}
-% \hline
-% column A & column B \\\hline
-% row 1 &
-% Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque quis quam at nisi iaculis aliquet vel et quam. \\\hline
-% row 2 &
-% Aliquam erat volutpat. Nam at velit a risus faucibus aliquet. Aenean egestas vehicula mi, quis rhoncus sem facilisis in. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed lobortis lacus quis mauris rutrum auctor. \\\hline
-% \end{tabular}
-% \end{center}
-% \end{table}
+This configuration yields 12 attack scenarios, each evaluated on 200 images, totaling 2400 robustness experiments. The parameter ranges are selected to align with previous watermarking studies while covering mild to severe attack intensities.
 
 \subsection{Evaluation Metrics}
-The following metrics are used to quantify performance:
+\label{subsec:EvaluationMetrics}
+
+\textbf{Imperceptibility Metrics:}
 \begin{itemize}
-    \item \textbf{Peak Signal-to-Noise-Ratio (PSNR):} Measures the ratio between the maximum possible power of a signal and the power of corrupting noise that affects the fidelity of its representation. Used to quantify imperceptibility.
-    \item \textbf{Structural Similarity Index Measure (SSIM):} Measures the similarity between two images, assessing perceptual difference in terms of structure, luminance, and contrast. Used to quantify imperceptibility.
-    \item \textbf{Bit Error Rate (BER):} The number of bit errors divided by the total number of transferred bits. This is the primary metric for robustness. A lower BER is better.
-    \item \textbf{Fréchet Inception Distance (FID):} Measures the similarity of two datasets of images. Used to assess if the distribution of watermarked images has shifted from the original model's output distribution.
+    \item \textbf{PSNR:} Peak Signal-to-Noise Ratio measuring pixel-level similarity.
+    \item \textbf{SSIM:} Structural Similarity Index assessing perceptual quality.
+    \item \textbf{FID:} Fréchet Inception Distance evaluating distribution preservation.
+    \item \textbf{CLIP Score:} Semantic similarity between prompt and generated image.
 \end{itemize}
+
+\textbf{Robustness Metrics:}
+\begin{itemize}
+    \item \textbf{Bit Error Rate (BER):} Primary robustness measure.
+    \item \textbf{True Positive Rate (TPR):} Detection accuracy at fixed FPR.
+    \item \textbf{Detection Accuracy:} Binary classification performance.
+\end{itemize}
+
+\subsection{Comparative Analysis Strategy}
+\label{subsec:ComparativeAnalysisStrategy}
+
+Rather than implementing competing methods, the evaluation strategy employs \textbf{benchmark extraction} from published literature:
+
+\begin{enumerate}
+    \item \textbf{Literature Analysis:} Extract performance metrics from Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} and Stable Signature \cite{fernandezStableSignatureRooting2023b} papers.
+    \item \textbf{Standardised Comparison:} Align evaluation datasets and attack parameters with published benchmarks.
+    \item \textbf{Statistical Analysis:} Report confidence intervals and significance tests where applicable.
+    \item \textbf{Performance Tables:} Create comparative tables showing relative performance across methods.
+\end{enumerate}
+
+This approach enables rigorous comparison while remaining feasible within project constraints.
+
+\subsection{Statistical Rigor and Reproducibility}
+\label{subsec:StatisticalRigor}
+
+To ensure scientific validity:
+
+\begin{itemize}
+    \item \textbf{Fixed Seeds:} Deterministic random number generation for reproducibility.
+    \item \textbf{Sample Sizes:} Sufficient for statistical power (n=200 per attack, n=1000 for FID).
+    \item \textbf{Confidence Intervals:} 95\% CI reported for key metrics.
+    \item \textbf{Version Control:} All code and hyperparameters documented.
+\end{itemize}
+
+\subsection{Success Criteria and Thresholds}
+\label{subsec:SuccessCriteria}
+
+The evaluation establishes clear success criteria to assess the viability of Gaussian Shading:
+
+\textbf{Imperceptibility Thresholds:}
+\begin{itemize}
+    \item \textbf{PSNR:} > 40 dB (high perceptual quality)
+    \item \textbf{SSIM:} > 0.95 (strong structural similarity)
+    \item \textbf{FID:} < 5.0 (distribution preservation)
+\end{itemize}
+
+\textbf{Robustness Thresholds:}
+\begin{itemize}
+    \item \textbf{BER:} < 0.1 for mild attacks (JPEG QF $\geq$ 75)
+    \item \textbf{BER:} < 0.25 for moderate attacks (JPEG QF $\geq$ 50)
+    \item \textbf{TPR:} > 0.9 at FPR = $10^{-6}$
+\end{itemize}
+
+These thresholds are derived from watermarking literature and provide objective criteria for evaluating the performance-lossless claims of Gaussian Shading.
+
+The methodology balances comprehensive evaluation with practical constraints, ensuring that results are both scientifically valid and directly comparable to existing literature while remaining achievable within undergraduate project scope and hardware limitations.
 
 
 \chapter{Results}
