@@ -39,9 +39,7 @@
 \addcontentsline{toc}{chapter}{List of Acronyms}
 \begin{acronym}[XXXXX]  % Use longest acronym width to suppress error
   \acro{AI}{Artificial Intelligence}
-  \acro{GenAI}{Generative AI}
   \acro{GAIM}{Generative AI Image Model}
-  \acro{GAII}{Generative AI Image}
   \acro{VAE}{Variational Autoencoder}
   \acro{GAN}{Generative Adversarial Network}
   \acro{DM}{Diffusion Model}
@@ -108,7 +106,7 @@ This project seeks to answer the following research questions:
     \item How does the performance of Gaussian Shading compare to other leading in-generation watermarking techniques.
 \end{itemize}
 
-The key contribution of this project is a rigorous and independent empirical evaluation of the Gaussian Shading watermarking method. By providing detailed performance data and a direct comparison to established benchmarks, this work offers valuable insights for the development of responsible and traceable \ac{GAII} generation systems.
+The key contribution of this project is a rigorous and independent empirical evaluation of the Gaussian Shading watermarking method. By providing detailed performance data and a direct comparison to established benchmarks, this work offers valuable insights for the development of responsible and traceable \ac{AI} generated image generation systems.
 
 \section{Dissertation Structure}
 The remainder of this dissertation is organised as follows: Chapter 2 reviews the literature on generative models and watermarking, focusing on the state-of-the-art techniques that lead to the selection of Gaussian Shading. Chapter 3 details the methodology, system architecture, and the specific framework used for implementation and evaluation. Chapter 4 presents the results of the empirical evaluation, analysing the imperceptibility and robustness of the implemented solution. Finally, Chapter 5 concludes the dissertation, summarising the findings in relation to the research questions, discussing the study's limitations, and potential directions for future work.
@@ -134,10 +132,10 @@ Generative images have revolutionised the \ac{AI} field by enabling the creation
 The rise of \acp{GAIM} has created an urgent need for robust watermarking solutions to address several key challenges.
 
 \subsubsection{Preventing Training Data Contamination and Model Collapse}
-Many \acp{GAIM} are trained on large datasets scraped from the internet. A significant risk in this process is "model collapse", where models are inadvertently trained on their own synthetic outputs or those from other models. This can lead to a feedback loop that degrades the quality and diversity of generated content over time \cite{bohacekNepotisticallyTrainedGenerativeAI2023}. Watermarking \acp{GAII} can mitigate this by marking these synthetic outputs, allowing them to be filtered out of future training datasets, thereby preserving the integrity of the training data.
+Many \acp{GAIM} are trained on large datasets scraped from the internet. A significant risk in this process is "model collapse", where models are inadvertently trained on their own synthetic outputs or those from other models. This can lead to a feedback loop that degrades the quality and diversity of generated content over time \cite{bohacekNepotisticallyTrainedGenerativeAI2023}. Watermarking \ac{AI} generated images can mitigate this by marking these synthetic outputs, allowing them to be filtered out of future training datasets, thereby preserving the integrity of the training data.
 
 \subsubsection{Attribution, Traceability, and Content Authenticity}
-Watermarks can act as digital fingerprints for \acp{GAII}, enabling robust attribution and traceability. Depending on the implementation, a watermark could encode information about the originating model, the user, or the time of generation. This is vital for accountability, particularly when addressing the use of copyrighted material in training data or the distribution of malicious content. Initiatives like the \ac{C2PA}, backed by major technology firms, aim to standardise how this provenance information is embedded and read, creating a framework for digital content certification \cite{ContentCredentialsC2PA}. An effective watermarking scheme is therefore essential for copyright protection, verifying ownership, and ensuring the authenticity of digital media in an age of prolific AI generation \cite{jiangWatermarkbasedDetectionAttribution2024}.
+Watermarks can act as digital fingerprints for \ac{AI} generated images, enabling robust attribution and traceability. Depending on the implementation, a watermark could encode information about the originating model, the user, or the time of generation. This is vital for accountability, particularly when addressing the use of copyrighted material in training data or the distribution of malicious content. Initiatives like the \ac{C2PA}, backed by major technology firms, aim to standardise how this provenance information is embedded and read, creating a framework for digital content certification \cite{ContentCredentialsC2PA}. An effective watermarking scheme is therefore essential for copyright protection, verifying ownership, and ensuring the authenticity of digital media in an age of prolific \ac{AI} generation \cite{jiangWatermarkbasedDetectionAttribution2024}.
 
 \section{Digital Watermarking Techniques}
 \subsection{Traditional Spatial Domain Watermarking}
@@ -239,7 +237,7 @@ These metrics provide the foundation for the experimental evaluation framework d
 \chapter{Methodology}
 \label{cha:Methodology}
 
-This chapter details the approach taken to investigate, implement, and evaluate the Gaussian Shading watermarking technique for \acp{GAII}. It covers the research strategy, the selection of the specific watermarking technique from available literature, a detailed experimental design, and the comprehensive framework for evaluation. The methodology will provide a rigorous assessment that enables direct comparison with state-of-the-art techniques while operating within the feasibility constraints of an undergraduate project.
+This chapter details the approach taken to investigate, implement, and evaluate the Gaussian Shading watermarking technique for \ac{AI} generated images. It covers the research strategy, the selection of the specific watermarking technique from available literature, a detailed experimental design, and the comprehensive framework for evaluation. The methodology will provide a rigorous assessment that enables direct comparison with state-of-the-art techniques while operating within the feasibility constraints of an undergraduate project.
 
 \section{Research Approach}
 \label{sec:ResearchApproach}
