@@ -160,7 +160,7 @@ To achieve this, the following objectives have been set:
 This project seeks to answer the following research questions:
 \begin{itemize}
     \item To what extent can the Gaussian Shading method provide robust watermarking against a standard set of digital attacks, including compression, noise, and geometric transformations?
-    \item What is the trade-off between watermark robustness and image quality? Can the method's "performance-lossless" claim be substantiated using metrics like \ac{PSNR}, \ac{SSIM}, and \ac{FID}?
+    \item What is the trade-off between watermark robustness and image quality? Can the method's "performance-lossless" claim be substantiated using distribution based metrics like \ac{FID} and \ac{CLIP} score?
     \item How does the performance of Gaussian Shading compare to other leading in-generation watermarking techniques.
 \end{itemize}
 
@@ -286,8 +286,8 @@ A robust watermarking system must be able to withstand a combination of these at
 \todo{maybe mention MSE, NCC}
 To objectively assess the performance of a watermarking technique, a set of standard metrics is used to measure three key properties:
 \begin{itemize}
-    \item \textbf{Imperceptibility:} This measures the visual distortion introduced by the watermark. It is commonly quantified using metrics like \ac{PSNR} and \ac{SSIM}. Higher values indicate that the watermarked image is visually closer to the original, meaning the watermark is less perceptible.
-    \item \textbf{Robustness:} This measures the watermark's ability to survive attacks. It is typically evaluated by calculating the \ac{BER} between the original and extracted watermark message after an attack has been applied. A lower \ac{BER} indicates higher robustness.
+    \item \textbf{Imperceptibility:} This measures the visual distortion introduced by the watermark. For traditional watermarking methods, commonly quantified using pixel level metrics like \ac{PSNR} and \ac{SSIM}. However, for latent space watermarking methods like Gaussian Shading, distribution-based metrics such as \ac{FID} and \ac{CLIP} Score are more appropriate. Lower \ac{FID} values mean the distribution of watermarked images is closer to that of the original images, while similar \ac{CLIP} scores indicate that the semantic content of the images remain consistent with the original prompts.
+    \item \textbf{Robustness:} This is a measure of the watermark's ability to survive attacks. Typically evaluated by calculating the \ac{BER} between the original and extracted watermark message after an attack has been applied. A lower \ac{BER} indicates better robustness.
     \item \textbf{Capacity:} This refers to the amount of information (in bits) that can be embedded within the watermark. There is often a trade-off between capacity, robustness, and imperceptibility.
 \end{itemize}
 These metrics provide the foundation for the experimental evaluation framework described in the next chapter.
@@ -302,7 +302,7 @@ This chapter details the approach taken to investigate, implement, and evaluate 
 
 This study employs a \textbf{quantitative empirical evaluation} methodology to assess the performance of Gaussian Shading watermarking. The approach is aligned with established benchmarks in the watermarking literature, specifically following the evaluation protocols used by Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} and Stable Signature \cite{fernandezStableSignatureRooting2023b}, enabling direct comparison without requiring re-implementation of competing methods.
 
-The selection of \acp{LDM} as the primary architecture is justified by their current dominance in high quality image generation and the availability of open-source implementations \cite{dhariwalDiffusionModelsBeat2021}. Specifically, Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} is chosen due to its open-source nature \cite{CompVisStablediffusion2024}, widespread adoption in research, and existing watermarking literature within its framework \cite{fernandezStableSignatureRooting2023b, zhaoRecipeWatermarkingDiffusion2023a, zhangAttackResilientImageWatermarking2024}.
+The selection of \acp{LDM} as the primary architecture is justified by their current dominance in high quality image generation and the availability of open source implementations \cite{dhariwalDiffusionModelsBeat2021}. Specifically, Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} is chosen due to its open source nature \cite{CompVisStablediffusion2024}, widespread adoption in research, and existing watermarking literature within its framework \cite{fernandezStableSignatureRooting2023b, zhaoRecipeWatermarkingDiffusion2023a, zhangAttackResilientImageWatermarking2024}.
 
 \section{Watermarking Technique Selection}
 \label{sec:WatermarkingTechniqueSelection}
@@ -530,8 +530,8 @@ Scientific validity is ensured through deterministic random number generation wi
 
 \subsection{Success Criteria and Thresholds}
 \label{subsec:SuccessCriteria}
-% this needs to be changed, as were no longer using SSIM and PSNR due to how Gaussian Shading works
-The evaluation establishes clear success criteria to assess Gaussian Shading's viability. \textbf{Imperceptibility thresholds} require \ac{PSNR} $>$ 40 dB (high perceptual quality), \ac{SSIM} $>$ 0.95 (strong structural similarity), and \ac{FID} $<$ 5.0 (distribution preservation). \textbf{Robustness thresholds} mandate \ac{BER} $<$ 0.1 for mild attacks (\ac{JPEG} QF $\geq$ 75), \ac{BER} $<$ 0.25 for moderate attacks (\ac{JPEG} QF $\geq$ 50), and \ac{TPR} $>$ 0.9 at \ac{FPR} = $10^{-6}$. These derived thresholds from the literature provide objective criteria for evaluating the performance-lossless claims of Gaussian Shading.
+
+The evaluation sets a clear success criteria to assess Gaussian Shading's viability. \textbf{Imperceptibility thresholds} require \ac{FID} $<$ 5.0 (indicating minimal distribution shift between watermarked and non-watermarked images) and \ac{CLIP} Score difference $<$ 0.05 (indicating preservation of semantic content). \textbf{Robustness thresholds} require \ac{BER} $<$ 0.1 for mild attacks (\ac{JPEG} QF $\geq$ 75), \ac{BER} $<$ 0.25 for moderate attacks (\ac{JPEG} QF $\geq$ 50), and \ac{TPR} $>$ 0.9 at \ac{FPR} = $10^{-6}$. These derived thresholds from the literature provide objective criteria for evaluating the performance lossless claims of Gaussian Shading.
 
 The methodology balances comprehensive evaluation with practical constraints, ensuring that results are both scientifically valid and directly comparable to existing literature while remaining achievable within undergraduate project scope and hardware limitations.
 
