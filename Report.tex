@@ -259,7 +259,6 @@ Watermarks are susceptible to a wide range of attacks, which can be broadly cate
 A robust watermarking system must be able to withstand a combination of these attacks to be considered effective in real-world scenarios.
 
 \subsection{Metrics for Evaluation}
-\todo{maybe mention MSE, NCC}
 To objectively assess the performance of a watermarking technique, a set of standard metrics is used to measure three key properties:
 \begin{itemize}
     \item \textbf{Imperceptibility:} This measures the visual distortion introduced by the watermark. For traditional watermarking methods, commonly quantified using pixel level metrics like \ac{PSNR} and \ac{SSIM}. However, for latent space watermarking methods like Gaussian Shading, distribution-based metrics such as \ac{FID} and \ac{CLIP} Score are more appropriate. Lower \ac{FID} values mean the distribution of watermarked images is closer to that of the original images, while similar \ac{CLIP} scores indicate that the semantic content of the images remain consistent with the original prompts.
