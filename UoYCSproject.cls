@@ -46,7 +46,7 @@
 
 % Koma-script report style
 %\PassOptionsToPackage{twoside=false}{typearea}
-\LoadClass[fontsize=12pt,a4paper,abstracton,twoside=false,numbers=noenddot]{scrreprt}
+\LoadClass[fontsize=12pt,a4paper,abstract=true,twoside=false,numbers=noenddot,version=last]{scrreprt}
 \RequirePackage{scrhack}
 \RequirePackage[toc,page]{appendix}
 \RequirePackage{graphicx}
