@@ -1,0 +1,50 @@
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    box/.style={rectangle, draw, rounded corners, minimum width=3cm, minimum height=1cm, align=center, fill=blue!10},
+    process/.style={rectangle, draw, rounded corners, minimum width=3cm, minimum height=1cm, align=center, fill=green!10},
+    arrow/.style={thick,->,>=stealth}
+]
+
+% Embedding Pipeline
+\node[draw, rounded corners, fill=gray!10, inner sep=10pt, label={[anchor=north]north:Embedding Pipeline}] (embedding) {
+    \begin{tikzpicture}[node distance=1.5cm]
+        % Nodes for embedding pipeline
+        \node[box] (prompt) {Text Prompt};
+        \node[process, right=of prompt] (encoder) {CLIP Text Encoder};
+        \node[box, below=of prompt] (watermark) {Watermark 's'};
+        \node[process, right=of watermark] (diffuse) {Diffuse \& Encrypt};
+        \node[process, right=of encoder] (sampling) {Watermarked Latent Sampling};
+        \node[process, right=of sampling] (denoising) {U-Net Denoising};
+        \node[process, right=of denoising] (decoder) {VAE Decoder};
+        \node[box, right=of decoder] (image) {Watermarked Image};
+        
+        % Connections for embedding pipeline
+        \draw[arrow] (prompt) -- (encoder);
+        \draw[arrow] (watermark) -- (diffuse);
+        \draw[arrow] (encoder) -- (sampling);
+        \draw[arrow] (diffuse) -- (sampling);
+        \draw[arrow] (sampling) -- (denoising);
+        \draw[arrow] (denoising) -- (decoder);
+        \draw[arrow] (decoder) -- (image);
+    \end{tikzpicture}
+};
+
+% Extraction Pipeline
+\node[draw, rounded corners, fill=gray!10, inner sep=10pt, below=1.5cm of embedding, label={[anchor=north]north:Extraction Pipeline}] (extraction) {
+    \begin{tikzpicture}[node distance=1.5cm]
+        % Nodes for extraction pipeline
+        \node[box] (wimage) {Watermarked Image};
+        \node[process, right=of wimage] (vae_encoder) {VAE Encoder};
+        \node[process, right=of vae_encoder] (ddim) {DDIM Inversion};
+        \node[process, right=of ddim] (recovery) {Watermark Recovery};
+        \node[box, right=of recovery] (recovered) {Recovered Watermark 's''};
+        
+        % Connections for extraction pipeline
+        \draw[arrow] (wimage) -- (vae_encoder);
+        \draw[arrow] (vae_encoder) -- (ddim);
+        \draw[arrow] (ddim) -- (recovery);
+        \draw[arrow] (recovery) -- (recovered);
+    \end{tikzpicture}
+};
+
+\end{tikzpicture}

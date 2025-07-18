@@ -6,7 +6,29 @@
 
 \usepackage[nohyperlinks]{acronym} % addition for acronyms page
 \usepackage{amsmath} % for equation environments
+\usepackage{algorithm} % for algorithm environments
+\usepackage{algorithmic} % for algorithm content
+\usepackage{listings} % for code listings
+\usepackage{xcolor} % for colored text in listings
+\usepackage{tikz} % for diagrams
+\usetikzlibrary{positioning,shapes,arrows,fit,calc}
+\usepackage{multirow} % for tables with merged rows
 \usepackage{hyperref}
+
+% Configure listings
+\lstset{
+  basicstyle=\ttfamily\small,
+  commentstyle=\color{gray},
+  keywordstyle=\color{blue},
+  stringstyle=\color{green!50!black},
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=5pt,
+  frame=single,
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false
+}
 
 \addbibresource{bibliography.bib}
 \author{Mischa}
@@ -18,10 +40,7 @@
 \dedication{To all students everywhere}
 
 \acknowledgements{
-  I would like to thank my goldfish for all the help it gave me
-  writing this document.
- 
-  As usual, my boss was an inspiring source of sagacious advice.
+  I would like to thank my supervisors, Dimitar Kazakov and Dr. Kofi Appiah, for their guidance and support throughout this project.
 }
 
 % More definitions & declarations in example.ldf
@@ -31,8 +50,8 @@
 \maketitle
 \listoffigures
 \listoftables
-%\renewcommand*{\lstlistlistingname}{List of Listings}
-%\lstlistoflistings
+\renewcommand*{\lstlistlistingname}{List of Listings}
+\lstlistoflistings
 
 % List of Acronyms used
 \chapter*{List of Acronyms}
@@ -283,7 +302,7 @@ This chapter details the approach taken to investigate, implement, and evaluate 
 
 This study employs a \textbf{quantitative empirical evaluation} methodology to assess the performance of Gaussian Shading watermarking. The approach is aligned with established benchmarks in the watermarking literature, specifically following the evaluation protocols used by Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} and Stable Signature \cite{fernandezStableSignatureRooting2023b}, enabling direct comparison without requiring re-implementation of competing methods.
 
-The selection of \acp{LDM} as the primary architecture is justified by their current dominance in high quality image generation and the availability of open-source implementations \todo{cite?}. Specifically, Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} is chosen due to its open-source nature \cite{CompVisStablediffusion2024}, widespread adoption in research, and existing watermarking literature within its framework \cite{fernandezStableSignatureRooting2023b, zhaoRecipeWatermarkingDiffusion2023a, zhangAttackResilientImageWatermarking2024}.
+The selection of \acp{LDM} as the primary architecture is justified by their current dominance in high quality image generation and the availability of open-source implementations \cite{dhariwalDiffusionModelsBeat2021}. Specifically, Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} is chosen due to its open-source nature \cite{CompVisStablediffusion2024}, widespread adoption in research, and existing watermarking literature within its framework \cite{fernandezStableSignatureRooting2023b, zhaoRecipeWatermarkingDiffusion2023a, zhangAttackResilientImageWatermarking2024}.
 
 \section{Watermarking Technique Selection}
 \label{sec:WatermarkingTechniqueSelection}
@@ -312,7 +331,7 @@ To ensure reproducible and comparable results, the evaluation follows a standard
 
 \begin{itemize}
     \item \textbf{Generative Model:} Stable Diffusion v2.1-base
-    \item \textbf{Image Resolution:} 512×512 pixels (standard for SD v2.1)
+    \item \textbf{Image Resolution:} 512$\times$512 pixels (standard for SD v2.1)
     \item \textbf{Guidance Scale:} 7.5 (classifier-free guidance strength)
     \item \textbf{Inference Steps:} 50 (using DPMSolver++ scheduler)
     \item \textbf{Precision:} Float16 for memory efficiency
@@ -336,16 +355,44 @@ The watermark implementation follows the Gaussian Shading specification with a 2
 \section{System Architecture}
 \label{sec:SystemArchitecture}
 
-The Gaussian Shading watermarking system operates through two primary pipelines. The \textbf{embedding pipeline} processes text prompts via \ac{CLIP} text encoder, then diffuses the watermark message $s$ across latent dimensions to obtain $s_{d}$. The diffused watermark $s_{d}$ is then encrypted with a ChaCha20 stream cipher using a secret key $K$ to produce $m$. The main modification occurs during initial latent sampling: instead of standard sampling $z_{T} \sim \mathcal{N}(0, I)$, the method uses distribution preserving sampling based on $m$ using a Gaussian quantile function and uniform random sampling. The watermarked latent $z_{T}$ then undergoes standard 50 step diffusion denoising and \ac{VAE} decoding to produce the final watermarked image. 
+The Gaussian Shading watermarking system operates through two primary pipelines: embedding and extraction. Figure \ref{fig:system_architecture} illustrates the complete architecture of the system, highlighting the key components and data flow.
 
-The \textbf{extraction pipeline} reverses the aforementioned process: \ac{VAE} encoding produces a latent representation $z_{0}'$, followed by \ac{DDIM} inversion to estimate initial noise $z_{T}'$. Inverse sampling logic (Gaussian \ac{CDF}) extracts a randomised watermark estimate $m'$ from $z_{T}'$, which is decrypted with key $K$ to recover the diffused watermark estimate $s_{d}'$. A reduction/voting mechanism across diffused copies recovers the final watermark estimate $s'$, enabling binary classification between watermarked and non-watermarked images based on the recovered bits.
+\subsection{Embedding Pipeline}
+The \textbf{embedding pipeline} integrates watermarking directly into the image generation process:
 
-% \begin{figure}[htb]
-%     \centering
-%     \includegraphics[width=\textwidth]{assets/architecture.pdf}
-%     \caption{Complete system architecture diagram.}
-%     \label{fig:system_architecture}
-% \end{figure}
+\begin{enumerate}
+    \item \textbf{Text Encoding:} The process begins with a text prompt that is encoded using the \ac{CLIP} text encoder to produce conditioning vectors.
+    
+    \item \textbf{Watermark Preparation:} The watermark message $s$ (a binary string) is diffused across latent dimensions to obtain $s_{d}$, creating redundant copies for robustness. The diffused watermark $s_{d}$ is then encrypted with a ChaCha20 stream cipher using a secret key $K$ to produce $m$.
+    
+    \item \textbf{Distribution-Preserving Sampling:} The core innovation occurs during initial latent sampling. Instead of standard sampling $z_{T} \sim \mathcal{N}(0, I)$, the method uses distribution-preserving sampling based on $m$ using a Gaussian quantile function and uniform random sampling. This ensures the watermarked latent maintains the same statistical properties as a non-watermarked latent.
+    
+    \item \textbf{Denoising Process:} The watermarked latent $z_{T}$ undergoes standard 50-step diffusion denoising guided by the conditioning vectors.
+    
+    \item \textbf{Image Decoding:} Finally, the \ac{VAE} decoder transforms the denoised latent representation into the final watermarked image in pixel space.
+\end{enumerate}
+
+\subsection{Extraction Pipeline}
+The \textbf{extraction pipeline} reverses the embedding process to recover the watermark:
+
+\begin{enumerate}
+    \item \textbf{Latent Encoding:} The watermarked image is encoded using the \ac{VAE} encoder to produce a latent representation $z_{0}'$.
+    
+    \item \textbf{\ac{DDIM} Inversion:} A deterministic \ac{DDIM} inversion process with 50 steps is applied to estimate the initial noise $z_{T}'$ that would have generated the image.
+    
+    \item \textbf{Watermark Recovery:} Inverse sampling logic (Gaussian \ac{CDF}) extracts a randomized watermark estimate $m'$ from $z_{T}'$, which is decrypted with key $K$ to recover the diffused watermark estimate $s_{d}'$.
+    
+    \item \textbf{Bit Reconstruction:} A reduction/voting mechanism across the diffused copies recovers the final watermark estimate $s'$, enabling binary classification between watermarked and non-watermarked images based on the recovered bits.
+\end{enumerate}
+
+The architecture is designed to be modular, allowing for adjustments to parameters such as the number of diffusion steps, watermark length, and diffusion redundancy factors without requiring structural changes.
+
+\begin{figure}[htb]
+    \centering
+    \input{assets/architecture}
+    \caption{Complete system architecture diagram showing the embedding pipeline (top) and extraction pipeline (bottom). The embedding pipeline integrates watermarking into the generation process by modifying the initial latent sampling, while the extraction pipeline uses DDIM inversion to recover the watermark.}
+    \label{fig:system_architecture}
+\end{figure}
 
 \section{Implementation Details}
 \label{sec:ImplementationDetails}
@@ -358,20 +405,66 @@ The implementation utilises an NVIDIA RTX 2070 Super (8GB \ac{VRAM}) with \ac{CU
 \subsection{Gaussian Shading Implementation}
 \label{subsec:GaussianShadingImplementation}
 
-The implementation follows the algorithm specification from \cite{yangGaussianShadingProvable2024}:
+The implementation follows the algorithm specification from \cite{yangGaussianShadingProvable2024}, The method consists of three key components: watermark diffusion, distribution preserving sampling, and DDIM inversion for extraction.
 
-\textbf{Distribution-Preserving Sampling:}
+\subsubsection{Watermark Diffusion}
+The watermark message $s \in \{0,1\}^m$ undergoes an initial diffusion process across its latent dimensions to enhance robustness. This process generates multiple copies of each bit across different dimensions, defined as $s_{d} = \text{Diffuse}(s, \text{channel\_copy}, \text{hw\_copy})$. Where $\text{channel\_copy}$ determines how many copies are made across channel dimensions, and $\text{hw\_copy}$ controls copies across spatial dimensions. This redundancy is important for robustness, as it allows for majority voting during extraction even if some dimensions are corrupted by attacks. The diffused watermark $s_d$ is then encrypted using ChaCha20 stream cipher with a secret key $K$ to produce the encrypted watermark $m$: $m = \text{Encrypt}(s_d, K)$
+
+\subsubsection{Distribution Preserving Sampling}
+A key part of Gaussian Shading is the distribution preserving sampling technique. In standard diffusion models, the initial latent is sampled from a standard normal distribution:
+
 \begin{equation}
 z_{T} \sim \mathcal{N}(0, I) \text{ (standard)}
 \end{equation}
+
+For watermarking, this sampling is modified to embed the encrypted watermark while maintaining the same statistical distribution:
+
 \begin{equation}
 z_{T}^{(w)} = \Phi^{-1}(U \cdot \Phi(z_{T}) + (1-U) \cdot \Phi(z_{T}^{(ref)})) \text{ (watermarked)}
 \end{equation}
 
-where $\Phi$ is the standard normal \ac{CDF}, $U$ is uniform random, and $z_{T}^{(ref)}$ encodes the encrypted watermark bits.
+where:
+\begin{itemize}
+    \item $\Phi$ is the standard normal \ac{CDF}
+    \item $\Phi^{-1}$ is the inverse \ac{CDF} (quantile function)
+    \item $U$ is a uniform random variable in $[0,1]$
+    \item $z_{T}^{(ref)}$ is a reference latent that encodes the encrypted watermark bits
+\end{itemize}
 
-\textbf{\ac{DDIM} Inversion for Extraction:}
-The extraction process uses deterministic \ac{DDIM} inversion with 50 steps to estimate the initial latent, enabling watermark recovery through the inverse sampling process.
+This approach ensures that $z_{T}^{(w)}$ follows the same distribution as $z_{T}$, making the watermark statistically undetectable and preserving the generative model's performance. The implementation uses the error function (erf) and its inverse for efficient computation of the normal \ac{CDF} and quantile functions.
+
+\subsubsection{\ac{DDIM} Inversion for Extraction}
+The extraction process uses deterministic \ac{DDIM} inversion with 50 steps to estimate the initial latent. The algorithm is:
+
+\begin{algorithm}
+\caption{\ac{DDIM} Inversion for Watermark Extraction}
+\begin{algorithmic}[1]
+\REQUIRE Watermarked image $x$, number of steps $T$
+\ENSURE Estimated initial latent $\hat{z}_T$
+\STATE $z_0 \gets \text{VAE\_Encoder}(x)$ \COMMENT{Encode image to latent space}
+\FOR{$t = 1$ to $T$}
+    \STATE $\epsilon_\theta \gets \text{U-Net}(z_{t-1}, t-1)$ \COMMENT{Predict noise}
+    \STATE $z_t \gets \text{DDIM\_Step}(z_{t-1}, \epsilon_\theta, t-1, t)$ \COMMENT{Reverse diffusion step}
+\ENDFOR
+\RETURN $z_T$
+\end{algorithmic}
+\end{algorithm}
+
+Where $\text{DDIM\_Step}$ implements the deterministic reverse diffusion process according to the \ac{DDIM} formulation. Once the initial latent $\hat{z}_{T}$ is recovered, the watermark is extracted by applying the inverse of the distribution preserving sampling process: $\hat{m} = \text{Extract}(\hat{z}_{T}, K)$
+
+The extracted watermark $\hat{m}$ is then decrypted and the diffused bits are combined through majority voting to recover the original message $\hat{s}$.
+
+\subsubsection{Memory Optimization Techniques}
+The implementation incorporates several memory optimization strategies to operate within the 8GB VRAM constraint:
+
+\begin{itemize}
+    \item \textbf{Half-precision arithmetic:} All tensors use float16 precision, reducing memory footprint by half compared to float32.
+    \item \textbf{Sequential processing:} Images are processed one at a time rather than in batches to avoid memory spikes.
+    \item \textbf{Efficient tensor management:} Careful attention to tensor lifecycle, explicitly freeing unused tensors and using in-place operations where possible.
+    \item \textbf{Optimised attention implementation:} Using PyTorch's attention implementation to reduce memory footprint of transformer blocks in the U-Net.
+\end{itemize}
+
+These optimisations enable processing of $512\times512$ images on the specified hardware without compromising the quality of the watermarking process.
 
 \section{Evaluation Framework}
 \label{sec:EvaluationFramework}
@@ -437,8 +530,8 @@ Scientific validity is ensured through deterministic random number generation wi
 
 \subsection{Success Criteria and Thresholds}
 \label{subsec:SuccessCriteria}
-
-The evaluation establishes clear success criteria to assess Gaussian Shading's viability. \textbf{Imperceptibility thresholds} require \ac{PSNR} > 40 dB (high perceptual quality), \ac{SSIM} > 0.95 (strong structural similarity), and \ac{FID} < 5.0 (distribution preservation). \textbf{Robustness thresholds} mandate \ac{BER} < 0.1 for mild attacks (\ac{JPEG} QF $\geq$ 75), \ac{BER} < 0.25 for moderate attacks (\ac{JPEG} QF $\geq$ 50), and \ac{TPR} > 0.9 at \ac{FPR} = $10^{-6}$. These derived thresholds from the literature provide objective criteria for evaluating the performance-lossless claims of Gaussian Shading.
+% this needs to be changed, as were no longer using SSIM and PSNR due to how Gaussian Shading works
+The evaluation establishes clear success criteria to assess Gaussian Shading's viability. \textbf{Imperceptibility thresholds} require \ac{PSNR} $>$ 40 dB (high perceptual quality), \ac{SSIM} $>$ 0.95 (strong structural similarity), and \ac{FID} $<$ 5.0 (distribution preservation). \textbf{Robustness thresholds} mandate \ac{BER} $<$ 0.1 for mild attacks (\ac{JPEG} QF $\geq$ 75), \ac{BER} $<$ 0.25 for moderate attacks (\ac{JPEG} QF $\geq$ 50), and \ac{TPR} $>$ 0.9 at \ac{FPR} = $10^{-6}$. These derived thresholds from the literature provide objective criteria for evaluating the performance-lossless claims of Gaussian Shading.
 
 The methodology balances comprehensive evaluation with practical constraints, ensuring that results are both scientifically valid and directly comparable to existing literature while remaining achievable within undergraduate project scope and hardware limitations.
 
