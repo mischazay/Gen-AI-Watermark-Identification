@@ -340,6 +340,13 @@ The Gaussian Shading watermarking system operates through two primary pipelines.
 
 The \textbf{extraction pipeline} reverses the aforementioned process: \ac{VAE} encoding produces a latent representation $z_{0}'$, followed by \ac{DDIM} inversion to estimate initial noise $z_{T}'$. Inverse sampling logic (Gaussian \ac{CDF}) extracts a randomised watermark estimate $m'$ from $z_{T}'$, which is decrypted with key $K$ to recover the diffused watermark estimate $s_{d}'$. A reduction/voting mechanism across diffused copies recovers the final watermark estimate $s'$, enabling binary classification between watermarked and non-watermarked images based on the recovered bits.
 
+% \begin{figure}[htb]
+%     \centering
+%     \includegraphics[width=\textwidth]{assets/architecture.pdf}
+%     \caption{Complete system architecture diagram.}
+%     \label{fig:system_architecture}
+% \end{figure}
+
 \section{Implementation Details}
 \label{sec:ImplementationDetails}
 
@@ -401,7 +408,13 @@ This configuration yields 12 attack scenarios, each evaluated on 200 images, tot
 \subsection{Evaluation Metrics}
 \label{subsec:EvaluationMetrics}
 
-The evaluation framework employs three metric categories. \textbf{Imperceptibility metrics} include \ac{PSNR} for pixel-level similarity, \ac{SSIM} for perceptual quality assessment, \ac{FID} for distribution preservation, and \ac{CLIP} Score for semantic similarity between prompts and generated images. \textbf{Robustness metrics} comprise \ac{BER} as the primary robustness measure, \ac{TPR} for detection accuracy at fixed \ac{FPR}, and overall detection accuracy for binary classification performance. \textbf{Computational efficiency metrics} measure embedding overhead (additional generation time per image), extraction time (\ac{DDIM} inversion and watermark recovery duration), and memory usage (peak \ac{VRAM} consumption during embedding/extraction).
+The evaluation framework employs three metric categories.
+
+While traditional metrics like \ac{PSNR} and \ac{SSIM} are common for assessing imperceptibility, they are not the primary metrics for this evaluation. The Gaussian Shading technique operates by altering the initial latent sample ($z_T$). As such, even when using an the same seed, the watermarked and non-watermarked images are inherently distinct at the pixel level, as they are slightly modified versions of one another. Applying pixel level metrics in this context is not appropriate, as they would report significant differences that do not reflect perceptual similarity.
+
+Therefore, distribution based metrics are more appropriate. The \ac{FID} score is used to compare the statistical distributions of the entire set of 1000 watermarked images against the 1000 non-watermarked images, providing a more meaningful measure of the watermark's overall impact on the model's output distribution. Additionally, the \ac{CLIP} score is used to ensure that the semantic content of the generated images remains consistent with the original prompt, further validating the watermark's imperceptibility.
+
+\textbf{Imperceptibility metrics} \ac{FID} for distribution preservation, and \ac{CLIP} Score for semantic similarity between prompts and generated images. \textbf{Robustness metrics} comprise \ac{BER} as the primary robustness measure, \ac{TPR} for detection accuracy at fixed \ac{FPR}, and overall detection accuracy for binary classification performance.
 
 \subsection{Comparative Analysis Strategy}
 \label{subsec:ComparativeAnalysisStrategy}
@@ -431,6 +444,29 @@ The methodology balances comprehensive evaluation with practical constraints, en
 
 
 \chapter{Results}
+
+\section{Baseline Performance \& Imperceptibility Analysis}
+\label{sec:ImperceptibilityAnalysis}
+
+This section evaluates the visual impact of the Gaussian Shading watermark, a critical aspect of its viability. The primary goal is to determine whether the watermark can be embedded without causing perceptible degradation to the generated images, thereby substantiating the "performance-lossless" claim from the original paper \cite{yangGaussianShadingProvable2024}. The analysis focuses on key imperceptibility metrics: the \ac{FID} score, which measures the difference between the distribution of generated images and real images, and the \ac{CLIP} score, which assesses semantic similarity between the image and its text prompt.
+
+Table \ref{tab:imperceptibility_results} presents the core imperceptibility metrics calculated over a dataset of 1000 images generated from MS-COCO prompts.
+
+\begin{table}[htb]
+\caption{Imperceptibility Metrics for Gaussian Shading.}
+\label{tab:imperceptibility_results}
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Metric} & \textbf{Value} \\ \hline
+\ac{FID} Score & 47.83 \\ \hline
+\ac{CLIP} Score (Ground Truth) & 0.310 \\ \hline
+\ac{CLIP} Score (Watermarked) & 0.309 \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+The results demonstrate a high degree of imperceptibility. The \ac{FID} score of 47.83 is well within the acceptable range for high-quality generative models and aligns with the success criteria defined in Section \ref{subsec:SuccessCriteria}. More importantly, the \ac{CLIP} scores for the ground truth (non-watermarked) and watermarked images are nearly identical, with a negligible difference of just 0.001. This indicates that the presence of the watermark does not compromise the semantic coherence between the generated image and its corresponding text prompt. This finding strongly supports the performance-lossless claim, as the watermark's impact on the final output is statistically insignificant from a semantic perspective.
 
 
 \chapter{Conclusion}
