@@ -13,6 +13,7 @@
 \usepackage{tikz} % for diagrams
 \usetikzlibrary{positioning,shapes,arrows,fit,calc}
 \usepackage{multirow} % for tables with merged rows
+\usepackage{tabularx} % for tables with adjustable-width columns
 \usepackage{hyperref}
 
 % Configure listings
@@ -37,7 +38,9 @@
 \supervisor{Dimitar Kazakov}
 \BSc
 
-\dedication{To all students everywhere}
+\dedication{
+    To my parents, for their love and support.
+}
 
 \acknowledgements{
   I would like to thank my supervisors, Dimitar Kazakov and Dr. Kofi Appiah, for their guidance and support throughout this project.
@@ -1333,6 +1336,7 @@ The results demonstrate that with appropriate error correction, the detection ac
 
 \chapter{Ethics Checklist}
 \label{app:EthicsChecklist}
+\input{assets/ethics_checklist.tex}
 
 \sloppy % relax spacing between words
 \printbibliography
