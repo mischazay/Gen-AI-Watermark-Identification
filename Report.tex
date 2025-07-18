@@ -93,47 +93,20 @@
 
 
 \begin{ethics}
-This statement addresses the ethical considerations surrounding the development and evaluation of digital watermarking techniques for AI-generated images. Following the University of York's ethical guidelines, this statement is structured around three core ethical principles: Avoidance of Harm, Informed Consent, and Data Protection.
+This statement outlines the ethical considerations for this project, structured around the following principles: Avoidance of Harm, Informed Consent, and Data Protection.
 
 \subsection*{Avoidance of Harm}
+This project aims to explore technology that mitigates the potential harms of \ac{AI}-generated images. By enabling robust watermarking, this work helps combat misinformation (e.g., deepfakes), provides a mechanism for artists to receive attribution for their work, and aligns with regulatory demands for transparency in syntheticly generated media, such as the European Union \ac{AI} Act \cite{RegulationEU20242024}.
 
-\subsubsection*{Potential Benefits and Positive Applications}
-The development of robust watermarking techniques for AI-generated images serves several beneficial purposes. By enabling traceability and attribution of AI-generated content, this research directly addresses concerns raised by artists whose work is used in training datasets without proper consent or compensation, providing a technical foundation for establishing provenance and ownership rights. Reliable identification of AI-generated images contributes to combating the spread of deepfakes and synthetic media used maliciously to spread misinformation, particularly in political manipulation or fraud contexts. This research aligns with emerging regulatory frameworks, including the EU's AI Act and recommendations from the US White House, which mandate watermarking of synthetic content to ensure transparency and accountability \cite{houseExecutiveOrderSafe2023, RegulationEU20242024}.
-
-\subsubsection*{Potential Risks and Mitigation Strategies}
-The development of watermarking techniques may inadvertently provide a roadmap for malicious actors to develop counter-measures. This risk is mitigated by focusing on robustness evaluation rather than vulnerability exploitation, contributing to the collective knowledge base that strengthens rather than weakens watermarking systems, and following responsible disclosure practices for any significant vulnerabilities discovered. Mandatory watermarking could potentially limit artistic freedom or alter the creative process. This concern is addressed by designing imperceptible watermarks that preserve artistic integrity, focusing on technical evaluation rather than advocating for mandatory implementation, and ensuring the watermarking process is performance-lossless, maintaining the quality of generated content. The same technology that enables beneficial tracking could potentially be misused for surveillance or censorship. This risk is acknowledged, and the research focuses on attribution and authenticity rather than surveillance applications, emphasizes transparency and open evaluation methodologies, and contributes to public discourse on responsible AI development.
-
-\subsubsection*{Broader Societal Implications}
-The research acknowledges its position within larger debates about AI governance, digital rights, and the future of creative industries. By providing empirical evidence on watermarking effectiveness, this work contributes to informed policy-making and industry standards rather than prescriptive solutions.
+Potential risks have been considered and mitigated. The risk of malicious actors reverse engineering the watermark is addressed by focusing on robustness evaluation rather than vulnerability exploitation. The potential for misuse regarding privacy/surveilance is acknowledged; however, the project's scope is strictly limited to authenticity and attribution, not tracking individuals.
 
 \subsection*{Informed Consent}
-
-\subsubsection*{Human Participants}
-This project does not involve human participants in any capacity. No user studies, surveys, interviews, or other forms of human subject research are conducted. All evaluation is performed on publicly available datasets using automated metrics.
-
-\subsubsection*{Data Sources and Consent Considerations}
-While no human participants are directly involved, the research utilizes publicly available datasets and open-source software, adhering to their respective licensing terms. The MS-COCO \cite{linMicrosoftCOCOCommon2015} dataset, used for generating evaluation images, is available under a Creative Commons license that permits research use. The Gustavosta prompt set \cite{GustavostaStableDiffusionPromptsDatasets2023} is also publicly available for research purposes. The source code for the original Gaussian Shading implementation \cite{__fubar__BsmhmmlfGaussianShading2025} is provided under the MIT License, which grants broad permissions for use and modification. This project uses these resources in full compliance with their licenses, ensuring that all data and software are handled ethically and responsibly. The Stable Diffusion model itself was trained on publicly available data, with the original developers being responsible for the ethical considerations of that process.
-
-\subsubsection*{Transparency and Reproducibility}
-Although informed consent from human participants is not applicable, the research maintains high standards of transparency. All methodologies and evaluation protocols are documented in detail, dataset sources and usage parameters are clearly specified, code and evaluation scripts are made available for reproducibility, and results are presented objectively without advocacy for specific policy positions.
+This project does not involve human participants. All experiments are conducted using publicly available datasets and open-source software, adhering to their respective licensing terms (e.g., Creative Commons for MS-COCO \cite{linMicrosoftCOCOCommon2015}, MIT License for Gaussian Shading source code \cite{__fubar__BsmhmmlfGaussianShading2025}). The research ensures transparency and reproducibility by documenting all methodologies and making evaluation scripts available.
 
 \subsection*{Data Protection}
+No personal or sensitive data was collected, processed, or stored. The datasets used (MS-COCO and Gustavosta prompts \cite{GustavostaStableDiffusionPromptsDatasets2023}) are publicly available for research and contain no personally identifiable information. All generated images and research data will only be retained as long as necessary to ensure reproducibility. The project adheres to responsible research practices, including minimising computational resources to reduce environmental impact.
 
-\subsubsection*{Dataset Handling and Storage}
-All datasets used in this research are handled in accordance with data protection best practices. Only the minimum necessary data is collected and processed, with images used solely for technical evaluation and not stored beyond the duration required for analysis. All research data is stored on secure, University-provided systems with appropriate access controls and backup procedures. Generated images and evaluation results are retained only for the duration necessary to complete the research and enable reproducibility, with no permanent archives of generated content created.
-
-\subsubsection*{Anonymization and Privacy}
-The research does not collect, process, or store any personal information about individuals, with all evaluation performed on technical metrics without reference to human subjects. The majority of images used in evaluation are synthetically generated using the watermarking system being evaluated, eliminating privacy concerns associated with real-world photography. Where publicly available datasets are used, no attempt is made to identify or analyze individuals who may be depicted in the images.
-
-\subsubsection*{Responsible Research Practices}
-The research follows established principles for ethical AI development, including fairness, accountability, transparency, and human rights considerations. The computational requirements of the research are minimized through efficient experimental design and use of appropriate hardware (RTX 2070 Super) to balance research quality with environmental impact. Results and methodologies are made available to the research community to enable validation, replication, and further development of responsible AI watermarking techniques.
-
-\subsection*{Conclusion}
-This research project has been designed with careful consideration of its ethical implications. The development of watermarking techniques for AI-generated images serves important societal needs for authenticity, attribution, and accountability in an era of increasingly sophisticated synthetic media. By focusing on technical evaluation rather than advocacy, maintaining transparency in methodology, and adhering to responsible research practices, this project contributes positively to the ongoing development of trustworthy AI systems.
-
-The research acknowledges the complex ethical landscape surrounding AI-generated content and watermarking technology. While this work provides technical contributions to the field, the broader questions of policy implementation, mandatory adoption, and governance frameworks remain important areas for continued interdisciplinary dialogue involving technologists, policymakers, artists, and society at large.
-
-No ethical approval from the Department's Physical Sciences Ethics Committee (PSEC) is required for this project, as it involves no human participants and uses only publicly available datasets for technical evaluation purposes. However, the ethical considerations outlined in this statement have been discussed with the project supervisor and integrated into the research design and methodology.
+Based on these considerations, formal ethical approval from the Physical Sciences Ethics Committee (PSEC) was not required. All ethical aspects have been discussed with the project supervisor, and the completed ethics checklist is available in Appendix \ref{app:EthicsChecklist}.
 \end{ethics}
 
 
@@ -1357,6 +1330,9 @@ Crop (80\%) & 0.183 & 0.967 & 0.991 \\ \hline
 
 The results demonstrate that with appropriate error correction, the detection accuracy can be significantly improved, particularly for more severe attacks. The BCH(255,191) code can correct up to 8 bit errors per 255-bit block, which is sufficient to handle the BER values observed for most attack scenarios.
 
+
+\chapter{Ethics Checklist}
+\label{app:EthicsChecklist}
 
 \sloppy % relax spacing between words
 \printbibliography
