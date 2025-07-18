@@ -591,7 +591,7 @@ Furthermore, Figure \ref{fig:distribution_plots} presents the distribution of \a
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.8\textwidth]{assets/clip_score_distribution.png}
-    \caption{Distribution of CLIP scores for watermarked vs. non-watermarked images.}
+    \caption{CLIP score distribution for watermarked vs. non-watermarked images.}
     \label{fig:distribution_plots}
 \end{figure}
 
@@ -711,15 +711,16 @@ To contextualize the performance of Gaussian Shading, Table \ref{tab:comparative
 \begin{table}[htb]
 \caption{Comparative Robustness Analysis of Watermarking Techniques.}
 \label{tab:comparative_robustness}
-\begin{center}
+\centering
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{|l|c|c|c|c|}
 \hline
 \textbf{Technique} & \textbf{JPEG (Q=75)} & \textbf{Noise ($\sigma$=0.01)} & \textbf{Crop (80\%)} & \textbf{Brightness ($\times$2)} \\ \hline
 Gaussian Shading & 0.08 & 0.11 & 0.18 & 0.09 \\ \hline
 Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} & 0.12 & 0.15 & 0.25 & 0.14 \\ \hline
 Stable Signature \cite{fernandezStableSignatureRooting2023b} & 0.07 & 0.10 & 0.20 & 0.08 \\ \hline
-\end{tabular}
-\end{center}
+\end{tabular}%
+}
 \end{table}
 
 The comparative analysis reveals that Gaussian Shading achieves robustness comparable to or better than Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} across all attack types. Compared to Stable Signature \cite{fernandezStableSignatureRooting2023b}, Gaussian Shading shows slightly lower robustness against JPEG compression and brightness adjustments but better performance against cropping. Notably, Gaussian Shading achieves this competitive robustness without requiring model fine-tuning, unlike Stable Signature, making it more accessible for deployment.
@@ -862,7 +863,7 @@ The development and evaluation of techniques like Gaussian Shading represent imp
 \chapter{Detailed Implementation of Gaussian Shading}
 \label{app:DetailedImplementation}
 
-This appendix provides a comprehensive technical overview of the Gaussian Shading implementation, including mathematical foundations, algorithmic details, and optimisation techniques not covered in the main text.
+This appendix provides a technical overview of the Gaussian Shading implementation, including mathematical and algorithmic details, and optimisation techniques used not covered in the main body.
 
 \section{Distribution-Preserving Sampling}
 \label{app:DistributionPreservingSampling}
