@@ -512,56 +512,113 @@ The methodology balances comprehensive evaluation with practical constraints, en
 
 
 \chapter{Results}
+\label{cha:Results}
 
+This chapter presents the empirical results of the evaluation, focusing on the two key performance areas for a watermarking system: imperceptibility and robustness. The findings are analysed to address the research questions concerning the viability of Gaussian Shading as a practical solution for \ac{AI}-generated media.
 
+\section{Baseline Performance and Imperceptibility}
+The first phase of the evaluation assessed the impact of the watermark on the output quality of the Stable Diffusion model. The goal was to empirically test the "performance-lossless" claim of the Gaussian Shading method using both semantic and distributional metrics.
+
+Table \ref{tab:imperceptibility_metrics} summarises the key imperceptibility results. The \ac{CLIP} score, which measures the semantic similarity between the text prompt and the generated image, shows a negligible difference of 0.0008 between the watermarked and non-watermarked image sets. This is well within the success threshold of 0.05, confirming that the watermark does not degrade the semantic content of the generated images. Visually, as shown in Figure \ref{fig:visual_comparison}, the watermarked images are indistinguishable from the originals, supporting the method's claim of high imperceptibility.
+
+However, the \ac{FID} score tells a different story. The calculated score of 47.83 is nearly an order of magnitude higher than the success threshold of 5.0. The \ac{FID} score measures the difference in the statistical distributions of the two image sets. This high value indicates that while the images look the same and represent the same content, the underlying distribution of pixel values has been significantly altered by the watermarking process. This result presents a critical challenge to the "performance-lossless" claim, suggesting that while visually and semantically lossless, the method is not statistically lossless. It is important to note that this evaluation was conducted on 1,000 images, whereas the original paper used 5,000; \ac{FID} is known to be sensitive to sample size, which may contribute to the discrepancy.
+
+\begin{table}[htb]
+    \caption{Imperceptibility and Distributional Metrics.}
+    \label{tab:imperceptibility_metrics}
+    \begin{center}
+    \begin{tabular}{|l|c|c|c|c|}
+    \hline
+    \textbf{Metric} & \textbf{Ground Truth} & \textbf{Watermarked} & \textbf{Success Threshold} & \textbf{Verdict} \\ \hline
+    \ac{CLIP} Score & 0.3099 & 0.3091 & \textless 0.05 difference & \textbf{Pass} \\ \hline
+    \ac{FID} Score & - & 47.83 & \textless 5.0 & \textbf{Fail} \\ \hline
+    \end{tabular}
+    \end{center}
+\end{table}
+
+\begin{figure}[htb]
+    \centering
+\includegraphics[width=\textwidth]{assets/visual_comparison.png}
+    \caption{Visual comparison of non-watermarked (top row) and watermarked (bottom row) images. No perceptible visual difference is observed across a range of styles and subjects.}
+    \label{fig:visual_comparison}
+\end{figure}
+
+\section{Robustness Evaluation}
+The second phase of the evaluation tested the watermark's resilience against a suite of 12 common digital attacks. The primary metric was the \ac{BER}, with lower values indicating higher robustness.
+
+The results, summarised in Table \ref{tab:robustness_summary}, demonstrate that Gaussian Shading is highly robust against most signal processing attacks. As shown in Figure \ref{fig:robustness_jpeg_noise}, the watermark maintains a \ac{BER} below 0.015 even under severe \ac{JPEG} compression (quality factor of 25) and significant Gaussian noise ($\sigma=0.05$). This performance exceeds the success criteria defined in the methodology.
+
+However, the evaluation revealed a critical vulnerability to geometric attacks. The random crop attack, which removed 20\% of the image area before resizing, resulted in a mean \ac{BER} of 0.4852. A \ac{BER} of 0.5 is equivalent to random chance, meaning the watermark was completely destroyed. This catastrophic failure, highlighted in Figure \ref{fig:robustness_blur_crop}, indicates that the spatial redundancy of the watermark is insufficient to survive the loss of image data from cropping.
+
+\begin{table}[htb]
+    \caption{Watermark Robustness Summary (Mean BER).}
+    \label{tab:robustness_summary}
+    \begin{center}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|l|l|c||l|l|c|}
+    \hline
+    \textbf{Attack Type} & \textbf{Parameter} & \textbf{Mean BER} & \textbf{Attack Type} & \textbf{Parameter} & \textbf{Mean BER} \\ \hline
+    \multirow{4}{*}{JPEG Compression} & Quality=90 & 0.0017 & \multirow{2}{*}{Gaussian Blur} & Radius=2 & 0.0017 \\
+     & Quality=75 & 0.0028 & & Radius=4 & 0.0180 \\
+     & Quality=50 & 0.0050 & \multirow{2}{*}{Brightness} & Factor=0.5 & 0.0006 \\
+     & Quality=25 & 0.0135 & & Factor=2.0 & 0.0023 \\ \cline{1-3}
+    \multirow{3}{*}{Gaussian Noise} & $\sigma=0.01$ & 0.0015 & \multirow{2}{*}{\textbf{Random Crop}} & \multirow{2}{*}{\textbf{80\%}} & \multirow{2}{*}{\textbf{0.4852}} \\
+     & $\sigma=0.03$ & 0.0037 & & & \\
+     & $\sigma=0.05$ & 0.0069 & & & \\ \hline
+    \end{tabular}%
+    }
+    \end{center}
+\end{table}
+
+\begin{figure}[htb]
+    \centering
+\includegraphics[width=\textwidth]{assets/robustness_jpeg_noise.pdf}
+    \caption{Robustness against JPEG compression (left) and Gaussian noise (right). The watermark shows high resilience, with BER remaining very low even under severe attack conditions.}
+    \label{fig:robustness_jpeg_noise}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+\includegraphics[width=\textwidth]{assets/robustness_blur_crop.pdf}
+    \caption{Robustness against Gaussian blur (left) and a comparison of severe attacks (right). The bar chart highlights the catastrophic failure of the crop attack compared to other severe distortions.}
+    \label{fig:robustness_blur_crop}
+\end{figure}
+
+\section{Discussion}
+The empirical results provide a nuanced answer to the research questions. While Gaussian Shading is visually imperceptible and robust to many common attacks, its claim of being "performance-lossless" is questionable under the rigorous standard of distributional analysis (FID). Furthermore, its vulnerability to cropping is a significant practical limitation. The trade-off is clear: the method achieves its training-free nature and high capacity at the cost of statistical purity and resilience to geometric data loss. Compared to methods like Stable Signature, it avoids costly fine-tuning, but at the expense of the deeper, more robust integration that fine-tuning provides.
 
 \chapter{Conclusion}
 \label{cha:conclusion}
 
+This dissertation conducted a rigorous, independent evaluation of the Gaussian Shading watermarking technique for \ac{AI}-generated images. By implementing the algorithm within a Stable Diffusion v2.1 framework and subjecting it to a comprehensive evaluation protocol, this project provides critical insights into its performance and practical viability.
+
+\section{Summary of Findings}
+The study's findings are summarised by directly addressing the initial research questions:
+
+\begin{itemize}
+    \item \textbf{To what extent is Gaussian Shading robust?} The method is highly robust against signal processing attacks like \ac{JPEG} compression, noise, and blurring, with \ac{BER} remaining below 2\% even under severe conditions. However, it is fundamentally not robust to geometric attacks like cropping, which completely destroys the watermark.
+    
+    \item \textbf{What is the trade-off between robustness and image quality?} The watermark is visually and semantically imperceptible, as confirmed by near-identical \ac{CLIP} scores. However, a high \ac{FID} score of 47.83 reveals a significant shift in the image distribution, challenging the method's "performance-lossless" claim from a statistical perspective.
+    
+    \item \textbf{How does it compare to other techniques?} Gaussian Shading offers the key advantages of being training-free (unlike Stable Signature) and having a high data capacity (unlike the 1-bit Tree-Ring). However, these benefits come at the cost of vulnerability to cropping and a measurable impact on the output distribution.
+\end{itemize}
+
+\section{Limitations and Future Work}
+This study was subject to several limitations. The evaluation was performed on a single generative model, and the \ac{FID} score calculation was based on a smaller dataset than the original paper, which may have influenced the result. The attack suite did not include more sophisticated adversarial attacks designed specifically to target and remove watermarks.
+
+Future work should focus on three key areas. First, investigating techniques to improve robustness against geometric attacks, potentially by integrating error-correction codes such as \ac{BCH} codes to allow for watermark recovery even with partial data loss. Second, exploring modifications to the watermark embedding process to mitigate the large shift in the FID score while preserving robustness. Finally, the technique should be evaluated across a wider range of generative models and against adversarial attacks to fully assess its security in real-world scenarios.
+
+\section{Final Remarks}
+In conclusion, this project confirms that Gaussian Shading is a promising, easy-to-deploy watermarking solution with high imperceptibility and strong robustness to many common image alterations. However, this independent evaluation has also identified and quantified critical weaknesses—namely, its failure to withstand cropping and its significant impact on the statistical distribution of generated images. These findings represent a valuable contribution to the field, providing a more complete and critical understanding of the trade-offs inherent in this state-of-the-art technique and highlighting important directions for the development of future watermarking solutions for responsible \ac{AI}.
+
 
 
 \appendix
-\chapter{Detailed Implementation of Gaussian Shading}
-\label{app:DetailedImplementation}
+\chapter{Additional Results and Implementation Details}
+\label{app:AdditionalContent}
 
-This appendix provides a technical overview of the Gaussian Shading implementation, including mathematical and algorithmic details, and optimisation techniques used not covered in the main body.
-
-\section{Distribution-Preserving Sampling}
-\label{app:DistributionPreservingSampling}
-
-The core innovation of Gaussian Shading is its distribution-preserving sampling technique, which enables watermark embedding without altering the statistical properties of the latent vectors. This section provides a detailed mathematical explanation of this process.
-
-\subsection{Mathematical Foundation}
-\label{subsec:MathematicalFoundation}
-
-The distribution-preserving sampling is based on the probability integral transform theorem, which states that if $X$ is a continuous random variable with cumulative distribution function (CDF) $F_X$, then the random variable $Y = F_X(X)$ follows a uniform distribution on $[0, 1]$.
-
-In the context of Gaussian Shading, this principle is applied as follows:
-
-\begin{enumerate}
-    \item Start with a standard normal random variable $z \sim \mathcal{N}(0, 1)$.
-    \item Apply the standard normal CDF $\Phi$ to transform it to a uniform random variable: $u = \Phi(z) \sim \mathcal{U}[0, 1]$.
-    \item Encode the watermark bit $m \in \{0, 1\}$ by selecting a reference value $z_{ref}$ such that $\Phi(z_{ref})$ represents the watermark bit.
-    \item Create a new uniform random variable $u'$ by interpolating between $\Phi(z)$ and $\Phi(z_{ref})$: $u' = \alpha \cdot \Phi(z) + (1 - \alpha) \cdot \Phi(z_{ref})$, where $\alpha \in [0, 1]$ is a mixing parameter.
-    \item Apply the inverse CDF (quantile function) to transform back to a normal distribution: $z' = \Phi^{-1}(u')$.
-\end{enumerate}
-
-The resulting random variable $z'$ still follows a standard normal distribution, but now encodes the watermark bit. This is because the interpolation happens in the uniform space, and the inverse CDF transformation preserves the standard normal distribution.
-
-\subsection{Implementation Details}
-\label{subsec:ImplementationDetails}
-
-The implementation uses the error function (erf) and its inverse for efficient computation of the normal CDF and quantile functions:
-
-\begin{equation}
-\Phi(z) = \frac{1}{2} \left(1 + \text{erf}\left(\frac{z}{\sqrt{2}}\right)\right)
-\end{equation}
-
-\begin{equation}
-\Phi^{-1}(u) = \sqrt{2} \cdot \text{erfinv}(2u - 1)
-\end{equation}
-
-For numerical stability, the implementation includes safeguards to handle edge cases:
+\section{Key Algorithm Implementation}
+This section provides the Python code for the core distribution-preserving sampling function, which is the central innovation of the Gaussian Shading technique.
 
 \begin{lstlisting}[language=Python, caption={Distribution-Preserving Sampling Implementation}]
 def distribution_preserving_sampling(z_t, m, alpha=0.5):
@@ -587,437 +644,33 @@ def distribution_preserving_sampling(z_t, m, alpha=0.5):
     return z_watermarked
 \end{lstlisting}
 
-The parameter $\alpha$ controls the strength of the watermark embedding. A value closer to 1 results in a more imperceptible watermark but potentially reduces robustness, while a value closer to 0 increases robustness at the potential cost of imperceptibility. In the implementation, $\alpha = 0.5$ was used as a balanced choice based on empirical testing.
-
-\section{Watermark Diffusion}
-\label{app:WatermarkDiffusion}
-
-To enhance robustness, the watermark message is diffused across multiple dimensions of the latent space before embedding. This redundancy allows for majority voting during extraction, improving resilience against attacks that may corrupt some dimensions.
-
-\subsection{Diffusion Algorithm}
-\label{subsec:DiffusionAlgorithm}
-
-The diffusion process creates multiple copies of each watermark bit across different dimensions:
-
-\begin{lstlisting}[language=Python, caption={Watermark Diffusion Implementation}]
-def diffuse_watermark(watermark, latent_shape, channel_copy=1, hw_copy=8):
-    """
-    Diffuse watermark bits across latent dimensions for redundancy.
-    
-    Args:
-        watermark: Binary watermark message (B, L)
-        latent_shape: Shape of latent tensor (B, C, H, W)
-        channel_copy: Number of copies across channel dimension
-        hw_copy: Number of copies across spatial dimensions
-        
-    Returns:
-        Diffused watermark (B, C, H, W)
-    """
-    batch_size, watermark_length = watermark.shape
-    _, channels, height, width = latent_shape
-    
-    # Calculate how many bits can be embedded per channel
-    bits_per_channel = (height * width) // hw_copy
-    
-    # Ensure we have enough space for the watermark
-    total_capacity = bits_per_channel * channels // channel_copy
-    assert watermark_length <= total_capacity, f"Watermark too large: {watermark_length} > {total_capacity}"
-    
-    # Initialize diffused tensor
-    diffused = torch.zeros(latent_shape, device=watermark.device)
-    
-    # Distribute watermark bits across dimensions
-    bit_index = 0
-    for c in range(0, channels, channel_copy):
-        if bit_index >= watermark_length:
-            break
-            
-        for h in range(0, height):
-            for w in range(0, width, hw_copy):
-                if bit_index >= watermark_length:
-                    break
-                    
-                # Copy the bit to multiple locations
-                for cc in range(channel_copy):
-                    if c + cc < channels:
-                        for hwc in range(hw_copy):
-                            if w + hwc < width:
-                                diffused[:, c + cc, h, w + hwc] = watermark[:, bit_index]
-                
-                bit_index += 1
-    
-    return diffused
-\end{lstlisting}
-
-The parameters \texttt{channel\_copy} and \texttt{hw\_copy} control the redundancy level. Higher values provide more robustness but reduce the total capacity of the watermark. The implementation uses \texttt{channel\_copy = 1} and \texttt{hw\_copy = 8} as default values, providing a good balance between robustness and capacity.
-
-\subsection{Encryption}
-\label{subsec:Encryption}
-
-Before diffusion, the watermark is encrypted using the ChaCha20 stream cipher to prevent unauthorized extraction and to randomize the bit pattern:
-
-\begin{lstlisting}[language=Python, caption={Watermark Encryption Implementation}]
-def encrypt_watermark(watermark, key, nonce):
-    """
-    Encrypt watermark using ChaCha20 stream cipher.
-    
-    Args:
-        watermark: Binary watermark message
-        key: 32-byte encryption key
-        nonce: 12-byte nonce
-        
-    Returns:
-        Encrypted watermark
-    """
-    # Convert binary watermark to bytes
-    watermark_bytes = bytes([int(''.join(map(str, watermark[i:i+8])), 2)
-                           for i in range(0, len(watermark), 8)])
-    
-    # Create cipher object
-    cipher = ChaCha20.new(key=key, nonce=nonce)
-    
-    # Encrypt
-    encrypted = cipher.encrypt(watermark_bytes)
-    
-    # Convert back to binary
-    encrypted_bits = []
-    for byte in encrypted:
-        for bit in format(byte, '08b'):
-            encrypted_bits.append(int(bit))
-    
-    # Pad if necessary
-    while len(encrypted_bits) < len(watermark):
-        encrypted_bits.append(0)
-    
-    return encrypted_bits[:len(watermark)]
-\end{lstlisting}
-
-The encryption serves two purposes: it secures the watermark against unauthorized extraction and randomizes the bit pattern to improve the statistical properties of the embedded watermark.
-
-\section{DDIM Inversion Algorithm}
-\label{app:DDIMInversion}
-
-The extraction process relies on DDIM inversion to estimate the initial latent vector from a watermarked image. This section provides a detailed explanation of the DDIM inversion algorithm.
-
-\subsection{Mathematical Formulation}
-\label{subsec:DDIMFormulation}
-
-DDIM (Denoising Diffusion Implicit Models) provides a deterministic formulation of the diffusion process, which enables inversion. The forward process is defined as:
-
-\begin{equation}
-x_t = \sqrt{\alpha_t} x_0 + \sqrt{1 - \alpha_t} \epsilon
-\end{equation}
-
-where $x_t$ is the noisy latent at timestep $t$, $x_0$ is the clean latent, $\alpha_t$ is a noise schedule parameter, and $\epsilon \sim \mathcal{N}(0, I)$ is random noise.
-
-The DDIM sampling formula for the forward process is:
-
-\begin{equation}
-x_t = \sqrt{\alpha_t} x_0 + \sqrt{1 - \alpha_t - \sigma_t^2} \cdot \epsilon_\theta(x_t, t) + \sigma_t \epsilon
-\end{equation}
-
-where $\epsilon_\theta(x_t, t)$ is the noise predicted by the model, and $\sigma_t$ is a variance parameter.
-
-For deterministic DDIM ($\sigma_t = 0$), the formula simplifies to:
-
-\begin{equation}
-x_t = \sqrt{\alpha_t} x_0 + \sqrt{1 - \alpha_t} \cdot \epsilon_\theta(x_t, t)
-\end{equation}
-
-The inversion process reverses this equation to estimate $x_0$ from $x_t$:
-
-\begin{equation}
-x_0 = \frac{x_t - \sqrt{1 - \alpha_t} \cdot \epsilon_\theta(x_t, t)}{\sqrt{\alpha_t}}
-\end{equation}
-
-Then, to move from timestep $t$ to $t+1$ in the reverse process:
-
-\begin{equation}
-x_{t+1} = \sqrt{\alpha_{t+1}} \cdot \frac{x_t - \sqrt{1 - \alpha_t} \cdot \epsilon_\theta(x_t, t)}{\sqrt{\alpha_t}} + \sqrt{1 - \alpha_{t+1}} \cdot \epsilon_\theta(x_t, t)
-\end{equation}
-
-This formula allows us to iteratively move from $x_0$ (the clean latent) to $x_T$ (the initial noise), which contains the embedded watermark.
-
-\subsection{Implementation}
-\label{subsec:DDIMImplementation}
-
-The DDIM inversion is implemented as follows:
-
-\begin{lstlisting}[language=Python, caption={DDIM Inversion Implementation}]
-def ddim_inversion(model, latent, num_steps=50):
-    """
-    Perform DDIM inversion to estimate initial noise.
-    
-    Args:
-        model: U-Net model for noise prediction
-        latent: Clean latent representation (z_0)
-        num_steps: Number of inversion steps
-        
-    Returns:
-        Estimated initial noise (z_T)
-    """
-    # Initialize with clean latent
-    x = latent.clone()
-    
-    # Get timesteps for inversion
-    timesteps = torch.linspace(0, 999, num_steps).long().to(latent.device)
-    
-    # Inversion loop
-    for i in range(num_steps - 1):
-        t = timesteps[i]
-        t_next = timesteps[i + 1]
-        
-        # Get noise schedule parameters
-        alpha_t = model.alphas_cumprod[t]
-        alpha_t_next = model.alphas_cumprod[t_next]
-        
-        # Predict noise
-        with torch.no_grad():
-            noise_pred = model.unet(x, t)
-        
-        # Estimate x_0
-        x_0_pred = (x - torch.sqrt(1 - alpha_t) * noise_pred) / torch.sqrt(alpha_t)
-        
-        # Compute x_{t+1} from x_t and predicted x_0
-        x = torch.sqrt(alpha_t_next) * x_0_pred + torch.sqrt(1 - alpha_t_next) * noise_pred
-    
-    return x
-\end{lstlisting}
-
-The inversion process uses the same number of steps as the forward diffusion process (50 steps) to ensure accurate reconstruction of the initial noise.
-
-\section{Memory Optimization Techniques}
-\label{app:MemoryOptimization}
-
-Implementing Gaussian Shading on consumer-grade hardware (8GB VRAM) required several memory optimization techniques:
-
-\subsection{Half-Precision Arithmetic}
-\label{subsec:HalfPrecision}
-
-All tensors use float16 precision, reducing memory footprint by 50\% compared to float32:
-
-\begin{lstlisting}[language=Python, caption=Half-Precision Configuration]
-# Configure model for half-precision
-model = model.to(torch.float16)
-model = model.to(device)
-
-# Ensure all tensors use half-precision
-latent = latent.to(torch.float16)
-watermark = watermark.to(torch.float16)
-\end{lstlisting}
-
-\subsection{Gradient Checkpointing}
-\label{subsec:GradientCheckpointing}
-
-During DDIM inversion, intermediate activations are recomputed rather than stored:
-
-\begin{lstlisting}[language=Python, caption=Gradient Checkpointing Configuration]
-# Enable gradient checkpointing
-model.unet.enable_gradient_checkpointing()
-
-# Custom forward pass with activation recomputation
-def custom_forward(x, t):
-    return model.unet(x, t, use_checkpoint=True)
-\end{lstlisting}
-
-\subsection{Sequential Processing}
-\label{subsec:SequentialProcessing}
-
-Images are processed one at a time rather than in batches:
-
-\begin{lstlisting}[language=Python, caption=Sequential Processing Implementation]
-# Process images sequentially
-results = []
-for i in range(len(prompts)):
-    # Process single image
-    result = process_single_image(prompts[i], watermark[i:i+1])
-    results.append(result)
-    
-    # Explicitly clear cache
-    torch.cuda.empty_cache()
-\end{lstlisting}
-
-\subsection{Efficient Tensor Management}
-\label{subsec:TensorManagement}
-
-Careful attention to tensor lifecycle, explicitly freeing unused tensors:
-
-\begin{lstlisting}[language=Python, caption={Efficient Tensor Management}]
-# Use context manager for temporary tensors
-with torch.no_grad():
-    # Compute intermediate result
-    temp_result = compute_intermediate(input_tensor)
-    
-    # Use the result
-    final_result = process_result(temp_result)
-    
-    # Explicitly delete temporary tensor
-    del temp_result
-    
-    # Force garbage collection
-    torch.cuda.empty_cache()
-\end{lstlisting}
-
-\subsection{Optimized Attention Implementation}
-\label{subsec:OptimizedAttention}
-
-Using PyTorch's memory-efficient attention implementation:
-
-\begin{lstlisting}[language=Python, caption={Optimized Attention Configuration}]
-# Configure model to use memory-efficient attention
-model.unet.config.use_memory_efficient_attention = True
-\end{lstlisting}
-
-These optimizations collectively enable the processing of 512$\times$512 images on consumer-grade hardware without compromising on the quality of the watermarking process.
-
-\chapter{Additional Experimental Results}
-\label{app:AdditionalResults}
-
-This appendix presents additional experimental results and analyses that complement the main findings presented in Chapter 4.
-
-\section{Detailed Robustness Results}
-\label{app:DetailedRobustnessResults}
-
-\subsection{JPEG Compression Analysis}
-\label{subsec:JPEGAnalysis}
-
-Table \ref{tab:detailed_jpeg_results} provides a comprehensive breakdown of the JPEG compression robustness results, including confidence intervals and detection accuracy.
+\section{Full Robustness Data}
+Table \ref{tab:full_robustness_data} provides the complete summary of the robustness evaluation, including the mean accuracy and mean Bit Error Rate (BER) for all 12 attack configurations performed on the 200-image test set.
 
 \begin{table}[htb]
-\caption{Detailed JPEG Compression Robustness Results.}
-\label{tab:detailed_jpeg_results}
+\caption{Complete Robustness Evaluation Summary.}
+\label{tab:full_robustness_data}
 \begin{center}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|}
 \hline
-\textbf{Quality Factor} & \textbf{BER (Mean ± 95\% CI)} & \textbf{Detection Accuracy} & \textbf{TPR at FPR=$10^{-6}$} \\ \hline
-90 & 0.053 ± 0.008 & 0.998 & 0.997 \\ \hline
-75 & 0.084 ± 0.011 & 0.994 & 0.991 \\ \hline
-50 & 0.156 ± 0.015 & 0.978 & 0.962 \\ \hline
-25 & 0.237 ± 0.019 & 0.921 & 0.887 \\ \hline
+\textbf{Attack Name} & \textbf{Attack Parameter} & \textbf{Mean Accuracy} & \textbf{Mean BER} \\
+\hline
+brightness & 0.50 & 0.9994 & 0.0006 \\
+brightness & 2.00 & 0.9977 & 0.0023 \\
+crop & 0.80 & 0.5148 & 0.4852 \\
+gaussian\_blur & 2.00 & 0.9983 & 0.0017 \\
+gaussian\_blur & 4.00 & 0.9820 & 0.0180 \\
+gaussian\_noise & 0.01 & 0.9985 & 0.0015 \\
+gaussian\_noise & 0.03 & 0.9963 & 0.0037 \\
+gaussian\_noise & 0.05 & 0.9931 & 0.0069 \\
+jpeg & 25.00 & 0.9865 & 0.0135 \\
+jpeg & 50.00 & 0.9950 & 0.0050 \\
+jpeg & 75.00 & 0.9972 & 0.0028 \\
+jpeg & 90.00 & 0.9983 & 0.0017 \\
+\hline
 \end{tabular}
 \end{center}
 \end{table}
-
-The results show a clear trend of increasing BER with decreasing quality factor, as expected. However, even at a quality factor of 25, which represents severe compression, the detection accuracy remains above 92\%, indicating that the watermark remains effective as a binary classifier.
-
-\subsection{Noise Robustness Analysis}
-\label{subsec:NoiseAnalysis}
-
-Figure \ref{fig:noise_distribution} shows the distribution of BER values across the test dataset for different noise levels.
-
-\begin{figure}[htb]
-    \centering
-    % \includegraphics[width=0.8\textwidth]{assets/noise_distribution.png}
-    \caption{Distribution of BER values for different noise levels across the test dataset.}
-    \label{fig:noise_distribution}
-\end{figure}
-
-The distributions show increasing spread with higher noise levels, indicating that some images are more susceptible to noise-induced watermark degradation than others. This suggests that content-adaptive watermarking strategies could potentially improve robustness for particularly vulnerable images.
-
-\subsection{Combined Attack Analysis}
-\label{subsec:CombinedAttackAnalysis}
-
-Table \ref{tab:combined_attack_matrix} presents a matrix of BER values for various combinations of JPEG compression and Gaussian noise.
-
-\begin{table}[htb]
-\caption{BER Matrix for Combined JPEG Compression and Gaussian Noise.}
-\label{tab:combined_attack_matrix}
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-\multirow{2}{*}{\textbf{Noise ($\sigma$)}} & \multicolumn{4}{c|}{\textbf{JPEG Quality Factor}} \\ \cline{2-5}
- & \textbf{90} & \textbf{75} & \textbf{50} & \textbf{25} \\ \hline
-\textbf{0.01} & 0.089 & 0.112 & 0.178 & 0.251 \\ \hline
-\textbf{0.03} & 0.147 & 0.169 & 0.224 & 0.283 \\ \hline
-\textbf{0.05} & 0.231 & 0.248 & 0.289 & 0.327 \\ \hline
-\end{tabular}
-\end{center}
-\end{table}
-
-The results show that the effects of combined attacks are not simply additive; there appears to be some interaction between the different attack types. For example, the combination of JPEG compression (quality 50) and Gaussian noise ($\sigma = 0.03$) results in a BER of $0.224$, which is less than the sum of their individual effects ($0.156 + 0.112 = 0.268$). This suggests that some of the degradation caused by the different attacks affects the same bits.
-
-\section{Statistical Analysis Details}
-\label{app:StatisticalAnalysis}
-
-\subsection{Confidence Interval Calculation}
-\label{subsec:ConfidenceIntervals}
-
-The 95\% confidence intervals for BER values were calculated using the binomial proportion confidence interval:
-
-\begin{equation}
-CI = \hat{p} \pm z_{0.975} \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
-\end{equation}
-
-where $\hat{p}$ is the observed BER, $z_{0.975} = 1.96$ is the z-score for a 95\% confidence level, and $n$ is the number of bits (256 bits $\times$ 200 images = 51,200 bits).
-
-\subsection{Detection Threshold Determination}
-\label{subsec:DetectionThreshold}
-
-The detection threshold was determined based on the distribution of Hamming distances between extracted watermarks and random binary strings. Figure \ref{fig:hamming_distribution} shows this distribution.
-
-\begin{figure}[htb]
-    \centering
-    % \includegraphics[width=0.8\textwidth]{assets/hamming_distribution.png}
-    \caption{Distribution of Hamming distances between extracted watermarks and random binary strings.}
-    \label{fig:hamming_distribution}
-\end{figure}
-
-The threshold was set to achieve a false positive rate of $10^{-6}$, which corresponds to a Hamming distance of approximately 0.38 (98 bits out of 256). This means that if the normalized Hamming distance between the extracted watermark and the original watermark is less than 0.38, the image is classified as watermarked.
-
-\section{Perceptual Difference Analysis}
-\label{app:PerceptualDifference}
-
-\subsection{Heatmap Visualization}
-\label{subsec:HeatmapVisualization}
-
-To visualize the spatial distribution of watermark-induced changes, perceptual difference heatmaps were generated. Figure \ref{fig:perceptual_heatmap} shows examples of these heatmaps for selected images.
-
-\begin{figure}[htb]
-    \centering
-    % \includegraphics[width=\textwidth]{assets/perceptual_heatmap.png}
-    \caption{Perceptual difference heatmaps showing the spatial distribution of watermark-induced changes. Brighter regions indicate larger differences.}
-    \label{fig:perceptual_heatmap}
-\end{figure}
-
-The heatmaps reveal that the watermark-induced changes are distributed throughout the image rather than concentrated in specific regions. This distribution pattern contributes to the imperceptibility of the watermark, as the changes are spread out and do not create noticeable artifacts in any particular area.
-
-\subsection{CLIP Score Analysis by Image Category}
-\label{subsec:CLIPScoreByCategory}
-
-To investigate whether the watermark's imperceptibility varies across different types of content, CLIP scores were analyzed by image category. Figure \ref{fig:clip_by_category} shows the results.
-
-\begin{figure}[htb]
-    \centering
-    % \includegraphics[width=0.8\textwidth]{assets/clip_by_category.png}
-    \caption{CLIP scores by image category for watermarked and non-watermarked images.}
-    \label{fig:clip_by_category}
-\end{figure}
-
-The analysis shows consistent CLIP scores across different image categories, indicating that the watermark's imperceptibility is not significantly affected by the type of content. This is an important finding for practical applications, as it suggests that the watermarking technique can be applied universally without needing content-specific adjustments.
-
-\section{Comparative Analysis with Error Correction}
-\label{app:ErrorCorrection}
-
-While the main results focus on raw BER values, practical implementations would typically include error correction codes. Table \ref{tab:error_correction_comparison} shows the detection accuracy with and without BCH error correction.
-
-\begin{table}[htb]
-\caption{Detection Accuracy With and Without BCH Error Correction.}
-\label{tab:error_correction_comparison}
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-\textbf{Attack} & \textbf{Raw BER} & \textbf{Without ECC} & \textbf{With BCH(255,191)} \\ \hline
-JPEG (Q=75) & 0.084 & 0.994 & 0.999 \\ \hline
-JPEG (Q=50) & 0.156 & 0.978 & 0.995 \\ \hline
-JPEG (Q=25) & 0.237 & 0.921 & 0.968 \\ \hline
-Noise ($\sigma=0.03$) & 0.112 & 0.989 & 0.998 \\ \hline
-Crop (80\%) & 0.183 & 0.967 & 0.991 \\ \hline
-\end{tabular}
-\end{center}
-\end{table}
-
-The results demonstrate that with appropriate error correction, the detection accuracy can be significantly improved, particularly for more severe attacks. The BCH(255,191) code can correct up to 8 bit errors per 255-bit block, which is sufficient to handle the BER values observed for most attack scenarios.
-
 
 \chapter{Ethics Checklist}
 \label{app:EthicsChecklist}
