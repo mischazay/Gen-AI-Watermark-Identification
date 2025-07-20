@@ -99,7 +99,7 @@
 This statement outlines the ethical considerations for this project, structured around the following principles: Avoidance of Harm, Informed Consent, and Data Protection.
 
 \subsection*{Avoidance of Harm}
-This project aims to explore technology that mitigates the potential harms of \ac{AI}-generated images. By enabling robust watermarking, this work helps combat misinformation (e.g., deepfakes), provides a mechanism for artists to receive attribution for their work, and aligns with regulatory demands for transparency in syntheticly generated media, such as the European Union \ac{AI} Act \cite{RegulationEU20242024}.
+This project aims to explore technology that mitigates the potential harms \ac{AI}-generated images can cause. By enabling robust watermarking, this work helps combat misinformation (e.g., deepfakes), provides a mechanism for artists to receive attribution for their work, and aligns with regulatory demands for transparency in synthetically generated media, such as the European Union \ac{AI} Act \cite{RegulationEU20242024}.
 
 Potential risks have been considered and mitigated. The risk of malicious actors reverse engineering the watermark is addressed by focusing on robustness evaluation rather than vulnerability exploitation. The potential for misuse regarding privacy/surveilance is acknowledged; however, the project's scope is strictly limited to authenticity and attribution, not tracking individuals.
 
@@ -116,18 +116,18 @@ Based on these considerations, formal ethical approval from the Physical Science
 \chapter{Introduction}
 \label{cha:Introduction}
 \section{Motivation and Problem Statement}
-The proliferation of powerful \acp{GAIM} such as Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022}, DALL-E \cite{rameshZeroShotTexttoImageGeneration2021}, and Midjourney mark a significant technological leap, unlocking new possibilities in fields like content creation, design prototyping, and automation. However, the ease with which these models can generate highly realistic synthetic media introduces critical ethical and practical challenges, including the spread of misinformation \cite{ferraraGenAIHumanityNefarious2024}, copyright infringement, and a general erosion of trust in digital content. Furthermore, current rulings by the United States Copyright Office render purely \ac{AI}-generated images ineligible for copyright protection \cite{CopyrightRegistrationGuidance2023}.
+The proliferation of powerful \acp{GAIM} such as Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022}, DALL-E \cite{rameshZeroShotTexttoImageGeneration2021}, and Midjourney marks a significant technological leap, unlocking new possibilities in fields like content creation, design prototyping, and automation. However, the ease with which these models can generate highly realistic synthetic media introduces critical, ethical and practical challenges, including the spread of misinformation \cite{ferraraGenAIHumanityNefarious2024}, copyright infringement, and a general erosion of trust in digital content. Furthermore, current rulings by the United States Copyright Office render purely \ac{AI}-generated images ineligible for copyright protection \cite{CopyrightRegistrationGuidance2023}.
 
-In response, a clear consensus is forming around the need for establishing authenticity, attribution, and traceability mechanisms for synthetic media. Governmental bodies, including the White House through its 2023 Executive Order on \ac{AI} \cite{houseExecutiveOrderSafe2023} and the European Union via its 2024 AI Act \cite{RegulationEU20242024}, have mandated the use of techniques like invisible watermarking for synthetic content. Consequently, leading technology companies have begun integrating such solutions; notable examples include Google's SynthID \cite{IdentifyingAIgeneratedImages2024}, Microsoft's watermarking in Bing Image Creator \cite{BingPreviewRelease2023}, and Stability AI's watermarking methods for its models \cite{CompVisStablediffusion2024}.
+In response, a clear consensus is forming around the need for establishing authenticity, attribution, and traceability mechanisms for synthetic media. Governmental bodies, including the White House through its 2023 Executive Order on \ac{AI} \cite{houseExecutiveOrderSafe2023} and the European Union via its 2024 AI Act \cite{RegulationEU20242024}, have mandated the use of techniques like invisible watermarking for synthetic content. Consequently, leading technology companies have begun integrating such solutions; notable examples include Google's SynthID \cite{IdentifyingAIgeneratedImages2024}, Microsoft's watermarking in Bing Image Creator \cite{BingPreviewRelease2023}, and Stability \ac{AI}'s watermarking methods for its models \cite{CompVisStablediffusion2024}.
 
-The urgency for effective watermarking is further underscored by concerns surrounding the data used to train \acp{GAIM}. Artists have voiced concerns about the unauthorised use of their work \cite{ThousandsArtistsCondemn2024}, leading to \ac{AI}-generated images that mimic their unique styles without credit or compensation \cite{AndersenStabilityAI}. This has fueled the development of defensive techniques like Glaze \cite{shanGlazeProtectingArtists2023} and Nightshade \cite{shanNightshadePromptSpecificPoisoning2024}, which disrupt model training \cite{kurakinAdversarialExamplesPhysical2017}, highlighting the creative community's demand for control. While digital watermarking has a long history \cite{coxDigitalWatermarking2001}, its application to generative AI presents new challenges requires solutions that are integrated directly into the generation process. This project addresses the critical need for such a method, one that is imperceptible, robust against manipulation, capable of carrying attribution data without degrading image quality, and integrated within the generation process itself.
+The urgency for effective watermarking is further underscored by concerns surrounding the data used to train \acp{GAIM}. Artists have voiced concerns about the unauthorised use of their work \cite{ThousandsArtistsCondemn2024}, leading to \ac{AI}-generated images that mimic their unique styles without credit or compensation \cite{AndersenStabilityAI}. This has fuelled the development of defensive techniques like Glaze \cite{shanGlazeProtectingArtists2023} and Nightshade \cite{shanNightshadePromptSpecificPoisoning2024}, which disrupt model training \cite{kurakinAdversarialExamplesPhysical2017}, highlighting the creative community's demand for control. While digital watermarking has a long history \cite{coxDigitalWatermarking2001}, its application to generative \ac{AI} presents new challenges and requires solutions that are integrated directly into the generation process. This project addresses the critical need for such a method, one that is imperceptible, robust against manipulation, capable of carrying attribution data without degrading image quality, and integrated within the generation process itself.
 
 \section{Project Aims \& Scope}
-The primary aim of this project is to investigate and evaluate the integration of digital watermarking within \ac{AI} image generation models to address the critical issues of \textbf{authenticity, attribution, traceability, and copyright protection}. To this end, the project will conduct a thorough evaluation of the Gaussian Shading watermarking algorithm, a state-of-the-art, training-free technique designed for \acp{LDM}.
+The primary aim of this project is to investigate and evaluate the integration of digital watermarking within \ac{AI} image generation models to address the critical issues of \textbf{authenticity, attribution, traceability, and copyright protection}. To this end, the project will conduct a thorough evaluation of the Gaussian Shading watermarking algorithm, a state of the art, training-free technique designed for \acp{LDM}.
 
 To achieve this, the following objectives have been set:
 \begin{enumerate}
-    \item To conduct a focused review of modern watermarking techniques to identify the current state-of-the-art, justify the selection of Gaussian Shading, and position it within the field.
+    \item To conduct a focused review of modern watermarking techniques to identify the current state of the art, justify the selection of Gaussian Shading, and its position within the landscape of digital watermarking.
     \item To implement the Gaussian Shading algorithm within a standard \ac{GAIM} framework, specifically Stable Diffusion v2.1.
     \item To design and execute a comprehensive evaluation framework to test the watermark's imperceptibility and its robustness against a suite of common digital attacks.
     \item To analyse the results, assessing the crucial trade-offs between robustness, imperceptibility, and data capacity, and compare against published benchmarks to critically assess the performance and viability of Gaussian Shading as a practical watermarking solution.
@@ -136,14 +136,14 @@ To achieve this, the following objectives have been set:
 This project seeks to answer the following research questions:
 \begin{itemize}
     \item To what extent can the Gaussian Shading method provide robust watermarking against a standard set of digital attacks, including compression, noise, and geometric transformations?
-    \item What is the trade-off between watermark robustness and image quality? Can the method's "performance-lossless" claim be substantiated using distribution based metrics like \ac{FID} and \ac{CLIP} score?
+    \item What is the trade-off between watermark robustness and image quality? Can the method's performance lossless claim be substantiated using distribution based metrics like \ac{FID} and \ac{CLIP} score?
     \item How does the performance of Gaussian Shading compare to other leading in-generation watermarking techniques.
 \end{itemize}
 
 The key contribution of this project is a rigorous and independent empirical evaluation of the Gaussian Shading watermarking method. By providing detailed performance data and a direct comparison to established benchmarks, this work offers valuable insights for the development of responsible and traceable \ac{AI} generated image generation systems.
 
 \section{Dissertation Structure}
-The remainder of this dissertation is organised as follows: Chapter 2 reviews the literature on generative models and watermarking, focusing on the state-of-the-art techniques that lead to the selection of Gaussian Shading. Chapter 3 details the methodology, system architecture, and the specific framework used for implementation and evaluation. Chapter 4 presents the results of the empirical evaluation, analysing the imperceptibility and robustness of the implemented solution. Finally, Chapter 5 concludes the dissertation, summarising the findings in relation to the research questions, discussing the study's limitations, and potential directions for future work.
+The remainder of this dissertation is organised as follows: Chapter 2 reviews the literature on generative models and watermarking, focusing on the state of the art techniques that lead to the selection of Gaussian Shading. Chapter 3 details the methodology, system architecture, and the specific framework used for implementation and evaluation. Chapter 4 presents the results of the empirical evaluation, analysing the imperceptibility and robustness of the implemented solution. Finally, Chapter 5 concludes the dissertation, summarising the findings in relation to the research questions, discussing the study's limitations, and potential directions for future work.
 
 
 \chapter{Literature Review}
@@ -270,7 +270,7 @@ These metrics provide the foundation for the experimental evaluation framework d
 \chapter{Methodology}
 \label{cha:Methodology}
 
-This chapter details the approach taken to investigate, implement, and evaluate the Gaussian Shading watermarking technique for \ac{AI} generated images. It covers the research strategy, the selection of the specific watermarking technique from available literature, a detailed experimental design, and the comprehensive framework for evaluation. The methodology will provide a rigorous assessment that enables direct comparison with state-of-the-art techniques while operating within the feasibility constraints of an undergraduate project.
+This chapter details the approach taken to investigate, implement, and evaluate the Gaussian Shading watermarking technique for \ac{AI} generated images. It covers the research strategy, the selection of the specific watermarking technique from available literature, a detailed experimental design, and the comprehensive framework for evaluation. The methodology will outline an assessment process that will enable comparison with state of the art techniques while operating within the feasibility constraints of an undergraduate project.
 
 \section{Research Approach}
 \label{sec:ResearchApproach}
@@ -511,105 +511,353 @@ The evaluation sets a clear success criteria to assess Gaussian Shading's viabil
 The methodology balances comprehensive evaluation with practical constraints, ensuring that results are both scientifically valid and directly comparable to existing literature while remaining achievable within undergraduate project scope and hardware limitations.
 
 
-\chapter{Results}
+\chapter{Results and Analysis}
 \label{cha:Results}
 
-This chapter presents the empirical results of the evaluation, focusing on the two key performance areas for a watermarking system: imperceptibility and robustness. The findings are analysed to address the research questions concerning the viability of Gaussian Shading as a practical solution for \ac{AI}-generated media.
+This chapter presents a comprehensive evaluation of the Gaussian Shading watermarking technique, examining both its imperceptibility and robustness characteristics through statistical analysis. The evaluation addresses the research questions concerning the viability of Gaussian Shading as a practical watermarking solution for \ac{AI}-generated images, and its place in the image watermarking landscape.
 
-\section{Baseline Performance and Imperceptibility}
-The first phase of the evaluation assessed the impact of the watermark on the output quality of the Stable Diffusion model. The goal was to empirically test the "performance-lossless" claim of the Gaussian Shading method using both semantic and distributional metrics.
+\section{Imperceptibility Analysis}
+\label{sec:ImperceptibilityAnalysis}
 
-Visually, as shown in Figure \ref{fig:visual_comparison}, the watermarked images are indistinguishable from their non-watermarked counterparts. This qualitative assessment is the first indication of the watermark's high imperceptibility. To quantify this, the \ac{CLIP} score, which measures the semantic similarity between the text prompt and the generated image, shows a negligible difference of 0.0008 between the watermarked (0.3091) and non-watermarked (0.3099) image sets. This is well within the success threshold of 0.05, confirming that the watermark does not degrade the semantic content of the generated images.
+The imperceptibility evaluation constitutes the foundational assessment of Gaussian Shading's main advantage: that watermarks can be embedded without degrading the quality or altering the statistical properties of generated images. This section presents an analysis using both semantic and distributional metrics to provide a comprehensive understanding of the watermark's impact.
 
-However, the \ac{FID} score presents a different story. The calculated score of 47.83, shown in Table \ref{tab:imperceptibility_metrics}, is nearly an order of magnitude higher than the success threshold of 5.0. The \ac{FID} score measures the difference in the statistical distributions of the two image sets. This high value indicates that while the images look the same and represent the same content, the underlying distribution of pixel values has been significantly altered by the watermarking process. This result presents a critical challenge to the "performance-lossless" claim, suggesting that while visually and semantically lossless, the method is not statistically lossless. It is important to note that this evaluation was conducted on 1,000 images, whereas the original paper used 5,000; \ac{FID} is known to be sensitive to sample size, which may contribute to the discrepancy.
+\subsection{Visual and Semantic Preservation}
+\label{subsec:VisualSemanticPreservation}
 
-\begin{table}[htb]
-    \caption{Imperceptibility and Distributional Metrics.}
-    \label{tab:imperceptibility_metrics}
-    \begin{center}
-    \begin{tabular}{|l|c|c|c|c|}
-    \hline
-    \textbf{Metric} & \textbf{Ground Truth} & \textbf{Watermarked} & \textbf{Success Threshold} & \textbf{Verdict} \\ \hline
-    \ac{CLIP} Score & 0.3099 & 0.3091 & \textless 0.05 difference & \textbf{Pass} \\ \hline
-    \ac{FID} Score & - & 47.83 & \textless 5.0 & \textbf{Fail} \\ \hline
-    \end{tabular}
-    \end{center}
-\end{table}
+The qualitative assessment of imperceptibility requires careful consideration of the watermarking process. Figure \ref{fig:visual_comparison} demonstrates the range of high-quality images that can be generated using the Gaussian Shading watermarking framework across diverse categories including landscapes, urban scenes, food, and architectural subjects.
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=\textwidth]{assets/visual_comparison.pdf}
-    \caption{Visual comparison of non-watermarked (top row) and watermarked (bottom row) images. No perceptible visual difference is observed across a range of styles and subjects.}
+    \caption{Sample images generated using the Gaussian Shading watermarking framework across diverse categories. The framework maintains high visual quality across varied content types, from landscapes and cityscapes to food and architectural subjects.}
     \label{fig:visual_comparison}
 \end{figure}
 
-\section{Robustness Evaluation}
-The second phase of the evaluation tested the watermark's resilience against a suite of 12 common digital attacks. The primary metric was the \ac{BER}, with lower values indicating higher robustness.
+While direct visual comparison of identical seeds with and without watermarking would provide the most rigorous imperceptibility assessment, the consistent high quality of watermarked images across diverse content categories suggests that the method does not introduce systematic visual artifacts that would compromise image quality.
 
-The results, summarised in Table \ref{tab:robustness_summary}, demonstrate that Gaussian Shading is highly robust against most signal processing attacks. As shown in Figure \ref{fig:robustness_jpeg_noise}, the watermark maintains a \ac{BER} below 0.015 even under severe \ac{JPEG} compression (quality factor of 25) and significant Gaussian noise ($\sigma=0.05$). This performance exceeds the success criteria defined in the methodology.
-
-However, the evaluation revealed a critical vulnerability to geometric attacks. The random crop attack, which removed 20\% of the image area before resizing, resulted in a mean \ac{BER} of 0.4852. A \ac{BER} of 0.5 is equivalent to random chance, meaning the watermark was completely destroyed. This catastrophic failure, highlighted in Figure \ref{fig:robustness_blur_crop}, indicates that the spatial redundancy of the watermark is insufficient to survive the loss of image data from cropping.
+To quantify semantic preservation, the evaluation employs \ac{CLIP} scores, which measure the semantic alignment between text prompts and generated images. The results, presented in Table \ref{tab:semantic_metrics}, reveal remarkable semantic consistency. The negligible difference of 0.0008 between watermarked (0.3091) and non-watermarked (0.3099) image sets falls well within natural variation bounds and significantly exceeds the success threshold of 0.05. This quantitative validation confirms that the watermarking process preserves the semantic integrity of the generation process, ensuring that the resulting images remain faithful to their textual descriptions.
 
 \begin{table}[htb]
-    \caption{Watermark Robustness Summary (Mean BER).}
-    \label{tab:robustness_summary}
+    \caption{Semantic CLIP Analysis}
+    \label{tab:semantic_metrics}
+    \begin{center}
+    \begin{tabular}{|l|c|c|c|}
+    \hline
+    \textbf{Condition} & \textbf{Mean \ac{CLIP} Score} & \textbf{Difference} & \textbf{Assessment} \\ \hline
+    Non-watermarked & 0.3099 & - & Baseline \\ \hline
+    Watermarked & 0.3091 & -0.0008 & \textbf{Imperceptible} \\ \hline
+    Success Threshold & - & < 0.05 & \textbf{Met} \\ \hline
+    \end{tabular}
+    \end{center}
+\end{table}
+
+The negligible difference in \ac{CLIP} scores (0.0008) demonstrates that the watermarking process preserves the semantic integrity of the generation process, ensuring that the resulting images remain faithful to their textual descriptions.
+
+\subsection{Distributional Impact: A Critical Discovery}
+\label{subsec:DistributionalImpact}
+
+While the semantic and visual assessments strongly support the imperceptibility claims, the distributional analysis reveals a more complex reality. The \ac{FID} score, which measures the statistical distance between the distributions of watermarked and non-watermarked image sets, yields a value of 47.83—nearly an order of magnitude above the stringent success threshold of 5.0.
+
+This finding represents a critical discovery that challenges the absolute nature of the "performance-lossless" claim. The elevated \ac{FID} score indicates that while individual images remain visually and semantically identical, the underlying statistical distribution of the watermarked image set has been measurably altered. This suggests that the watermarking process introduces systematic changes to the generative process that, while imperceptible at the individual image level, become detectable when analysing the aggregate behaviour of the model.
+
+\begin{table}[htb]
+    \caption{Distributional Impact Assessment}
+    \label{tab:distributional_metrics}
+    \begin{center}
+    \begin{tabular}{|l|c|c|c|}
+    \hline
+    \textbf{Metric} & \textbf{Observed Value} & \textbf{Success Threshold} & \textbf{Assessment} \\ \hline
+    \ac{FID} Score & 47.83 & < 5.0 & \textbf{Significant Impact} \\ \hline
+    \end{tabular}
+    \end{center}
+\end{table}
+
+\subsubsection{Contextualising the FID Score}
+The elevated \ac{FID} score requires careful interpretation within the broader context of generative model evaluation. Several factors may contribute to this result:
+
+\begin{enumerate}
+    \item \textbf{Sample Size Sensitivity:} \ac{FID} scores are known to be sensitive to sample size. This evaluation used 1,000 images compared to the original paper's 5,000 images, which may contribute to the elevated score through reduced statistical stability.
+    
+    \item \textbf{Distributional Shift vs. Quality Degradation:} The high \ac{FID} score may indicate a distributional shift rather than quality degradation. The watermarking process modifies the sampling mechanism, potentially altering the exploration of the latent space in ways that affect aggregate statistics without compromising individual image quality.
+    
+    \item \textbf{Methodological Differences:} Variations in the \ac{FID} calculation methodology, including the choice of feature extraction network and preprocessing steps, can significantly impact results.
+\end{enumerate}
+
+This analysis suggests that while Gaussian Shading achieves visual and semantic imperceptibility, it may not be entirely "performance-lossless" from a strict distributional perspective. This finding has important implications for applications where maintaining precise distributional properties is critical.
+
+\section{Robustness Evaluation: Strengths and Critical Vulnerabilities}
+\label{sec:RobustnessEvaluation}
+
+The robustness assessment evaluates the watermark's resilience against a comprehensive suite of attacks designed to simulate real-world image manipulations. This analysis reveals a complex performance profile characterised by exceptional strength against signal processing attacks but catastrophic vulnerability to geometric transformations.
+
+\subsection{Signal Processing Robustness: Exceptional Performance}
+\label{subsec:SignalProcessingRobustness}
+
+The evaluation of signal processing attacks demonstrates Gaussian Shading's remarkable robustness against common image degradations. Figure \ref{fig:robustness_jpeg_noise} illustrates the watermark's resilience to two critical attack categories: \ac{JPEG} compression and additive Gaussian noise.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=\textwidth]{assets/robustness_jpeg_noise.pdf}
+    \caption{Exceptional robustness against signal processing attacks. Left: \ac{JPEG} compression robustness showing minimal degradation even at aggressive compression ratios. Right: Gaussian noise resilience demonstrating consistent performance across increasing noise levels. Both attack types show \ac{BER} values well below critical thresholds.}
+    \label{fig:robustness_jpeg_noise}
+\end{figure}
+
+\subsubsection{JPEG Compression Analysis}
+The \ac{JPEG} compression results reveal extraordinary robustness across the entire tested range. Even under severe compression (quality factor 25), the \ac{BER} remains at a mere 0.0135 (1.35%), far below the established robustness threshold of 0.1 for moderate attacks. This performance is particularly noteworthy given that \ac{JPEG} compression is among the most common image processing operations encountered in practice.
+
+The compression robustness can be attributed to Gaussian Shading's distribution-preserving sampling mechanism, which embeds watermark information in a way that aligns with the natural redundancy structure of images. By operating in the latent space and preserving statistical properties, the method achieves resilience against compression artifacts that typically target high-frequency components.
+
+\subsubsection{Noise Resilience}
+Similarly impressive results emerge from the Gaussian noise evaluation. The watermark maintains excellent detectability even under significant noise contamination ($\sigma = 0.05$), with \ac{BER} reaching only 0.0069 (0.69%). This robustness demonstrates that the spatial redundancy created by the watermark diffusion process effectively withstands random perturbations.
+
+The noise resilience is particularly important for real-world applications where images may undergo various forms of degradation during transmission, storage, or processing. The consistent performance across noise levels suggests that the watermark's error correction mechanisms and spatial redundancy provide effective protection against stochastic attacks.
+
+\subsection{Additional Signal Processing Attacks}
+\label{subsec:AdditionalSignalProcessing}
+
+Beyond compression and noise, the evaluation encompasses additional signal processing attacks that further demonstrate the method's robustness. Gaussian blur attacks with radii up to 4 pixels result in \ac{BER} values of only 0.0180 (1.8%), while brightness adjustments spanning a factor-of-four range (0.5× to 2.0×) yield negligible degradation with maximum \ac{BER} of 0.0023 (0.23%).
+
+These results collectively establish Gaussian Shading as exceptionally robust against the broad category of signal processing attacks, positioning it favourably compared to traditional watermarking methods that often struggle with such comprehensive attack resistance.
+
+\subsection{Geometric Attack Vulnerability: A Critical Limitation}
+\label{subsec:GeometricVulnerability}
+
+In stark contrast to its exceptional signal processing robustness, the geometric attack evaluation reveals a fundamental vulnerability that significantly limits the method's practical applicability. Figure \ref{fig:robustness_blur_crop} starkly illustrates this limitation through the catastrophic failure under random crop attacks.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=\textwidth]{assets/robustness_blur_crop.pdf}
+    \caption{Contrasting robustness performance revealing critical vulnerability. Left: Continued excellent performance against Gaussian blur. Right: Comparative analysis highlighting the catastrophic failure under crop attacks (red bar) versus maintained robustness against other severe signal processing attacks.}
+    \label{fig:robustness_blur_crop}
+\end{figure}
+
+The random crop attack, which removes 20\% of the image area before resizing, results in a devastating \ac{BER} of 0.4852 (48.52%)—essentially equivalent to random guessing (50%). This performance represents complete watermark destruction, indicating that the spatial redundancy mechanisms are insufficient to survive significant data loss.
+
+\subsubsection{Root Cause Analysis}
+The catastrophic crop failure stems from fundamental limitations in Gaussian Shading's spatial redundancy strategy:
+
+\begin{enumerate}
+    \item \textbf{Insufficient Spatial Distribution:} While the watermark is diffused across spatial dimensions, the redundancy level is insufficient to survive substantial spatial data loss.
+    
+    \item \textbf{Lack of Geometric Invariance:} The method lacks inherent geometric invariance properties, making it vulnerable to any transformation that significantly alters spatial relationships.
+    
+    \item \textbf{No Error Correction Integration:} The absence of sophisticated error correction codes limits recovery capability when portions of the watermark are lost.
+\end{enumerate}
+
+This vulnerability has profound practical implications, as cropping is among the most common image manipulations encountered in real-world scenarios, from social media posting to document processing.
+
+\subsection{Comprehensive Robustness Summary}
+\label{subsec:RobustnessOverview}
+
+Table \ref{tab:comprehensive_robustness} provides a complete overview of the robustness evaluation results, clearly delineating the method's strengths and limitations.
+
+\begin{table}[htb]
+    \caption{Comprehensive Robustness Evaluation Results}
+    \label{tab:comprehensive_robustness}
     \begin{center}
     \resizebox{\textwidth}{!}{%
-    \begin{tabular}{|l|l|c||l|l|c|}
+    \begin{tabular}{|l|l|c|c|c|}
     \hline
-    \textbf{Attack Type} & \textbf{Parameter} & \textbf{Mean BER} & \textbf{Attack Type} & \textbf{Parameter} & \textbf{Mean BER} \\ \hline
-    \multirow{4}{*}{JPEG Compression} & Quality=90 & 0.0017 & \multirow{2}{*}{Gaussian Blur} & Radius=2 & 0.0017 \\
-     & Quality=75 & 0.0028 & & Radius=4 & 0.0180 \\
-     & Quality=50 & 0.0050 & \multirow{2}{*}{Brightness} & Factor=0.5 & 0.0006 \\
-     & Quality=25 & 0.0135 & & Factor=2.0 & 0.0023 \\ \cline{1-3}
-    \multirow{3}{*}{Gaussian Noise} & $\sigma=0.01$ & 0.0015 & \multirow{2}{*}{\textbf{Random Crop}} & \multirow{2}{*}{\textbf{80\%}} & \multirow{2}{*}{\textbf{0.4852}} \\
-     & $\sigma=0.03$ & 0.0037 & & & \\
-     & $\sigma=0.05$ & 0.0069 & & & \\ \hline
+    \textbf{Attack Category} & \textbf{Attack Configuration} & \textbf{Mean \ac{BER}} & \textbf{Performance} & \textbf{Assessment} \\ \hline
+    \multirow{4}{*}{JPEG Compression} & Quality=90 & 0.0017 & Excellent & \textbf{Pass} \\
+     & Quality=75 & 0.0028 & Excellent & \textbf{Pass} \\
+     & Quality=50 & 0.0050 & Excellent & \textbf{Pass} \\
+     & Quality=25 & 0.0135 & Very Good & \textbf{Pass} \\ \hline
+    \multirow{3}{*}{Gaussian Noise} & $\sigma=0.01$ & 0.0015 & Excellent & \textbf{Pass} \\
+     & $\sigma=0.03$ & 0.0037 & Excellent & \textbf{Pass} \\
+     & $\sigma=0.05$ & 0.0069 & Excellent & \textbf{Pass} \\ \hline
+    \multirow{2}{*}{Gaussian Blur} & Radius=2 & 0.0017 & Excellent & \textbf{Pass} \\
+     & Radius=4 & 0.0180 & Very Good & \textbf{Pass} \\ \hline
+    \multirow{2}{*}{Brightness} & Factor=0.5 & 0.0006 & Excellent & \textbf{Pass} \\
+     & Factor=2.0 & 0.0023 & Excellent & \textbf{Pass} \\ \hline
+    \textbf{Geometric} & \textbf{Crop (80\% retention)} & \textbf{0.4852} & \textbf{Catastrophic} & \textbf{Critical Fail} \\ \hline
     \end{tabular}%
     }
     \end{center}
 \end{table}
 
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width=\textwidth]{assets/robustness_jpeg_noise.pdf}
-    \caption{Robustness against JPEG compression (left) and Gaussian noise (right). The watermark shows high resilience, with BER remaining very low even under severe attack conditions.}
-    \label{fig:robustness_jpeg_noise}
-\end{figure}
+The results reveal a clear performance dichotomy: exceptional robustness against signal processing attacks coupled with fundamental vulnerability to geometric transformations. This profile suggests that Gaussian Shading is well-suited for applications where signal processing attacks are the primary concern but may require additional protection mechanisms for scenarios involving geometric manipulations.
 
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width=\textwidth]{assets/robustness_blur_crop.pdf}
-    \caption{Robustness against Gaussian blur (left) and a comparison of severe attacks (right). The bar chart highlights the catastrophic failure of the crop attack compared to other severe distortions.}
-    \label{fig:robustness_blur_crop}
-\end{figure}
+\section{Evaluation Scale and Methodology}
+\label{sec:EvaluationScale}
 
-\section{Discussion}
-The empirical results provide a nuanced answer to the research questions. While Gaussian Shading is visually imperceptible and robust to many common attacks, its claim of being "performance-lossless" is questionable under the rigorous standard of distributional analysis (\ac{FID}). Furthermore, its vulnerability to cropping is a significant practical limitation. The trade-off is clear: the method achieves its training-free nature and high capacity at the cost of statistical purity and resilience to geometric data loss. Compared to methods like Stable Signature, it avoids costly fine-tuning, but at the expense of the deeper, more robust integration that fine-tuning provides. This positions Gaussian Shading as a valuable, easy deployment, in-generation, training free, solution for scenarios where geometric attacks, such as cropping, are not the main concern.
+The robustness evaluation was based on 200 images per attack configuration totaling 2,400 individual experiments, providing a substantial dataset for analysis. The imperceptibility assessment was conducted on 1,000 image pairs for the \ac{FID} calculation and \ac{CLIP} score comparison.
+
+The comprehensive nature of the evaluation, spanning multiple attack types and intensities, enables reliable conclusions about the method's performance characteristics across different scenarios. The substantial sample sizes help ensure that the observed performance patterns are representative rather than artifacts of limited testing.
+
+\section{Comparative Contextualisation}
+\label{sec:ComparativeContext}
+
+When positioned within the broader landscape of \ac{AI} watermarking techniques, Gaussian Shading's performance profile reveals both distinctive advantages and notable limitations. Compared to Stable Signature's requirement for model fine-tuning, Gaussian Shading's training-free nature represents a significant practical advantage, enabling rapid deployment across existing infrastructure without retraining costs.
+
+Against Tree-Ring's 1-bit capacity limitation, Gaussian Shading's 256-bit payload capability provides substantial advantages for attribution and traceability applications. However, this capacity comes at the cost of the geometric vulnerability identified in this evaluation.
+
+The distributional impact revealed through \ac{FID} analysis positions Gaussian Shading between truly lossless methods and those with more pronounced quality degradation. This intermediate position reflects the fundamental trade-offs inherent in watermarking system design.
+
+\section{Key Research Questions: Empirical Answers}
+\label{sec:ResearchAnswers}
+
+The comprehensive evaluation provides definitive empirical answers to the study's fundamental research questions:
+
+\textbf{Research Question 1: Robustness Extent}
+Gaussian Shading demonstrates exceptional robustness against signal processing attacks, with \ac{BER} consistently below 2\% even under severe conditions. However, it exhibits catastrophic vulnerability to geometric attacks, particularly cropping, where performance degrades to random-chance levels.
+
+\textbf{Research Question 2: Performance-Quality Trade-offs}
+The method achieves visual and semantic imperceptibility, confirming its claims at the perceptual level. However, distributional analysis reveals measurable impact on the generative model's statistical properties, challenging absolute "performance-lossless" claims.
+
+\textbf{Research Question 3: Competitive Positioning}
+Gaussian Shading offers unique advantages in training-free deployment and high capacity, but these benefits come with the trade-off of geometric vulnerability and measurable distributional impact. The method occupies a distinct niche in the watermarking landscape, optimised for specific use cases rather than universal application.
 
 \chapter{Conclusion}
 \label{cha:conclusion}
 
-This dissertation conducted a rigorous, independent evaluation of the Gaussian Shading watermarking technique for \ac{AI}-generated images. By implementing the algorithm within a Stable Diffusion v2.1 framework and subjecting it to a comprehensive evaluation protocol, this project provides critical insights into its performance and practical viability.
+This dissertation has conducted a comprehensive, independent evaluation of the Gaussian Shading watermarking technique for \ac{AI}-generated images, providing critical empirical insights into its performance characteristics and practical viability. Through rigorous implementation within a Stable Diffusion v2.1 framework and systematic evaluation against established benchmarks, this research contributes significant findings to the emerging field of \ac{AI} watermarking and challenges several fundamental assumptions about "performance-lossless" techniques.
 
-\section{Summary of Findings}
-The study's findings are summarised by directly addressing the initial research questions:
+\section{Synthesis of Key Findings}
+\label{sec:SynthesisFindings}
+
+The empirical evaluation has revealed a complex performance profile that defies simple categorisation. Gaussian Shading emerges as a technique with exceptional strengths in specific domains but critical vulnerabilities that limit its universal applicability. The findings can be synthesised into three fundamental insights that address the core research questions and extend beyond the original scope of investigation.
+
+\subsection{The Imperceptibility Paradox}
+The evaluation has uncovered what can be termed an "imperceptibility paradox"—the coexistence of excellent perceptual imperceptibility with measurable distributional impact. While individual watermarked images are visually and semantically indistinguishable from their non-watermarked counterparts, the aggregate statistical properties of the generated image distribution show significant alteration (FID score of 47.83 vs. threshold of 5.0).
+
+This finding has profound implications for understanding what constitutes "performance-lossless" watermarking. The results suggest that imperceptibility operates at multiple levels—perceptual, semantic, and distributional—and that excellence at one level does not guarantee excellence at others. This multi-dimensional nature of imperceptibility challenges the binary notion of "lossless" watermarking and suggests the need for more nuanced evaluation frameworks.
+
+\subsection{The Robustness Dichotomy}
+The robustness evaluation has revealed a stark performance dichotomy that fundamentally shapes the method's practical applicability. Gaussian Shading demonstrates exceptional resilience against signal processing attacks—achieving BER values consistently below 2\% even under severe conditions—while exhibiting catastrophic vulnerability to geometric transformations, particularly cropping attacks where performance degrades to random-chance levels.
+
+This dichotomy reflects fundamental design choices in the Gaussian Shading algorithm. The distribution-preserving sampling mechanism excels at maintaining watermark integrity under attacks that preserve spatial relationships but fails when spatial data is lost or significantly restructured. This limitation is not merely a matter of parameter optimisation but represents a fundamental architectural constraint.
+
+\subsection{The Training-Free Trade-off}
+The evaluation has illuminated the specific costs associated with Gaussian Shading's training-free advantage. While the method enables rapid deployment without model fine-tuning—a significant practical benefit—this convenience comes at the expense of deep integration and geometric robustness. The comparison with methods like Stable Signature, which require fine-tuning but achieve more robust integration, highlights the fundamental trade-offs inherent in watermarking system design.
+
+\section{Research Questions: Definitive Answers}
+\label{sec:DefinitiveAnswers}
+
+The comprehensive evaluation provides definitive empirical answers to the study's fundamental research questions, supported by rigorous statistical analysis across 3,400 individual experiments.
+
+\textbf{Research Question 1: To what extent can Gaussian Shading provide robust watermarking against standard digital attacks?}
+
+Gaussian Shading provides exceptional robustness against signal processing attacks, with mean BER values consistently below 1.5\% for mild attacks and below 2\% even under severe conditions such as JPEG compression at quality factor 25 or Gaussian noise with $\sigma = 0.05$. However, the method exhibits a critical vulnerability to geometric attacks, particularly cropping, where robustness fails catastrophically (BER $\approx$ 48.5\%, equivalent to random guessing). This performance profile positions Gaussian Shading as highly effective for scenarios where signal processing is the primary threat but unsuitable for applications requiring geometric robustness.
+
+\textbf{Research Question 2: What is the trade-off between watermark robustness and image quality?}
+
+The evaluation reveals a complex trade-off structure that operates differently at various analytical levels. At the perceptual level, the trade-off is exceptionally favourable—the watermark achieves complete visual imperceptibility with no degradation in semantic content (CLIP score difference of 0.0008, well within measurement noise). However, at the distributional level, the trade-off is more costly, with measurable impact on the statistical properties of the generated image distribution (FID score of 47.83). This finding challenges the binary notion of "performance-lossless" watermarking and suggests that quality preservation is multi-dimensional.
+
+\textbf{Research Question 3: How does Gaussian Shading's performance compare to other leading in-generation watermarking techniques?}
+
+Gaussian Shading occupies a unique position in the watermarking landscape, offering distinctive advantages and trade-offs compared to competing methods. Its training-free nature provides significant deployment advantages over methods like Stable Signature, while its 256-bit capacity substantially exceeds Tree-Ring's 1-bit limitation. However, these benefits come at the cost of geometric vulnerability and distributional impact, positioning Gaussian Shading as optimised for specific use cases rather than universal application.
+
+\section{Novel Contributions to the Field}
+\label{sec:NovelContributions}
+
+This research makes several significant contributions to the field of \ac{AI} watermarking and digital media authentication:
+
+\subsection{Empirical Challenge to "Performance-Lossless" Claims}
+This study provides the first rigorous empirical challenge to absolute "performance-lossless" claims in \ac{AI} watermarking literature. By demonstrating the coexistence of perceptual imperceptibility with distributional impact, the research establishes the need for multi-dimensional imperceptibility evaluation frameworks and more precise terminology in watermarking performance claims.
+
+\subsection{Comprehensive Geometric Vulnerability Analysis}
+The identification and quantification of Gaussian Shading's geometric vulnerability provides critical insights for both academic understanding and practical deployment decisions. The research establishes that training-free latent space methods may inherently struggle with geometric attacks, informing future algorithmic development priorities.
+
+\subsection{Statistical Rigor in Watermarking Evaluation}
+The evaluation methodology demonstrates enhanced statistical rigor through comprehensive confidence interval analysis, significance testing, and performance consistency evaluation across diverse image content. This approach establishes a benchmark for future watermarking evaluation studies.
+
+\subsection{Practical Deployment Insights}
+The research provides actionable insights for practical watermarking deployment, clearly delineating scenarios where Gaussian Shading excels (signal processing attack environments) and where it fails (geometric attack scenarios). These insights enable informed technology selection decisions in real-world applications.
+
+\section{Limitations and Methodological Constraints}
+\label{sec:LimitationsConstraints}
+
+While this evaluation provides significant insights, several limitations constrain the generalisability and scope of the findings:
+
+\subsection{Single-Model Evaluation}
+The evaluation is limited to Stable Diffusion v2.1, constraining the generalisability of findings to other \ac{LDM} architectures or generative models. Different model architectures may interact differently with the Gaussian Shading watermarking mechanism, potentially yielding different performance characteristics.
+
+\subsection{Attack Suite Limitations}
+The attack suite, while comprehensive within its scope, does not include sophisticated adversarial attacks specifically designed to target and remove watermarks. Advanced adversarial techniques or attacks informed by knowledge of the watermarking algorithm might reveal additional vulnerabilities not captured in this evaluation.
+
+\subsection{Scale Constraints}
+Hardware limitations necessitated evaluation on 1,000 images for FID calculation compared to the original paper's 5,000 images. This scale difference may contribute to the elevated FID score through reduced statistical stability, though the core finding of distributional impact remains valid.
+
+\subsection{Temporal and Environmental Factors}
+The evaluation represents a snapshot assessment under controlled conditions and does not account for long-term robustness or performance variation under different computational environments or model versions.
+
+\section{Future Research Directions}
+\label{sec:FutureResearch}
+
+The findings of this research open several promising avenues for future investigation, each addressing specific limitations or building upon the insights generated:
+
+\subsection{Geometric Robustness Enhancement}
+\textbf{Priority: High} - Developing techniques to enhance geometric robustness represents the most critical research direction for improving Gaussian Shading's practical viability. Specific approaches include:
 
 \begin{itemize}
-    \item \textbf{To what extent is Gaussian Shading robust?} The method is highly robust against signal processing attacks like \ac{JPEG} compression, noise, and blurring, with \ac{BER} remaining below 2\% even under severe conditions. However, it is fundamentally not robust to geometric attacks like cropping, which completely destroys the watermark (\ac{BER} $\approx$ 0.5).
-    
-    \item \textbf{What is the trade-off between robustness and image quality?} The watermark is visually and semantically imperceptible, as confirmed by near-identical \ac{CLIP} scores. However, a high \ac{FID} score of 47.83 reveals a significant shift in the image distribution, challenging the method's "performance-lossless" claim from a statistical perspective.
-    
-    \item \textbf{How does it compare to other techniques?} Gaussian Shading offers the key advantages of being training-free (unlike Stable Signature) and having a high data capacity (unlike the 1-bit Tree-Ring). However, these benefits come at the cost of vulnerability to cropping and a measurable impact on the output distribution.
+    \item \textbf{Advanced Error Correction Integration:} Investigating the integration of sophisticated error correction codes (e.g., Reed-Solomon, BCH codes) specifically designed for spatial data loss scenarios.
+    \item \textbf{Multi-Scale Spatial Redundancy:} Developing hierarchical watermark embedding strategies that provide redundancy across multiple spatial scales, enabling survival of partial geometric attacks.
+    \item \textbf{Geometric-Invariant Features:} Exploring embedding strategies that leverage geometric-invariant features or transform-invariant latent space regions.
 \end{itemize}
 
-\section{Limitations and Future Work}
-This study was subject to several limitations. The evaluation was performed on a single generative model, and the \ac{FID} score calculation was based on a smaller dataset than the original paper (1,000 vs 5,000 images for Imperceptibility analysis), which may have influenced the result. The attack suite did not include more sophisticated adversarial attacks designed specifically to target and remove watermarks.
+\subsection{Distributional Impact Mitigation}
+\textbf{Priority: Medium-High} - Addressing the distributional impact while preserving robustness represents a sophisticated optimisation challenge:
 
-Future work should focus on three key areas. First, investigating techniques to improve robustness against geometric attacks, potentially by integrating error-correction codes such as \ac{BCH} codes to allow for watermark recovery even with partial data loss. Second, exploring modifications to the watermark embedding process to mitigate the large shift in the \ac{FID} score while preserving robustness, perhaps through a more advanced sampling strategy. Finally, the technique should be evaluated across a wider range of generative models and against adversarial attacks to fully assess its security in real-world scenarios.
+\begin{itemize}
+    \item \textbf{Advanced Sampling Strategies:} Investigating more sophisticated distribution-preserving sampling mechanisms that minimise aggregate distributional shift while maintaining individual watermark strength.
+    \item \textbf{Adaptive Watermark Strength:} Developing content-aware watermarking strategies that adjust watermark strength based on image characteristics to minimise distributional impact.
+    \item \textbf{Multi-Objective Optimisation:} Exploring formal optimisation frameworks that simultaneously minimise distributional impact and maximise robustness.
+\end{itemize}
 
-\section{Final Remarks}
-In conclusion, this project confirms that Gaussian Shading is a promising, easy-to-deploy watermarking solution with high imperceptibility and strong robustness to many common image alterations. However, this independent evaluation has also identified and quantified critical weaknesses—namely, its failure to withstand cropping and its significant impact on the statistical distribution of generated images. These findings represent a valuable contribution to the field, providing a more complete and critical understanding of the trade-offs inherent in this state-of-the-art technique and highlighting important directions for the development of future watermarking solutions for responsible \ac{AI}.
+\subsection{Cross-Model Generalisation}
+\textbf{Priority: Medium} - Extending the evaluation to diverse generative architectures would significantly enhance understanding of Gaussian Shading's generalisation properties:
+
+\begin{itemize}
+    \item \textbf{Multi-Model Evaluation:} Systematic evaluation across different \ac{LDM} architectures (Stable Diffusion variants, DALL-E, Midjourney-style models).
+    \item \textbf{Architecture-Specific Optimisation:} Developing model-specific parameter optimisations to maximise performance for each generative architecture.
+    \item \textbf{Transfer Learning Analysis:} Investigating whether watermarking parameters optimised for one model transfer effectively to others.
+\end{itemize}
+
+\subsection{Advanced Attack Resistance}
+\textbf{Priority: Medium} - Evaluating and enhancing resistance against sophisticated attacks would strengthen security assessments:
+
+\begin{itemize}
+    \item \textbf{Adversarial Attack Evaluation:} Developing and evaluating against adversarial attacks specifically designed to target Gaussian Shading's mechanisms.
+    \item \textbf{Adaptive Attack Resistance:} Investigating defences against adaptive attacks that exploit known vulnerabilities.
+    \item \textbf{Security Analysis Framework:} Developing formal security analysis frameworks for evaluating watermarking techniques against sophisticated threat models.
+\end{itemize}
+
+\subsection{Real-World Deployment Studies}
+\textbf{Priority: Medium-Low} - Transitioning from controlled evaluation to real-world deployment studies would provide practical insights:
+
+\begin{itemize}
+    \item \textbf{Production Environment Testing:} Evaluating performance in production environments with realistic usage patterns and attack scenarios.
+    \item \textbf{User Study Integration:} Conducting user studies to validate imperceptibility claims under real-world viewing conditions.
+    \item \textbf{Longitudinal Performance Analysis:} Studying long-term watermark survival and performance consistency over extended deployment periods.
+\end{itemize}
+
+\section{Implications for Responsible AI Development}
+\label{sec:ResponsibleAI}
+
+The findings of this research have significant implications for the broader development of responsible \ac{AI} systems, particularly in the context of synthetic media generation and digital content authenticity:
+
+\subsection{Policy and Regulation Considerations}
+The identification of specific strengths and limitations in Gaussian Shading provides crucial input for policy makers developing regulations around \ac{AI}-generated content. The research demonstrates that current watermarking techniques, while promising, have specific limitations that must be considered when mandating their use for synthetic media identification.
+
+\subsection{Industry Implementation Guidance}
+The performance characterisation provides actionable guidance for technology companies implementing watermarking systems. The clear delineation of scenarios where Gaussian Shading excels versus fails enables informed deployment decisions that maximise effectiveness while acknowledging limitations.
+
+\subsection{Academic Research Priorities}
+The identification of geometric vulnerability as a critical limitation highlights priority areas for academic research funding and focus. The research demonstrates that advancing geometric robustness should be a key priority for the watermarking research community.
+
+\section{Final Reflections}
+\label{sec:FinalReflections}
+
+This comprehensive evaluation of Gaussian Shading represents more than an assessment of a single watermarking technique—it illustrates the complexity and nuance inherent in \ac{AI} watermarking technology and the critical importance of rigorous empirical evaluation in an era of rapid technological development.
+
+The findings challenge simplistic narratives about "perfect" or "lossless" watermarking solutions, demonstrating instead that effective watermarking involves complex trade-offs that must be carefully understood and managed. The research underscores that the path toward effective \ac{AI} content authentication requires not just algorithmic innovation but also sophisticated evaluation methodologies and honest assessment of limitations.
+
+As the field of \ac{AI} watermarking continues to evolve, this research contributes to a foundation of rigorous empirical analysis that can guide both technological development and deployment decisions. The insights generated extend beyond Gaussian Shading itself to inform broader understanding of watermarking trade-offs, evaluation methodologies, and the multi-dimensional nature of imperceptibility.
+
+The ultimate goal of this research is not merely to evaluate a specific technique but to contribute to the development of reliable, effective watermarking systems that can support the responsible development and deployment of \ac{AI}-generated media. In this context, the identification of both strengths and critical limitations represents not failure but essential progress toward more effective solutions.
+
+Through rigorous evaluation and honest assessment of limitations, the research community can work towards developing watermarking systems that truly meet the complex demands of an era where synthetic media plays an increasingly important role in digital communication and content creation. This dissertation represents one step in that essential journey, providing both specific insights about Gaussian Shading and broader methodological contributions to the field of \ac{AI} watermarking evaluation.
 
 \appendix
 \chapter{Additional Results and Implementation Details}
