@@ -14,7 +14,7 @@
 \node[section] (embedding_section) at (0,0) {
     \begin{tikzpicture}[node distance=0.6cm]
         % avoid title overlap
-        \node[font=\scriptsize\bfseries] at (0,0.5) {Embedding Pipeline};
+        \node[font=\scriptsize\bfseries] at (0,0.8) {Embedding Pipeline};
         
         % Row 1
         \node[data] (prompt) {Text Prompt};
@@ -24,10 +24,10 @@
         % Row 2
         \node[data, below=of prompt] (watermark_bits) {256-bit WM};
         \node[algorithm, right=of watermark_bits] (diffusion) {WM Diffusion\\$ch=1, hw=8$};
-        \node[algorithm, right=of diffusion] (encryption) {ChaCha20};
+        \node[algorithm, below=of diffusion] (encryption) {ChaCha20};
         
         % Row 3
-        \node[algorithm, below=0.8cm of diffusion] (gaussian_shading) {Gaussian Shading\\$z_T^{(w)} = \Phi^{-1}(...)$};
+        \node[algorithm, below=of encryption] (gaussian_shading) {Gaussian Shading\\$z_T^{(w)} = \Phi^{-1}(...)$};
         
         % Row 4
         \node[data, below=of gaussian_shading] (watermarked_latent) {WM Latent};
@@ -35,60 +35,55 @@
         \node[embedding, right=of unet] (vae_dec) {VAE Dec.};
         
         % Final output
-        \node[data, below=of unet] (wm_image) {WM Image};
+        \node[data, below=of vae_dec] (wm_image) {WM Image};
         
-        % Clear arrow paths
         \draw[arrow] (prompt) -- (clip_encoder);
         \draw[arrow] (clip_encoder) -- (text_emb);
         \draw[arrow] (watermark_bits) -- (diffusion);
         \draw[arrow] (diffusion) -- (encryption);
-        \draw[arrow] (encryption) |- (gaussian_shading);
-        \draw[arrow] (text_emb) |- (gaussian_shading);
+        \draw[arrow] (encryption) -- (gaussian_shading);
         \draw[arrow] (gaussian_shading) -- (watermarked_latent);
         \draw[arrow] (watermarked_latent) -- (unet);
+        \draw[arrow] (text_emb) -- (unet); % Corrected: Text Emb. conditions the U-Net
         \draw[arrow] (unet) -- (vae_dec);
-        \draw[arrow] (vae_dec) |- (wm_image);
+        \draw[arrow] (vae_dec) -- (wm_image);
     \end{tikzpicture}
 };
 
 % EXTRACTION PIPELINE 
-\node[section, below=1cm of embedding_section] (extraction_section) {
+\node[section, below=2cm of embedding_section] (extraction_section) {
     \begin{tikzpicture}[node distance=0.6cm]
         % avoid title overlap
-        \node[font=\scriptsize\bfseries] at (0,0.5) {Extraction Pipeline};
+        \node[font=\scriptsize\bfseries] at (0,0.8) {Extraction Pipeline};
         
-        % Row 1 - Input processing
+        % Input processing
         \node[data] (attacked_input) {Test Image};
         \node[extraction, right=of attacked_input] (vae_encoder) {VAE Enc.};
         \node[data, right=of vae_encoder] (latent_repr) {Latent $z_0'$};
         
-        % Row 2 - DDIM Inversion
-        \node[algorithm, below=of vae_encoder] (ddim_inversion) {DDIM Inversion\\50 steps};
-        \node[data, right=of ddim_inversion] (estimated_latent) {Est. $z_T'$};
-        
-        % Row 3 - Watermark recovery
-        \node[algorithm, below=of ddim_inversion] (inverse_sampling) {Inverse\\Sampling};
-        \node[extraction, right=of inverse_sampling] (decryption) {ChaCha20\\Dec.};
-        
-        % Row 4 - Final processing
-        \node[extraction, below=of inverse_sampling] (majority_voting) {Majority\\Vote};
-        \node[data, right=of majority_voting] (extracted_watermark) {Extract. $s'$};
-        
-        % Row 5 - Evaluation
-        \node[algorithm, below=of majority_voting] (ber_calculation) {BER Calc.};
+        % DDIM Inversion
+        \node[algorithm, right=of latent_repr] (ddim_inversion) {DDIM Inversion\\50 steps};
+        \node[data, below=of ddim_inversion] (estimated_latent) {Est. $z_T'$};
+
+        % Watermark recovery
+        \node[algorithm, left=of estimated_latent] (inverse_sampling) {Inverse\\Sampling};
+        \node[extraction, left=of inverse_sampling] (decryption) {ChaCha20\\Dec.};
+        \node[extraction, left=of decryption] (majority_voting) {Majority\\Vote};
+        \node[data, below=of majority_voting] (extracted_watermark) {Extract. $s'$};
+
+        % Evaluation
+        \node[algorithm, right=of extracted_watermark] (ber_calculation) {BER Calc.};
         \node[data, right=of ber_calculation] (detection_result) {Pass/Fail};
         
-        % Clearer vertical flow arrows
         \draw[arrow] (attacked_input) -- (vae_encoder);
         \draw[arrow] (vae_encoder) -- (latent_repr);
-        \draw[arrow] (vae_encoder) -- (ddim_inversion);
+        \draw[arrow] (latent_repr) -- (ddim_inversion);
         \draw[arrow] (ddim_inversion) -- (estimated_latent);
-        \draw[arrow] (ddim_inversion) -- (inverse_sampling);
+        \draw[arrow] (estimated_latent) -- (inverse_sampling);
         \draw[arrow] (inverse_sampling) -- (decryption);
-        \draw[arrow] (inverse_sampling) -- (majority_voting);
-        \draw[arrow] (decryption) -- (extracted_watermark);
+        \draw[arrow] (decryption) -- (majority_voting);
         \draw[arrow] (majority_voting) -- (extracted_watermark);
-        \draw[arrow] (majority_voting) -- (ber_calculation);
+        \draw[arrow] (extracted_watermark) -- (ber_calculation);
         \draw[arrow] (ber_calculation) -- (detection_result);
     \end{tikzpicture}
 };
