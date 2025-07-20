@@ -1,50 +1,93 @@
+\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
-    node distance=1.5cm,
-    box/.style={rectangle, draw, rounded corners, minimum width=3cm, minimum height=1cm, align=center, fill=blue!10},
-    process/.style={rectangle, draw, rounded corners, minimum width=3cm, minimum height=1cm, align=center, fill=green!10},
-    arrow/.style={thick,->,>=stealth}
+    node distance=0.8cm,
+    % Compact styles to fit within page margins
+    embedding/.style={rectangle, draw, rounded corners, minimum width=1.8cm, minimum height=0.5cm, align=center, fill=blue!15, font=\scriptsize},
+    extraction/.style={rectangle, draw, rounded corners, minimum width=1.8cm, minimum height=0.5cm, align=center, fill=green!15, font=\scriptsize},
+    algorithm/.style={rectangle, draw, rounded corners, minimum width=2.2cm, minimum height=0.6cm, align=center, fill=yellow!20, font=\scriptsize},
+    data/.style={rectangle, draw, rounded corners, minimum width=1.5cm, minimum height=0.5cm, align=center, fill=gray!10, font=\scriptsize},
+    arrow/.style={->,>=stealth},
+    section/.style={draw, rounded corners, fill=gray!5, inner sep=4pt}
 ]
 
-% Embedding Pipeline
-\node[draw, rounded corners, fill=gray!10, inner sep=10pt, label={[anchor=north]north:Embedding Pipeline}] (embedding) {
-    \begin{tikzpicture}[node distance=1.5cm]
-        % Nodes for embedding pipeline
-        \node[box] (prompt) {Text Prompt};
-        \node[process, right=of prompt] (encoder) {CLIP Text Encoder};
-        \node[box, below=of prompt] (watermark) {Watermark 's'};
-        \node[process, right=of watermark] (diffuse) {Diffuse \& Encrypt};
-        \node[process, right=of encoder] (sampling) {Watermarked Latent Sampling};
-        \node[process, right=of sampling] (denoising) {U-Net Denoising};
-        \node[process, right=of denoising] (decoder) {VAE Decoder};
-        \node[box, right=of decoder] (image) {Watermarked Image};
+% EMBEDDING PIPELINE (Top Section)
+\node[section, label={[anchor=north west, font=\scriptsize]north west:\textbf{Embedding Pipeline}}] (embedding_section) at (0,0) {
+    \begin{tikzpicture}[node distance=0.6cm]
+        % Row 1
+        \node[data] (prompt) {Text Prompt};
+        \node[embedding, right=of prompt] (clip_encoder) {CLIP\\Encoder};
+        \node[data, right=of clip_encoder] (text_emb) {Text Emb.};
         
-        % Connections for embedding pipeline
-        \draw[arrow] (prompt) -- (encoder);
-        \draw[arrow] (watermark) -- (diffuse);
-        \draw[arrow] (encoder) -- (sampling);
-        \draw[arrow] (diffuse) -- (sampling);
-        \draw[arrow] (sampling) -- (denoising);
-        \draw[arrow] (denoising) -- (decoder);
-        \draw[arrow] (decoder) -- (image);
+        % Row 2
+        \node[data, below=of prompt] (watermark_bits) {256-bit WM};
+        \node[algorithm, right=of watermark_bits] (diffusion) {WM Diffusion\\$ch=1, hw=8$};
+        \node[algorithm, right=of diffusion] (encryption) {ChaCha20};
+        
+        % Row 3
+        \node[algorithm, below=0.8cm of diffusion] (gaussian_shading) {Gaussian Shading\\$z_T^{(w)} = \Phi^{-1}(...)$};
+        
+        % Row 4
+        \node[data, below=of gaussian_shading] (watermarked_latent) {WM Latent};
+        \node[embedding, right=of watermarked_latent] (unet) {U-Net\\50 steps};
+        \node[embedding, right=of unet] (vae_dec) {VAE Dec.};
+        
+        % Final output
+        \node[data, below=of unet] (wm_image) {WM Image};
+        
+        % Simple direct connections to avoid overlaps
+        \draw[arrow] (prompt) -- (clip_encoder);
+        \draw[arrow] (clip_encoder) -- (text_emb);
+        \draw[arrow] (watermark_bits) -- (diffusion);
+        \draw[arrow] (diffusion) -- (encryption);
+        \draw[arrow] (encryption) |- (gaussian_shading);
+        \draw[arrow] (text_emb) |- (gaussian_shading);
+        \draw[arrow] (gaussian_shading) -- (watermarked_latent);
+        \draw[arrow] (watermarked_latent) -- (unet);
+        \draw[arrow] (unet) -- (vae_dec);
+        \draw[arrow] (vae_dec) |- (wm_image);
     \end{tikzpicture}
 };
 
-% Extraction Pipeline
-\node[draw, rounded corners, fill=gray!10, inner sep=10pt, below=1.5cm of embedding, label={[anchor=north]north:Extraction Pipeline}] (extraction) {
-    \begin{tikzpicture}[node distance=1.5cm]
-        % Nodes for extraction pipeline
-        \node[box] (wimage) {Watermarked Image};
-        \node[process, right=of wimage] (vae_encoder) {VAE Encoder};
-        \node[process, right=of vae_encoder] (ddim) {DDIM Inversion};
-        \node[process, right=of ddim] (recovery) {Watermark Recovery};
-        \node[box, right=of recovery] (recovered) {Recovered Watermark 's''};
+% EXTRACTION PIPELINE (Bottom Section)
+\node[section, below=1cm of embedding_section, label={[anchor=north west, font=\scriptsize]north west:\textbf{Extraction Pipeline}}] (extraction_section) {
+    \begin{tikzpicture}[node distance=0.6cm]
+        % Row 1
+        \node[data] (attacked_input) {Test Image};
+        \node[extraction, right=of attacked_input] (vae_encoder) {VAE Enc.};
+        \node[data, right=of vae_encoder] (latent_repr) {Latent $z_0'$};
         
-        % Connections for extraction pipeline
-        \draw[arrow] (wimage) -- (vae_encoder);
-        \draw[arrow] (vae_encoder) -- (ddim);
-        \draw[arrow] (ddim) -- (recovery);
-        \draw[arrow] (recovery) -- (recovered);
+        % Row 2
+        \node[algorithm, below=of vae_encoder] (ddim_inversion) {DDIM Inversion\\50 steps};
+        \node[data, right=of ddim_inversion] (estimated_latent) {Est. $z_T'$};
+        
+        % Row 3
+        \node[algorithm, below=of ddim_inversion] (inverse_sampling) {Inverse\\Sampling};
+        \node[extraction, right=of inverse_sampling] (decryption) {ChaCha20\\Dec.};
+        
+        % Row 4
+        \node[extraction, below=of inverse_sampling] (majority_voting) {Majority\\Vote};
+        \node[data, right=of majority_voting] (extracted_watermark) {Extract. $s'$};
+        
+        % Row 5
+        \node[algorithm, below=of majority_voting] (ber_calculation) {BER Calc.};
+        \node[data, right=of ber_calculation] (detection_result) {Pass/Fail};
+        
+        % Simple connections
+        \draw[arrow] (attacked_input) -- (vae_encoder);
+        \draw[arrow] (vae_encoder) -- (latent_repr);
+        \draw[arrow] (latent_repr) |- (ddim_inversion);
+        \draw[arrow] (ddim_inversion) -- (estimated_latent);
+        \draw[arrow] (estimated_latent) |- (inverse_sampling);
+        \draw[arrow] (inverse_sampling) -- (decryption);
+        \draw[arrow] (decryption) |- (majority_voting);
+        \draw[arrow] (majority_voting) -- (extracted_watermark);
+        \draw[arrow] (extracted_watermark) |- (ber_calculation);
+        \draw[arrow] (ber_calculation) -- (detection_result);
     \end{tikzpicture}
 };
+
+% Connect sections
+\draw[arrow, thick] (embedding_section.south) -- (extraction_section.north);
 
 \end{tikzpicture}
+}
