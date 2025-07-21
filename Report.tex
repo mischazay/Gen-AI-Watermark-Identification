@@ -311,7 +311,7 @@ The final selection of the watermarking technique is based on the following crit
     \item \textbf{Implementation Feasibility:} Availability of reference implementations or clarity of the proposed algorithm within the project's timeframe.
 \end{enumerate}
 
-Based on these criteria, Gaussian Shading \cite{yangGaussianShadingProvable2024} was selected. Its approach modifies the initial latent sampling process, offering direct integration (Criterion 1). A key advantage is its provably performance-lossless nature, meaning it does not require model fine-tuning and aims to preserve the original model's output quality (Criteria 1, 4, 5). The original paper reports high robustness and good capacity (Criteria 2 \& 3), making it a strong candidate. While other latent space methods like Stable Signature \cite{fernandezStableSignatureRooting2023b} or Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} (originally designed primarily for 1-bit capacity, limiting its suitability for detailed attribution data under Criterion 3) also offer strong integration, Gaussian Shading's advantage for this project lies with it being performance-lossless without needing model fine-tuning or architectural changes (Criterion 5). This simplifies implementation and ensures the watermark minimally impacts the generative capabilities of the base Stable Diffusion model (Criterion 4), compared to approaches that might require adjustments to the \ac{VAE} or U-Net.
+Based on these criteria, Gaussian Shading \cite{yangGaussianShadingProvable2024} was selected. Its approach modifies the initial latent sampling process, offering direct integration (Criterion 1). A key advantage is its provably performance-lossless nature, meaning it does not require model fine-tuning and aims to preserve the original model's output quality (Criteria 1, 4, 5). The original paper reports high robustness and good capacity (Criteria 2 \& 3), making it a strong candidate. While other latent space methods like Stable Signature \cite{fernandezStableSignatureRooting2023b} or Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} (originally designed primarily for 1-bit capacity, limiting its suitability for detailed attribution data under Criterion 3), also offer strong integration; Gaussian Shading's advantage for this project lies with it being performance-lossless without needing model fine-tuning or architectural changes (Criterion 5). This simplifies implementation and ensures the watermark minimally impacts the generative capabilities of the base Stable Diffusion model (Criterion 4), compared to approaches that might require adjustments to the \ac{VAE} or U-Net.
 
 
 \section{Experimental Design}
@@ -373,7 +373,7 @@ The \textbf{extraction pipeline} reverses the embedding process to recover the w
 
 The architecture is designed to be modular, allowing for adjustments to parameters such as the number of diffusion steps, watermark length, and diffusion redundancy factors without requiring structural changes.
 
-\begin{figure}[htb]
+\begin{figure}[H]
     \centering
     \input{assets/architecture}
     \caption{Architecture diagram showing: embedding pipeline (top) \& extraction pipeline (bottom).}
@@ -507,8 +507,8 @@ Therefore, distribution based metrics are more appropriate. The \ac{FID} score i
 A fundamental challenge in watermarking research is that differing papers will apply their own evaluation metrics and criteria, therefore making reliable comparisons difficult, without also implementing other methods using the same tests, which would be difficult for numerous reasons, for example, Stable Signature is not training agnostic, meaning deployment requires retraining of \ac{GAIM} training data. Acknowledging these limitations we shall compare methodological approaches rather than direct numerical benchmarking:
 
 \begin{enumerate}
-    \item \textbf{Methodological Analysis:} Focus on fundamental characteristics and trade-offs of different approaches (Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} and Stable Signature \cite{fernandezStableSignatureRooting2023b}).
-    \item \textbf{Cross-Study Limitation Recognition:} Acknowledge that differences in experimental protocols, datasets, attack implementations, hardware configurations, and evaluation metrics can significantly influence reported performance figures.
+    \item \textbf{Methodological Analysis:} Focus on characteristics and trade-offs of different approaches (Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} \& Stable Signature \cite{fernandezStableSignatureRooting2023b}).
+    \item \textbf{Cross-Study Limitation Recognition:} Acknowledge that differences in experimental protocols, datasets, attack implementations, hardware configurations and evaluation metrics can significantly influence reported performance figures.
     \item \textbf{Statistical Analysis:} Calculate $95\%$ confidence intervals for all key metrics using the 200 individual measurements per attack configuration. Perform statistical significance tests (paired t-tests, \ac{ANOVA}) to assess performance differences across attack types and intensities.
     \item \textbf{Independent Rigorous Evaluation:} Provide comprehensive statistical analysis of Gaussian Shading with $95\%$ confidence intervals and significance testing to enable future research to make informed comparisons.
 \end{enumerate}
@@ -517,14 +517,14 @@ This approach prioritises methodological transparency and acknowledges the curre
 \subsection{Statistical Rigour and Reproducibility}
 \label{subsec:StatisticalRigor}
 
-Scientific validity is ensured through deterministic random number generation with fixed seeds for reproducibility, statistically sufficient sample sizes (n=200 per attack, n=1000 for \ac{FID}), $95\%$ confidence intervals calculated using t-distribution, and comprehensive documentation of all code and hyperparameters under version control.
+Scientific validity is ensured through deterministic random number generation with fixed seeds for reproducibility, statistically sufficient sample sizes (n=200 per attack, n=1000 for \ac{FID}), $95\%$ confidence intervals calculated using t-distribution and comprehensive documentation of all code and hyperparameters under version control.
 
 \subsection{Success Criteria and Thresholds}
 \label{subsec:SuccessCriteria}
 
-The evaluation sets a clear success criteria to assess Gaussian Shading's viability. \textbf{Imperceptibility thresholds} require \ac{FID} $<30$ (indicating minimal distribution shift between watermarked and non-watermarked images) and \ac{CLIP} Score difference $< 0.05$ (indicating preservation of semantic content). \textbf{Robustness thresholds} require \ac{BER} $< 0.1$ for mild attacks (\ac{JPEG} QF $\geq 75$), \ac{BER} $< 0.25$ for moderate attacks (\ac{JPEG} QF $\geq 50$), and \ac{TPR} $> 0.9$ at \ac{FPR} = $10^{-6}$. These derived thresholds from the literature provide objective criteria for evaluating the performance lossless claims of Gaussian Shading.
+The evaluation sets a clear success criteria to assess Gaussian Shading's viability. \textbf{Imperceptibility thresholds} require \ac{FID} $<30$ (minimal distribution shift between watermarked and non-watermarked images) and \ac{CLIP} Score difference $< 0.05$ (preservation of semantic content). \textbf{Robustness thresholds} require \ac{BER} $< 0.1$ for mild attacks (\ac{JPEG} QF $\geq 75$), \ac{BER} $< 0.25$ for moderate attacks (\ac{JPEG} QF $\geq 50$), and \ac{TPR} $> 0.9$ at \ac{FPR} = $10^{-6}$. These derived thresholds from the literature provide objective criteria for evaluating the performance lossless claims of Gaussian Shading.
 
-The methodology balances comprehensive evaluation with practical constraints, ensuring that results are both scientifically valid and directly comparable to existing literature while remaining achievable within undergraduate project scope and hardware limitations.
+The methodology balances comprehensive evaluation with practical constraints, ensuring that results are both scientifically valid and comparable to existing literature while remaining manageable within undergraduate project scope and hardware limitations.
 
 
 \chapter{Results and Analysis}
