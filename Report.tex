@@ -294,7 +294,7 @@ This chapter details the approach taken to investigate, implement, and evaluate 
 
 This study employs a \textbf{quantitative empirical evaluation} methodology to assess the performance of Gaussian Shading watermarking. The approach is aligned with established benchmarks in the watermarking literature, specifically following the evaluation protocols used by Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} and Stable Signature \cite{fernandezStableSignatureRooting2023b}, enabling direct comparison without requiring re-implementation of competing methods.
 
-The selection of \acp{LDM} as the primary architecture is justified by their current dominance in high quality image generation and the availability of open source implementations \cite{dhariwalDiffusionModelsBeat2021}. Specifically, Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} is chosen due to its open source nature \cite{CompVisStablediffusion2024}, widespread adoption in research, and existing watermarking literature within its framework \cite{fernandezStableSignatureRooting2023b, zhaoRecipeWatermarkingDiffusion2023a, zhangAttackResilientImageWatermarking2024}.
+The selection of \acp{LDM} as the primary architecture is justified by their current dominance in high quality image generation and the availability of open source implementations \cite{dhariwalDiffusionModelsBeat2021}. Specifically, Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} is chosen due to its open source nature \cite{CompVisStablediffusion2024}, widespread adoption in research and existing watermarking literature within its framework \cite{fernandezStableSignatureRooting2023b, zhaoRecipeWatermarkingDiffusion2023a, zhangAttackResilientImageWatermarking2024}.
 
 \section{Watermarking Technique Selection}
 \label{sec:WatermarkingTechniqueSelection}
@@ -306,7 +306,7 @@ The final selection of the watermarking technique is based on the following crit
     \item \textbf{Suitability for LDM Integration:} How readily the technique can be integrated into the Stable Diffusion architecture.
     \item \textbf{Robustness Potential:} Theoretical and empirical evidence from literature regarding resistance to common image manipulations.
     \item \textbf{Capacity for Attribution Data:} Ability to embed a sufficient payload for traceability purposes \cite{jiangWatermarkbasedDetectionAttribution2024}.
-    \item \textbf{Imperceptibility:} Maintaining high visual quality of the generated images.
+    \item \textbf{Imperceptibility:} Maintaining high visual quality of generated images.
     \item \textbf{Implementation Feasibility:} Availability of reference implementations or clarity of the proposed algorithm within the projects timeframe.
 \end{enumerate}
 
