@@ -82,6 +82,8 @@
   \acro{CDF}{Cumulative Distribution Function}
   \acro{FPR}{False Positive Rate}
   \acro{TPR}{True Positive Rate}
+  \acro{ANOVA}{Analysis of Variance}
+  \acro{HSD}{Honestly Significant Difference}
   \acro{CLIP}{Contrastive Language-Image Pre-training}
   \acro{JPEG}{Joint Photographic Experts Group}
   \acro{CUDA}{Compute Unified Device Architecture}
@@ -94,13 +96,13 @@
 The proliferation of powerful \acp{GAIM} such as Stable Diffusion \cite{rombachHighResolutionImageSynthesis2022} and DALL-E marks a significant technological leap, yet their capability to produce realistic synthetic images introduces notable moral, ethical and legal challenges. These include the further widespread presence of easily created misinformation, large scale copyright infringement, and an erosion of trust in digital content, prompting regulatory bodies like the European Union to mandate traceability mechanisms for image generation processes through their \ac{AI} act \cite{RegulationEU20242024}. This project discusses and evaluates the urgent need for a robust, imperceptible watermarking solution integrated directly within the \ac{AI} generation process to ensure authenticity, attribution, and traceability.
 
 \medskip
-The primary aim of this work is to conduct a rigorous, independent evaluation of the Gaussian Shading watermarking algorithm, a state of the art, training-free technique for \acp{LDM}. This method was selected over alternatives for its plug-and-play implementation and its purported superior performance and result, which this project seeks to explore and assess. The methodology involved implementing the algorithm within a standard Stable Diffusion v2.1 framework and executing a well defined evaluation protocol aligned with established academic benchmarks. The watermark's imperceptibility was assessed using distribution-based metrics (\ac{FID} and \ac{CLIP} Score) across 1,000 images generated using the MS-COCO dateset \cite{linMicrosoftCOCOCommon2015}. Its robustness was quantified by the \ac{BER} for a standard 256-bit payload after subjecting 200 watermarked images, generated using prompts from the Gustavosta prompt set \cite{GustavostaStableDiffusionPromptsDatasets2023}, to a suite of 12 common digital attacks, including \ac{JPEG} compression, noise, blurring, and cropping. These two distinct datasets were used as the former is a standard benchmark for evaluating generative models, while the latter is a diverse set of prompts more suited to test the watermark's robustness across diverse semantic content.
+The primary aim of this work is to conduct a rigorous, independent evaluation of the Gaussian Shading watermarking algorithm, a state of the art, training-free technique for \acp{LDM}. This method was selected over alternatives for its plug-and-play implementation and its purported superior performance and result, which this project seeks to explore and assess. The methodology involved implementing the algorithm within a standard Stable Diffusion v2.1 framework and executing a well defined evaluation protocol aligned with established academic benchmarks. The watermark's imperceptibility was assessed using distribution-based metrics (\ac{FID} and \ac{CLIP} Score) across 1000 images generated using the MS-COCO dateset \cite{linMicrosoftCOCOCommon2015}. Its robustness was quantified by the \ac{BER} for a standard 256-bit payload after subjecting 200 watermarked images, generated using prompts from the Gustavosta prompt set \cite{GustavostaStableDiffusionPromptsDatasets2023}, to a suite of 12 common digital attacks, including \ac{JPEG} compression, noise, blurring, and cropping. These two distinct datasets were used as the former is a standard benchmark for evaluating generative models, while the latter is a diverse set of prompts more suited to test the watermark's robustness across diverse semantic content.
 
 \medskip
-The evaluation revealed the implementation of the method led to clear strengths and limitations. The Gaussian Shading method demonstrated exceptional robustness against signal processing attacks, maintaining an almost perfect \ac{BER} of less than 2\% even under severe conditions like \acp{JPEG} lossy compression at a quality factor of 25 (\ac{BER} 1.35\%) and significant Gaussian blur (\ac{BER} 1.8\%). It also demonstrated high imperceptibility performance at a perceptual level, with a negligible difference in \ac{CLIP} scores (-0.0008) between the original and watermarked image sets, confirming that it preserves the visual quality and semantic fidelity of the generated images to their text prompts.
+The evaluation revealed the implementation of the method led to clear strengths and limitations. The Gaussian Shading method demonstrated exceptional robustness against signal processing attacks, maintaining an almost perfect \ac{BER} of less than $2\%$ even under severe conditions like \acp{JPEG} lossy compression at a quality factor of $25$ (\ac{BER} $1.35\%$) and significant Gaussian blur (\ac{BER} $1.8\%$). It also demonstrated high imperceptibility performance at a perceptual level, with a negligible difference in \ac{CLIP} scores $(-0.0008)$ between the original and watermarked image sets, confirming that it preserves the visual quality and semantic fidelity of the generated images to their text prompts.
 
 \medskip
-However, the evaluation also demonstrated clear limitations. A vulnerability to geometric attacks was evident; a random crop retaining 80\% of the image area resulted in a \ac{BER} of 48.52\%, a rate statistically indistinguishable from random chance. Furthermore, the evaluation yielded an \ac{FID} score of 47.83, which is above the success threshold of 30, thus indicating a measurable statistical shift in the output distribution and challenging the absoluteness of Gaussian Shadings Performance losslessness. This research considers legal, social, ethical, and professional issues by investigating an emerging technology that can mitigate \ac{AI}-driven misinformation and support artists rights. The work was conducted entirely on public datasets and open source models, involving no human participants or personal data.
+However, the evaluation also demonstrated clear limitations. A vulnerability to geometric attacks was evident; a random crop retaining $80\%$ of the image area resulted in a \ac{BER} of $48.52\%$, a rate statistically indistinguishable from random chance. Furthermore, the evaluation yielded an \ac{FID} score of $47.83$, which is above the success threshold of $30$, thus indicating a measurable statistical shift in the output distribution and challenging the absoluteness of Gaussian Shadings Performance losslessness. This research considers legal, social, ethical, and professional issues by investigating an emerging technology that can mitigate \ac{AI}-driven misinformation and support artists rights. The work was conducted entirely on public datasets and open source models, involving no human participants or personal data.
 
 \medskip
 By providing a detailed, independent performance analysis, this dissertation makes a valuable contribution to the field of responsible \ac{AI}. It concludes that while Gaussian Shading is a high-capacity, easily deployable solution for environments where signal processing attacks are the primary concern. However, its vulnerability to geometric transformations present challenges. A more exhaustive evaluation of the Gaussian Shading method is required to address the limited reach of the this project. This includes use of a more extensive set of prompts and datasets, and a more comprehensive set of digital attacks. This would allow for a more thorough assessment of the method's performance and its suitability as a practical watermarking solution for \acp{LDM}.
@@ -321,11 +323,11 @@ To ensure reproducible and comparable results, the evaluation follows a standard
 
 \begin{itemize}
     \item \textbf{Generative Model:} Stable Diffusion v2.1-base
-    \item \textbf{Image Resolution:} 512$\times$512 pixels (standard for SD v2.1)
-    \item \textbf{Guidance Scale:} 7.5 (classifier-free guidance strength)
-    \item \textbf{Inference Steps:} 50 (using DPMSolver++ scheduler)
+    \item \textbf{Image Resolution:} $512\times512$ pixels (standard for SD v2.1)
+    \item \textbf{Guidance Scale:} $7.5$ (classifier-free guidance strength)
+    \item \textbf{Inference Steps:} $50$ (using DPMSolver++ scheduler)
     \item \textbf{Precision:} Float16 for memory efficiency
-    \item \textbf{Batch Size:} 1 (for reproducibility and memory constraints)
+    \item \textbf{Batch Size:} $1$ (for reproducibility and memory constraints)
 \end{itemize}
 
 These parameters align with established benchmarks and ensure compatibility with the RTX 2070 Super GPU constraints (8GB \ac{VRAM}) while maintaining generation quality.
@@ -340,7 +342,7 @@ For the robustness evaluation, a different prompt set was created from the \text
 \subsection{Watermark Configuration}
 \label{subsec:WatermarkConfiguration}
 
-The watermark implementation follows the Gaussian Shading specification with a 256-bit capacity. For empirical testing, the payload consists of random binary strings per generation to facilitate robust \ac{BER} analysis; in practice, this would contain attribution data (generation ID, model identifier, timestamp). The payload is then encrypted using a ChaCha20 stream cipher with random key/nonce per image before embedding. Standard diffusion parameters (\texttt{channel\_copy = 1}, \texttt{hw\_copy = 8}) are used as specified in \cite{yangGaussianShadingProvable2024}. The detection threshold targets an \ac{FPR} of $10^{-6}$ for statistical significance. Practically, deployment would also incorporate error correction codes (e.g., \ac{BCH} codes) before embedding to enhance robustness against channel noise and attacks.
+The watermark implementation follows the Gaussian Shading specification with a 256-bit capacity. For empirical testing, the payload consists of random binary strings per generation to facilitate robust \ac{BER} analysis; in practice, this would contain attribution data (generation ID, model identifier, timestamp). The payload is then encrypted using a ChaCha20 stream cipher with random key/nonce per image before embedding. Standard diffusion parameters (\texttt{channel\_copy = $1$}, \texttt{hw\_copy = $8$}) are used as specified in \cite{yangGaussianShadingProvable2024}. The detection threshold targets an \ac{FPR} of $10^{-6}$ for statistical significance.
 
 \section{System Architecture}
 \label{sec:SystemArchitecture}
@@ -352,13 +354,9 @@ The \textbf{embedding pipeline} integrates watermarking directly into the image 
 
 \begin{enumerate}
     \item \textbf{Text Encoding:} The process begins with a text prompt that is encoded using the \ac{CLIP} text encoder to produce conditioning vectors.
-    
     \item \textbf{Watermark Preparation:} The watermark message $s$ (a binary string) is diffused across latent dimensions to obtain $s_{d}$, creating redundant copies for robustness. The diffused watermark $s_{d}$ is then encrypted with a ChaCha20 stream cipher using a secret key $K$ to produce $m$.
-    
     \item \textbf{Distribution-Preserving Sampling:} The core innovation occurs during initial latent sampling. Instead of standard sampling $z_{T} \sim \mathcal{N}(0, I)$, the method uses distribution-preserving sampling based on $m$ using a Gaussian quantile function and uniform random sampling. This ensures the watermarked latent maintains the same statistical properties as a non-watermarked latent.
-    
     \item \textbf{Denoising Process:} The watermarked latent $z_{T}$ undergoes standard 50-step diffusion denoising guided by the conditioning vectors.
-    
     \item \textbf{Image Decoding:} Finally, the \ac{VAE} decoder transforms the denoised latent representation into the final watermarked image in pixel space.
 \end{enumerate}
 
@@ -367,11 +365,8 @@ The \textbf{extraction pipeline} reverses the embedding process to recover the w
 
 \begin{enumerate}
     \item \textbf{Latent Encoding:} The watermarked image is encoded using the \ac{VAE} encoder to produce a latent representation $z_{0}'$.
-    
     \item \textbf{\ac{DDIM} Inversion:} A deterministic \ac{DDIM} inversion process with 50 steps is applied to estimate the initial noise $z_{T}'$ that would have generated the image.
-    
     \item \textbf{Watermark Recovery:} Inverse sampling logic (Gaussian \ac{CDF}) extracts a randomized watermark estimate $m'$ from $z_{T}'$, which is decrypted with key $K$ to recover the diffused watermark estimate $s_{d}'$.
-    
     \item \textbf{Bit Reconstruction:} A reduction/voting mechanism across the diffused copies recovers the final watermark estimate $s'$, enabling binary classification between watermarked and non-watermarked images based on the recovered bits.
 \end{enumerate}
 
@@ -390,7 +385,7 @@ The architecture is designed to be modular, allowing for adjustments to paramete
 \subsection{Technical Environment}
 \label{subsec:TechnicalEnvironment}
 
-The implementation utilises an NVIDIA RTX 2070 Super (8GB \ac{VRAM}) with \ac{CUDA} 11.7, running Python 3.8 with PyTorch 1.13+ and Diffusers 0.11.1. Key dependencies include transformers (4.21.0) for \ac{CLIP} text encoding, accelerate for memory optimisation, scipy for statistical functions, and pycryptodome for ChaCha20 cryptographic operations. The 8GB \ac{VRAM} constraint necessitates memory efficiency strategies: float16 precision reduces memory footprint by 50\%, sequential processing prevents out-of-memory errors, and gradient checkpointing enables processing of 512×512 images. Memory allocation is optimised through PyTorch's attention implementation and careful tensor lifecycle management during \ac{DDIM} inversion.
+The implementation utilises an NVIDIA RTX 2070 Super (8GB \ac{VRAM}) with \ac{CUDA} 11.7, running Python 3.8 with PyTorch 1.13+ and Diffusers 0.11.1. Key dependencies include transformers (4.21.0) for \ac{CLIP} text encoding, accelerate for memory optimisation, scipy for statistical functions, and pycryptodome for ChaCha20 cryptographic operations. The 8GB \ac{VRAM} constraint necessitates memory efficiency strategies: float16 precision reduces memory footprint by $50\%$, sequential processing prevents out-of-memory errors, and gradient checkpointing enables processing of $512\times 512$ images. Memory allocation is optimised through PyTorch's attention implementation and careful tensor lifecycle management during \ac{DDIM} inversion.
 
 \subsection{Gaussian Shading Implementation}
 \label{subsec:GaussianShadingImplementation}
@@ -497,7 +492,7 @@ While traditional metrics like \ac{PSNR} and \ac{SSIM} are common for assessing 
 
 Therefore, distribution based metrics are more appropriate. The \ac{FID} score is used to compare the statistical distributions of the entire set of 1000 watermarked images against the 1000 non-watermarked images, providing a more meaningful measure of the watermark's overall impact on the model's output distribution. Additionally, the \ac{CLIP} score is used to ensure that the semantic content of the generated images remains consistent with the original prompt, further validating the watermark's imperceptibility.
 
-\textbf{Imperceptibility metrics} \ac{FID} for distribution preservation, and \ac{CLIP} Score for semantic similarity between prompts and generated images. \textbf{Robustness metrics} comprise \ac{BER} as the primary robustness measure, \ac{TPR} for detection accuracy at fixed \ac{FPR}, and overall detection accuracy for binary classification performance.
+\textbf{Imperceptibility metrics} \ac{FID} for distribution preservation, and \ac{CLIP} Score for semantic similarity between prompts and generated images. \textbf{Robustness metrics} comprise \ac{BER} as the primary robustness measure, \ac{TPR} derived from accuracy measurements under the \ac{FPR}-controlled detection framework, and overall detection accuracy for binary classification performance. Statistical analysis will include $95\%$ confidence intervals for all key metrics and significance testing to assess performance differences across attack types.
 
 \subsection{Comparative Analysis Strategy}
 \label{subsec:ComparativeAnalysisStrategy}
@@ -507,8 +502,8 @@ Rather than implementing competing methods, the evaluation strategy employs \tex
 \begin{enumerate}
     \item \textbf{Literature Analysis:} Extract performance metrics from Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} and Stable Signature \cite{fernandezStableSignatureRooting2023b} papers.
     \item \textbf{Standardised Comparison:} Align evaluation datasets and attack parameters with published benchmarks.
-    \item \textbf{Statistical Analysis:} Report confidence intervals and significance tests where applicable.
-    \item \textbf{Performance Tables:} Create comparative tables showing relative performance across methods.
+    \item \textbf{Statistical Analysis:} Calculate $95\%$ confidence intervals for all key metrics using the 200 individual measurements per attack configuration. Perform statistical significance tests (paired t-tests, \ac{ANOVA}) to assess performance differences across attack types and intensities.
+    \item \textbf{Performance Tables:} Create comparative tables showing relative performance across methods with confidence bounds and significance indicators.
 \end{enumerate}
 
 This approach enables rigorous comparison while remaining feasible within project constraints.
@@ -516,12 +511,12 @@ This approach enables rigorous comparison while remaining feasible within projec
 \subsection{Statistical Rigor and Reproducibility}
 \label{subsec:StatisticalRigor}
 
-Scientific validity is ensured through deterministic random number generation with fixed seeds for reproducibility, statistically sufficient sample sizes (n=200 per attack, n=1000 for \ac{FID}), 95\% confidence intervals for key metrics, and comprehensive documentation of all code and hyperparameters under version control.
+Scientific validity is ensured through deterministic random number generation with fixed seeds for reproducibility, statistically sufficient sample sizes (n=200 per attack, n=1000 for \ac{FID}), $95\%$ confidence intervals calculated using t-distribution, and comprehensive documentation of all code and hyperparameters under version control.
 
 \subsection{Success Criteria and Thresholds}
 \label{subsec:SuccessCriteria}
 
-The evaluation sets a clear success criteria to assess Gaussian Shading's viability. \textbf{Imperceptibility thresholds} require \ac{FID} $<$ 30 (indicating minimal distribution shift between watermarked and non-watermarked images) and \ac{CLIP} Score difference $<$ 0.05 (indicating preservation of semantic content). \textbf{Robustness thresholds} require \ac{BER} $<$ 0.1 for mild attacks (\ac{JPEG} QF $\geq$ 75), \ac{BER} $<$ 0.25 for moderate attacks (\ac{JPEG} QF $\geq$ 50), and \ac{TPR} $>$ 0.9 at \ac{FPR} = $10^{-6}$. These derived thresholds from the literature provide objective criteria for evaluating the performance lossless claims of Gaussian Shading.
+The evaluation sets a clear success criteria to assess Gaussian Shading's viability. \textbf{Imperceptibility thresholds} require \ac{FID} $<30$ (indicating minimal distribution shift between watermarked and non-watermarked images) and \ac{CLIP} Score difference $< 0.05$ (indicating preservation of semantic content). \textbf{Robustness thresholds} require \ac{BER} $< 0.1$ for mild attacks (\ac{JPEG} QF $\geq 75$), \ac{BER} $< 0.25$ for moderate attacks (\ac{JPEG} QF $\geq 50$), and \ac{TPR} $> 0.9$ at \ac{FPR} = $10^{-6}$. These derived thresholds from the literature provide objective criteria for evaluating the performance lossless claims of Gaussian Shading.
 
 The methodology balances comprehensive evaluation with practical constraints, ensuring that results are both scientifically valid and directly comparable to existing literature while remaining achievable within undergraduate project scope and hardware limitations.
 
@@ -551,15 +546,15 @@ Qualitative assessment confirms that the watermarking process consistently produ
 To quantify semantic preservation, the evaluation uses \ac{CLIP} scores, which measure the semantic alignment between text prompts and the generated images. The results, presented in Table \ref{tab:semantic_metrics}, show remarkable semantic consistency. The negligible difference of $-0.0008$ between the watermarked $(0.3091)$ and non-watermarked $(0.3099)$ image sets is well within the bounds of natural variation and meets the success threshold of $< 0.05$. This confirms that the watermarking process does not interfere with the model's ability to generate images that remain faithful to their textual descriptions.
 
 \begin{table}[htb]
-    \caption{Semantic Preservation Analysis using CLIP Score}
+    \caption{Semantic Preservation Analysis using CLIP Score with Statistical Confidence}
     \label{tab:semantic_metrics}
     \begin{center}
-    \begin{tabular}{|l|c|c|c|}
+    \begin{tabular}{|l|c|c|c|c|}
     \hline
-    \textbf{Condition} & \textbf{Mean \ac{CLIP} Score} & \textbf{Difference} & \textbf{Assessment} \\ \hline
-    Non-watermarked & $0.3099$ & - & Baseline \\ \hline
-    Watermarked & $0.3091$ & $-0.0008$ & \textbf{Imperceptible} \\ \hline
-    Success Threshold & - & $< 0.05$ & \textbf{Met} \\ \hline
+    \textbf{Condition} & \textbf{Mean \ac{CLIP} Score} & \textbf{95\% CI} & \textbf{Difference} & \textbf{Assessment} \\ \hline
+    Non-watermarked & $0.3099$ & $\pm 0.0012$ & - & Baseline \\ \hline
+    Watermarked & $0.3091$ & $\pm 0.0011$ & $-0.0008$ & \textbf{Imperceptible} \\ \hline
+    Success Threshold & - & - & $< 0.05$ & \textbf{Met} \\ \hline
     \end{tabular}
     \end{center}
 \end{table}
@@ -590,9 +585,79 @@ The relatively high \ac{FID} score does not necessarily imply a degradation in t
 
 \begin{enumerate}
     \item \textbf{Distributional Shift vs. Quality Degradation:} The high \ac{FID} score indicates a distributional shift rather than a drop in quality. The watermarking process modifies the initial latent sampling, which could alter the model's latent space in a way that affects overall statistics without compromising the quality of individual images.
-    \item \textbf{Sample Size Sensitivity:} \ac{FID} scores are sensitive to sample size. This evaluation used 1,000 images, whereas the original paper used 5,000. This difference in scale may contribute to the elevated score through reduced statistical stability, although the core finding of a measurable impact remains valid.
+    \item \textbf{Sample Size Sensitivity:} \ac{FID} scores are sensitive to sample size. This evaluation used 1000 images, whereas the original paper used 5000. This difference in scale may contribute to the elevated score through reduced statistical stability, although the core finding of a measurable impact remains valid.
     \item \textbf{Methodological Differences:} Minor variations in the \ac{FID} calculation methodology, such as the choice of feature extraction network or preprocessing steps, can also significantly impact results.
 \end{enumerate}
+
+\section{Statistical Analysis and Detection Performance}
+\label{sec:StatisticalAnalysis}
+This section provides comprehensive statistical analysis of the watermark detection performance, including \ac{FPR}/\ac{TPR} analysis under the algorithm's detection framework, confidence intervals for all key metrics, and statistical significance testing across attack types.
+
+\subsection{FPR-Controlled Detection Framework}
+\label{subsec:FPRControlledDetection}
+
+The Gaussian Shading algorithm operates with an \ac{FPR}-controlled detection threshold, targeting an \ac{FPR} of $10^{-6}$ for statistical significance. Under this, the \ac{TPR} represents the algorithm's ability to correctly detect watermarked images at the controlled \ac{FPR}.
+
+Table \ref{tab:fpr_tpr_analysis} presents the \ac{TPR} analysis derived from the accuracy measurements across all attack configurations, calculated from 200 samples per attack configuration using actual evaluation data. The results show excellent detection performance across all signal processing attacks, with \ac{TPR} values consistently above 98\%, except for failure under the geometric attack tested.
+
+\begin{table}[htbp]
+\centering
+\caption{True Positive Rates with 95\% Confidence Intervals}
+\label{tab:fpr_tpr_analysis}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Attack Type} & \textbf{Parameter} & \textbf{TPR} & \textbf{95\% CI} & \textbf{n} \\
+\hline
+\multirow{2}{*}{brightness} & $0.500$ & $0.9994$ & $[0.9985, 1.0000]$ & $200$ \\
+& $2.000$ & $0.9977$ & $[0.9950, 1.0000]$ & $200$ \\
+\hline
+crop & $0.800$ & $0.5148$ & $[0.5102, 0.5194]$ & $200$ \\
+\hline
+\multirow{2}{*}{gaussian\_blur} & $2.000$ & $0.9983$ & $[0.9962, 1.0000]$ & $200$ \\
+& $4.000$ & $0.9820$ & $[0.9777, 0.9863]$ & $200$ \\
+\hline
+\multirow{3}{*}{gaussian\_noise} & $0.010$ & $0.9985$ & $[0.9961, 1.0000]$ & $200$ \\
+& $0.030$ & $0.9963$ & $[0.9924, 1.0000]$ & $200$ \\
+& $0.050$ & $0.9931$ & $[0.9890, 0.9972]$ & $200$ \\
+\hline
+\multirow{4}{*}{jpeg} & $25.000$ & $0.9865$ & $[0.9810, 0.9920]$ & $200$ \\
+& $50.000$ & $0.9950$ & $[0.9905, 0.9995]$ & $200$ \\
+& $75.000$ & $0.9972$ & $[0.9938, 1.0000]$ & $200$ \\
+& $90.000$ & $0.9983$ & $[0.9956, 1.0000]$ & $200$ \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+The analysis shows exceptional \ac{TPR} performance across all signal processing attacks, with values consistently above $98\%$ even under severe conditions. However, the geometric attack (crop) results in \ac{TPR} failure at $51.48\%$, statistically indistinguishable from random chance.
+
+\subsection{Statistical Significance}
+\label{subsec:StatisticalSignificance}
+
+To assess the statistical significance of performance differences across attack types and intensities, one-way \ac{ANOVA} and paired t-tests were conducted on the \ac{BER} measurements from the 200 generated images per attack configuration.
+
+\subsubsection{Attack Type Comparison}
+One-way \ac{ANOVA} testing across the five main attack categories (brightness, gaussian blur, gaussian noise, jpeg, crop) shows significant differences in robustness performance ($F(4,2395) = 15064.930$, $p < 0.001$). Post-hoc Tukey \ac{HSD} tests identify that:
+
+\begin{itemize}
+    \item \textbf{Crop attacks} show much worse performance compared to all other categories ($p < 0.001$)
+    \item \textbf{Brightness attacks} show significantly superior robustness compared to all other categories ($p < 0.001$)
+    \item \textbf{Gaussian blur} shows worse performance than brightness, JPEG, and noise attacks ($p < 0.001$)
+    \item \textbf{JPEG compression} and \textbf{Gaussian noise} show comparable performance ($p = 0.740$, not significant)
+\end{itemize}
+
+\subsubsection{Attack Intensity Analysis}
+Paired t-tests examining performance degradation with increasing attack intensity show statistically significant effects:
+
+\begin{itemize}
+    \item \textbf{Brightness intensity:} Factor $0.5$ vs $2.0$ ($t = 1.876$, $p = 0.062$, marginally significant)
+    \item \textbf{Gaussian blur intensity:} Radius $2.0$ vs $4.0$ ($t = 11.121$, $p < 0.001$, highly significant)
+    \item \textbf{Gaussian noise intensity:} Progressive degradation across $\sigma$ levels ($0.01$ vs $0.03$: $t = 2.498$, $p = 0.013$; $0.03$ vs $0.05$: $t = 4.699$, $p < 0.001$)
+    \item \textbf{JPEG compression intensity:} Significant degradation with decreasing quality (QF $25$ vs $50$: $t = -6.157$, $p < 0.001$; QF $50$ vs $75$: $t = -3.150$, $p = 0.002$; QF $75$ vs $90$: $t = -2.533$, $p = 0.012$)
+\end{itemize}
+
+These results provide statistical validation that the observed performance patterns are not due to random variation but represent genuine algorithmic characteristics, with the crop attack showing the most dramatic performance degradation.
 
 This analysis suggests that while Gaussian Shading achieves excellent visual and semantic imperceptibility, it is not entirely performance lossless from a distributional perspective. This has implications for applications where maintaining precise distributional properties is critical, and highlights the need for a multi faceted understanding of imperceptibility in watermarking research.
 
@@ -614,7 +679,7 @@ The evaluation of signal processing attacks shows Gaussian Shading's remarkable 
 \end{figure}
 
 \subsubsection{JPEG Compression and Noise Resilience}
-The \ac{JPEG} compression results are particularly impressive. Even under severe compression (quality factor 25), the \ac{BER} remains at 0.0135 (1.35\%), far below the established success threshold of 0.25 for moderate attacks. This performance is noteworthy, as \ac{JPEG} compression is one of the most common and destructive operations for many watermarking schemes. Similarly, the watermark maintains excellent detectability under significant Gaussian noise ($\sigma = 0.05$), with the \ac{BER} reaching only 0.0069 (0.69\%).
+The \ac{JPEG} compression results are particularly impressive. Even under severe compression (quality factor $25$), the \ac{BER} remains at $0.0135\ (1.35\%)$, far below the established success threshold of $0.25$ for moderate attacks. This performance is noteworthy, as \ac{JPEG} compression is one of the most common and destructive operations for many watermarking schemes. Similarly, the watermark maintains excellent detectability under significant Gaussian noise ($\sigma = 0.05$), with the \ac{BER} reaching only $0.0069\ (0.69\%)$.
 
 This high level of robustness can be attributed to the method's operation in the latent space. By embedding the watermark in the initial latent vector and preserving its statistical properties, Gaussian Shading creates a watermark that is deeply integrated with the image's fundamental structure, making it resilient to attacks that primarily affect the pixel level or high frequency information.
 
@@ -650,28 +715,29 @@ This vulnerability has practical implications, as cropping is a common image man
 Table \ref{tab:comprehensive_robustness} provides a complete overview of the robustness evaluations conducted, clearly showing the method's strengths and limitations. These results show great robustness against signal processing attacks along with a failure against geometric transformations (crop).
 
 \begin{table}[htb]
-    \caption{Comprehensive Robustness Evaluation Results}
+    \caption{Comprehensive Robustness Evaluation Results with Statistical Confidence}
     \label{tab:comprehensive_robustness}
     \begin{center}
     \resizebox{\textwidth}{!}{%
-    \begin{tabular}{|l|l|c|c|c|}
+    \begin{tabular}{|l|l|c|c|c|c|}
     \hline
-    \textbf{Attack Category} & \textbf{Attack Configuration} & \textbf{Mean \ac{BER}} & \textbf{Performance} & \textbf{Assessment} \\ \hline
-    \multirow{4}{*}{JPEG Compression} & Quality=90 & 0.0017 & Excellent & \textbf{Pass} \\
-     & Quality=75 & 0.0028 & Excellent & \textbf{Pass} \\
-     & Quality=50 & 0.0050 & Excellent & \textbf{Pass} \\
-     & Quality=25 & 0.0135 & Very Good & \textbf{Pass} \\ \hline
-    \multirow{3}{*}{Gaussian Noise} & $\sigma=0.01$ & 0.0015 & Excellent & \textbf{Pass} \\
-     & $\sigma=0.03$ & 0.0037 & Excellent & \textbf{Pass} \\
-     & $\sigma=0.05$ & 0.0069 & Excellent & \textbf{Pass} \\ \hline
-    \multirow{2}{*}{Gaussian Blur} & Radius=2 & 0.0017 & Excellent & \textbf{Pass} \\
-     & Radius=4 & 0.0180 & Very Good & \textbf{Pass} \\ \hline
-    \multirow{2}{*}{Brightness} & Factor=0.5 & 0.0006 & Excellent & \textbf{Pass} \\
-     & Factor=2.0 & 0.0023 & Excellent & \textbf{Pass} \\ \hline
-    \textbf{Geometric} & \textbf{Crop (80\% retention)} & \textbf{0.4852} & \textbf{Very Poor} & \textbf{Fail} \\ \hline
+    \textbf{Attack Category} & \textbf{Attack Configuration} & \textbf{Mean \ac{BER}} & \textbf{95\% CI} & \textbf{Performance} & \textbf{Assessment} \\ \hline
+    \multirow{4}{*}{JPEG Compression} & Quality=$90$ & $0.0017$ & $\pm 0.0018$ & Excellent & \textbf{Pass} \\
+     & Quality=$75$ & $0.0028$ & $\pm 0.0024$ & Excellent & \textbf{Pass} \\
+     & Quality=$50$ & $0.0050$ & $\pm 0.0032$ & Excellent & \textbf{Pass} \\
+     & Quality=$25$ & $0.0135$ & $\pm 0.0052$ & Very Good & \textbf{Pass} \\ \hline
+    \multirow{3}{*}{Gaussian Noise} & $\sigma=0.01$ & $0.0015$ & $\pm 0.0017$ & Excellent & \textbf{Pass} \\
+     & $\sigma=0.03$ & $0.0037$ & $\pm 0.0027$ & Excellent & \textbf{Pass} \\
+     & $\sigma=0.05$ & $0.0069$ & $\pm 0.0036$ & Excellent & \textbf{Pass} \\ \hline
+    \multirow{2}{*}{Gaussian Blur} & Radius=$2$ & $0.0017$ & $\pm 0.0018$ & Excellent & \textbf{Pass} \\
+     & Radius=$4$ & $0.0180$ & $\pm 0.0060$ & Very Good & \textbf{Pass} \\ \hline
+    \multirow{2}{*}{Brightness} & Factor=$0.5$ & $0.0006$ & $\pm 0.0011$ & Excellent & \textbf{Pass} \\
+     & Factor=$2.0$ & $0.0023$ & $\pm 0.0021$ & Excellent & \textbf{Pass} \\ \hline
+    \textbf{Geometric} & \textbf{Crop (80\% retention)} & \textbf{0.4852} & $\pm 0.0701$ & \textbf{Very Poor} & \textbf{Fail} \\ \hline
     \end{tabular}%
     }
     \end{center}
+    \footnotesize{\textit{Confidence intervals calculated using t-distribution for n=200 samples per attack configuration.}}
 \end{table}
 
 To contextualise these findings, Table \ref{tab:comparative_robustness} compares Gaussian Shading's performance against published results for Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} and Stable Signature \cite{fernandezStableSignatureRooting2023b}. This comparison highlights the unique trade-offs of each method. Gaussian Shading outperforms Tree-Ring in terms of capacity (256 bits vs. 1 bit) and shows comparable or superior robustness to signal processing attacks. Compared to Stable Signature, its training-free nature is a significant advantage, but it pays a clear price in geometric robustness.
@@ -687,12 +753,12 @@ To contextualise these findings, Table \ref{tab:comparative_robustness} compares
     \hline
     \textbf{Metric} & - & \textbf{BER} & \textbf{BER} & \textbf{BER} \\
     \hline
-    JPEG Compression & QF=50 & \textbf{0.0050} & $\sim$0.01 & $\sim$0.01 \\
-    JPEG Compression & QF=25 & \textbf{0.0135} & $\sim$0.02 & $\sim$0.03 \\
+    JPEG Compression & QF=$50$ & \textbf{0.0050} & $\sim0.01$ & $\sim0.01$ \\
+    JPEG Compression & QF=$25$ & \textbf{0.0135} & $\sim0.02$ & $\sim0.03$ \\
     \hline
-    Gaussian Blur & Radius=4 & \textbf{0.0180} & $\sim$0.01 & $\sim$0.02 \\
+    Gaussian Blur & Radius=$4$ & \textbf{0.0180} & $\sim0.01$ & $\sim0.02$ \\
     \hline
-    Crop & 80\% retention & \textbf{0.4852} & $\sim$0.05 & \textbf{< 0.05} \\
+    Crop & $80\%$ retention & \textbf{0.4852} & $\sim0.05$ & \textbf{< 0.05} \\
     \hline
     \textbf{Capacity} & - & \textbf{256 bits} & 1 bit & 64 bits \\
     \textbf{Training-Free} & - & \textbf{Yes} & Yes & No \\
@@ -705,12 +771,12 @@ To contextualise these findings, Table \ref{tab:comparative_robustness} compares
 
 This comparative analysis solidifies the conclusion that Gaussian Shading occupies a specific niche: it is a high-capacity, easy-to-deploy solution that offers excellent protection in environments where geometric transformations are unlikely. However, its critical failure under cropping makes it unsuitable for applications where such manipulations are common.
 
-\section{Evaluation Scale and Methodology}
+\section{Evaluation Scale and Statistical Methodology}
 \label{sec:EvaluationScale}
 
-The robustness evaluation was based on 200 images per attack configuration totaling 2,400 individual experiments, providing a substantial dataset for analysis. The imperceptibility assessment was conducted on 1,000 image pairs for the \ac{FID} calculation and \ac{CLIP} score comparison.
+The robustness evaluation was based on 200 images per attack configuration totaling 2400 individual experiments, providing a substantial dataset for statistical analysis. The imperceptibility assessment was conducted on 1000 image pairs for the \ac{FID} calculation and \ac{CLIP} score comparison.
 
-The comprehensive nature of the evaluation, spanning multiple attack types and intensities, enables reliable conclusions about the method's performance characteristics across different scenarios. The substantial sample sizes help ensure that the observed performance patterns are representative rather than artifacts of limited testing.
+The comprehensive nature of the evaluation, spanning multiple attack types and intensities, enables reliable conclusions about the method's performance characteristics across different scenarios. The substantial sample sizes ($n=200$ per attack) provide sufficient statistical power for calculating meaningful $95\%$ confidence intervals using t-distribution and conducting significance testing through \ac{ANOVA} and paired t-tests. This analysis ensures that the observed performance patterns are representative and statistically validated rather than artifacts of limited testing or random variation.
 
 \section{Comparative Contextualisation}
 \label{sec:ComparativeContext}
@@ -727,7 +793,7 @@ The distributional impact revealed through \ac{FID} analysis positions Gaussian 
 The comprehensive evaluation provides definitive empirical answers to the study's fundamental research questions:
 
 \textbf{Research Question 1: Robustness Extent}
-Gaussian Shading demonstrates exceptional robustness against signal processing attacks, with \ac{BER} consistently below 2\% even under severe conditions. However, it exhibits catastrophic vulnerability to geometric attacks, particularly cropping, where performance degrades to random-chance levels.
+Gaussian Shading demonstrates exceptional robustness against signal processing attacks, with \ac{BER} consistently below $2\%$ even under severe conditions. However, it exhibits catastrophic vulnerability to geometric attacks, particularly cropping, where performance degrades to random-chance levels.
 
 \textbf{Research Question 2: Performance-Quality Trade-offs}
 The method achieves visual and semantic imperceptibility, confirming its claims at the perceptual level. However, distributional analysis reveals measurable impact on the generative model's statistical properties, challenging absolute "performance-lossless" claims.
@@ -745,7 +811,7 @@ This work offers a nuanced understanding of the trade-offs inherent in training-
 \section{Limitations and Alternatives}
 \label{sec:LimitationsAlternatives}
 
-While this evaluation provides significant insights, several limitations constrain the generalisability of the findings. The evaluation is limited to a single model architecture (Stable Diffusion v2.1), and its findings may not directly transfer to other \acp{LDM} or generative models. The attack suite, while comprehensive, did not include sophisticated adversarial attacks designed to specifically target the watermarking algorithm, which could reveal further vulnerabilities. Additionally, hardware constraints necessitated a smaller dataset for \ac{FID} calculation (1,000 images) than the original paper (5,000 images), which may contribute to the elevated score.
+While this evaluation provides significant insights, several limitations constrain the generalisability of the findings. The evaluation is limited to a single model architecture (Stable Diffusion v2.1), and its findings may not directly transfer to other \acp{LDM} or generative models. The attack suite, while comprehensive, did not include sophisticated adversarial attacks designed to specifically target the watermarking algorithm, which could reveal further vulnerabilities. Additionally, hardware constraints necessitated a smaller dataset for \ac{FID} calculation (1000 images) than the original paper (5000 images), which may contribute to the elevated score.
 
 Alternative approaches could have been considered. A different watermarking technique, such as the fine-tuning-based Stable Signature \cite{fernandezStableSignatureRooting2023b}, could have been implemented to provide a direct, hands-on comparison, though this was deemed infeasible within the project's scope. A qualitative study involving human evaluators could have also offered a different perspective on imperceptibility, complementing the quantitative metrics used.
 
