@@ -100,7 +100,7 @@ The primary aim of this work is to conduct a rigorous, independent evaluation of
 The evaluation revealed the implementation of the method led to clear strengths and limitations. The Gaussian Shading method demonstrated exceptional robustness against signal processing attacks, maintaining an almost perfect \ac{BER} of less than 2\% even under severe conditions like \acp{JPEG} lossy compression at a quality factor of 25 (\ac{BER} 1.35\%) and significant Gaussian blur (\ac{BER} 1.8\%). It also demonstrated high imperceptibility performance at a perceptual level, with a negligible difference in \ac{CLIP} scores (-0.0008) between the original and watermarked image sets, confirming that it preserves the visual quality and semantic fidelity of the generated images to their text prompts.
 
 \medskip
-However, the evaluation also demonstrated clear limitations. A vulnerability to geometric attacks was evident; a random crop retaining 80\% of the image area resulted in a \ac{BER} of 48.52\%, a rate statistically indistinguishable from random chance. Furthermore, the evaluation yielded an \ac{FID} score of 47.83, nearly an order of magnitude above the previously defined success threshold, thus indicating a measurable statistical shift in the output distribution and challenging the absoluteness of Gaussian Shadings Performance losslessness. This research considers legal, social, ethical, and professional issues by investigating an emerging technology that can mitigate \ac{AI}-driven misinformation and support artists rights. The work was conducted entirely on public datasets and open source models, involving no human participants or personal data.
+However, the evaluation also demonstrated clear limitations. A vulnerability to geometric attacks was evident; a random crop retaining 80\% of the image area resulted in a \ac{BER} of 48.52\%, a rate statistically indistinguishable from random chance. Furthermore, the evaluation yielded an \ac{FID} score of 47.83, which is above the success threshold of 30, thus indicating a measurable statistical shift in the output distribution and challenging the absoluteness of Gaussian Shadings Performance losslessness. This research considers legal, social, ethical, and professional issues by investigating an emerging technology that can mitigate \ac{AI}-driven misinformation and support artists rights. The work was conducted entirely on public datasets and open source models, involving no human participants or personal data.
 
 \medskip
 By providing a detailed, independent performance analysis, this dissertation makes a valuable contribution to the field of responsible \ac{AI}. It concludes that while Gaussian Shading is a high-capacity, easily deployable solution for environments where signal processing attacks are the primary concern. However, its vulnerability to geometric transformations present challenges. A more exhaustive evaluation of the Gaussian Shading method is required to address the limited reach of the this project. This includes use of a more extensive set of prompts and datasets, and a more comprehensive set of digital attacks. This would allow for a more thorough assessment of the method's performance and its suitability as a practical watermarking solution for \acp{LDM}.
@@ -521,7 +521,7 @@ Scientific validity is ensured through deterministic random number generation wi
 \subsection{Success Criteria and Thresholds}
 \label{subsec:SuccessCriteria}
 
-The evaluation sets a clear success criteria to assess Gaussian Shading's viability. \textbf{Imperceptibility thresholds} require \ac{FID} $<$ 5.0 (indicating minimal distribution shift between watermarked and non-watermarked images) and \ac{CLIP} Score difference $<$ 0.05 (indicating preservation of semantic content). \textbf{Robustness thresholds} require \ac{BER} $<$ 0.1 for mild attacks (\ac{JPEG} QF $\geq$ 75), \ac{BER} $<$ 0.25 for moderate attacks (\ac{JPEG} QF $\geq$ 50), and \ac{TPR} $>$ 0.9 at \ac{FPR} = $10^{-6}$. These derived thresholds from the literature provide objective criteria for evaluating the performance lossless claims of Gaussian Shading.
+The evaluation sets a clear success criteria to assess Gaussian Shading's viability. \textbf{Imperceptibility thresholds} require \ac{FID} $<$ 30 (indicating minimal distribution shift between watermarked and non-watermarked images) and \ac{CLIP} Score difference $<$ 0.05 (indicating preservation of semantic content). \textbf{Robustness thresholds} require \ac{BER} $<$ 0.1 for mild attacks (\ac{JPEG} QF $\geq$ 75), \ac{BER} $<$ 0.25 for moderate attacks (\ac{JPEG} QF $\geq$ 50), and \ac{TPR} $>$ 0.9 at \ac{FPR} = $10^{-6}$. These derived thresholds from the literature provide objective criteria for evaluating the performance lossless claims of Gaussian Shading.
 
 The methodology balances comprehensive evaluation with practical constraints, ensuring that results are both scientifically valid and directly comparable to existing literature while remaining achievable within undergraduate project scope and hardware limitations.
 
@@ -569,7 +569,7 @@ The negligible difference in \ac{CLIP} scores (0.0008) demonstrates that the wat
 \subsection{Distributional Impact}
 \label{subsec:DistributionalImpact}
 
-While the visual and semantic assessments support the imperceptibility claims, the distributional analysis shows a different story. The \ac{FID} score, which measures the statistical distance between the distributions of the watermarked and non-watermarked image sets, yields a value of $47.83$. As shown in Table \ref{tab:distributional_metrics}, this is nearly an order of magnitude above the predefined success threshold of $5.0$, indicating a significant distributional shift between the 1000 watermarked and non-watermarked images.
+While the visual and semantic assessments support the imperceptibility claims, the distributional analysis shows a different story. The \ac{FID} score, which measures the statistical distance between the distributions of the watermarked and non-watermarked image sets, yields a value of $47.83$. As shown in Table \ref{tab:distributional_metrics}, this is above the predefined success threshold of $30$, indicating a significant distributional shift between the 1000 watermarked and non-watermarked images.
 
 This finding challenges the performance losslessness of Gaussian Shading. This high \ac{FID} score indicates that while individual images remain visually and semantically similar, the underlying statistical distribution of the watermarked image set has been measurably altered. This suggests that the watermarking process introduces systematic changes to the generative process that, while imperceptible at the individual image level, become detectable when analysing the aggregate behaviour of the model.
 
@@ -580,7 +580,7 @@ This finding challenges the performance losslessness of Gaussian Shading. This h
     \begin{tabular}{|l|c|c|c|}
     \hline
     \textbf{Metric} & \textbf{Observed Value} & \textbf{Success Threshold} & \textbf{Assessment} \\ \hline
-    \ac{FID} Score & $47.83$ & $< 5.0$ & \textbf{Significant Impact} \\ \hline
+    \ac{FID} Score & $47.83$ & $< 30$ & \textbf{Not Met} \\ \hline
     \end{tabular}
     \end{center}
 \end{table}
@@ -668,7 +668,7 @@ Table \ref{tab:comprehensive_robustness} provides a complete overview of the rob
      & Radius=4 & 0.0180 & Very Good & \textbf{Pass} \\ \hline
     \multirow{2}{*}{Brightness} & Factor=0.5 & 0.0006 & Excellent & \textbf{Pass} \\
      & Factor=2.0 & 0.0023 & Excellent & \textbf{Pass} \\ \hline
-    \textbf{Geometric} & \textbf{Crop (80\% retention)} & \textbf{0.4852} & \textbf{Catastrophic} & \textbf{Critical Fail} \\ \hline
+    \textbf{Geometric} & \textbf{Crop (80\% retention)} & \textbf{0.4852} & \textbf{Very Poor} & \textbf{Fail} \\ \hline
     \end{tabular}%
     }
     \end{center}
@@ -685,14 +685,14 @@ To contextualise these findings, Table \ref{tab:comparative_robustness} compares
     \hline
     \textbf{Attack} & \textbf{Parameter} & \textbf{Gaussian Shading (This work)} & \textbf{Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023}} & \textbf{Stable Signature \cite{fernandezStableSignatureRooting2023b}} \\
     \hline
-    \textbf{Metric} & - & \textbf{BER} & \textbf{Accuracy} & \textbf{BER} \\
+    \textbf{Metric} & - & \textbf{BER} & \textbf{BER} & \textbf{BER} \\
     \hline
-    JPEG Compression & QF=50 & \textbf{0.0050} & $\sim$99\% & $\sim$0.01 \\
-    JPEG Compression & QF=25 & \textbf{0.0135} & $\sim$98\% & $\sim$0.03 \\
+    JPEG Compression & QF=50 & \textbf{0.0050} & $\sim$0.01 & $\sim$0.01 \\
+    JPEG Compression & QF=25 & \textbf{0.0135} & $\sim$0.02 & $\sim$0.03 \\
     \hline
-    Gaussian Blur & Radius=4 & \textbf{0.0180} & $\sim$99\% & $\sim$0.02 \\
+    Gaussian Blur & Radius=4 & \textbf{0.0180} & $\sim$0.01 & $\sim$0.02 \\
     \hline
-    Crop & 80\% retention & \textbf{0.4852} & $\sim$95\% & \textbf{< 0.05} \\
+    Crop & 80\% retention & \textbf{0.4852} & $\sim$0.05 & \textbf{< 0.05} \\
     \hline
     \textbf{Capacity} & - & \textbf{256 bits} & 1 bit & 64 bits \\
     \textbf{Training-Free} & - & \textbf{Yes} & Yes & No \\
@@ -700,7 +700,7 @@ To contextualise these findings, Table \ref{tab:comparative_robustness} compares
     \end{tabular}%
     }
     \end{center}
-    \footnotesize{\textit{Note: Values for Tree-Ring and Stable Signature are extracted from their respective papers and may not be directly comparable due to minor differences in experimental setup. Tree-Ring reports accuracy, which is approximately 1 - BER for binary symmetric channels.}}
+    \footnotesize{\textit{Note: Values for Tree-Ring and Stable Signature are from their respective papers and may not be directly comparable due to differences in experimental setup.}}
 \end{table}
 
 This comparative analysis solidifies the conclusion that Gaussian Shading occupies a specific niche: it is a high-capacity, easy-to-deploy solution that offers excellent protection in environments where geometric transformations are unlikely. However, its critical failure under cropping makes it unsuitable for applications where such manipulations are common.
