@@ -827,11 +827,11 @@ The most critical area for future work is enhancing \textbf{geometric robustness
 This research provides crucial insights for the broader development of responsible \ac{AI} systems. For \textbf{policy and regulation}, the findings demonstrate that while watermarking is a promising tool, its current limitations (e.g., geometric vulnerability) must be considered when mandating its use. For \textbf{industry implementation}, the clear performance characterisation enables informed technology selection, guiding practitioners to use Gaussian Shading in scenarios where signal processing attacks are the primary concern. For the \textbf{academic community}, this work highlights the need for more nuanced, multi-dimensional evaluation frameworks and pinpoints geometric robustness as a key priority for future research. By contributing a rigorous, independent assessment, this study helps build a foundation for developing more reliable and effective technologies for digital content authentication in the age of \ac{AI}.
 
 \appendix
-\chapter{Additional Results and Implementation Details}
+\chapter{Appendix: Additional Content}
 \label{app:AdditionalContent}
 
 \section{Gaussian Shading sampling function.}
-\begin{lstlisting}[language=Python, caption={Distribution-Preserving Sampling Implementation}]
+\begin{lstlisting}[language=Python, caption={Gaussian Shading Sampling Implementation}]
 def distribution_preserving_sampling(z_t, m, alpha=0.5):
     # Convert to uniform using normal CDF
     u_z = 0.5 * (1 + torch.erf(z_t / math.sqrt(2)))
@@ -855,12 +855,50 @@ def distribution_preserving_sampling(z_t, m, alpha=0.5):
     return z_watermarked
 \end{lstlisting}
 
+\section{Core Watermark Evaluation Logic}
+This function implements the main part of watermark detection, supporting the \ac{BER} calculations in the results.
+\begin{lstlisting}[language=Python, caption={Watermark Detection and Evaluation Implementation}]
+def eval_watermark(self, reversed_m):
+    # Convert latent values to binary (threshold at 0)
+    reversed_m = (reversed_m > 0).int()
+    
+    # Decrypt the watermark using the stored key
+    reversed_sd = (reversed_m + self.key) % 2
+    
+    # Apply diffusion inverse to reconstruct watermark
+    reversed_watermark = self.diffusion_inverse(reversed_sd)
+    
+    # Calculate accuracy by comparing with original watermark
+    correct = (reversed_watermark == self.watermark).float().mean().item()
+    
+    # Update detection counters based on thresholds
+    if correct >= self.tau_onebit:
+        self.tp_onebit_count = self.tp_onebit_count + 1
+    if correct >= self.tau_bits:
+        self.tp_bits_count = self.tp_bits_count + 1
+    
+    return correct
+\end{lstlisting}
+
+\section{GPU Memory Optimisation}
+This function enabled large scale evaluation (2400 robustness experiments, 1000 imperceptibility experiments) on consumer hardware (RTX 2070 Super, 8GB VRAM).
+\begin{lstlisting}[language=Python, caption={GPU Memory Optimisation}]
+def optimise_gpu_memory():
+    """Optimise GPU memory usage."""
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        torch.cuda.synchronize()
+        # Enable memory efficient attention if available
+        try:
+            torch.backends.cuda.enable_flash_sdp(True)
+        except:
+            pass
+\end{lstlisting}
+
 \section{Statistical Analysis Code Snippets}
 This section provides key Python code snippets from the statistical analysis script for reproducibility.
-
-\subsection{Confidence Interval Calculation}
-{\footnotesize
-\begin{verbatim}
+% \subsection{Confidence Interval Calculation}
+\begin{lstlisting}[language=Python, caption={Confidence Interval Calculation}]
 import scipy.stats as stats
 import numpy as np
 
@@ -875,12 +913,10 @@ def calculate_confidence_intervals(data, confidence=0.95):
     upper_bound = min(1, mean + margin)
     
     return mean, lower_bound, upper_bound, margin, t_critical
-\end{verbatim}
-}
+\end{lstlisting}
 
-\subsection{ANOVA Analysis}
-{\footnotesize
-\begin{verbatim}
+% \subsection{ANOVA Analysis}
+\begin{lstlisting}[language=Python, caption={ANOVA Analysis}]
 from scipy.stats import f_oneway
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
@@ -903,32 +939,7 @@ tukey_results = pairwise_tukeyhsd(
     groups=detailed_data['attack_name'],
     alpha=0.05
 )
-\end{verbatim}
-}
-
-\subsection{TPR Calculation from Accuracy}
-{\footnotesize
-\begin{verbatim}
-# Convert accuracy to TPR (True Positive Rate)
-detailed_data['tpr'] = detailed_data['accuracy']
-detailed_data['fpr'] = 1 - detailed_data['accuracy']
-
-# Calculate confidence intervals per attack configuration
-confidence_results = []
-configs = detailed_data[['attack_name', 'attack_param']
-                      ].drop_duplicates().itertuples()
-
-for config in configs:
-    config_data = detailed_data[
-        (detailed_data['attack_name'] == config.attack_name) &
-        (detailed_data['attack_param'] == config.attack_param)
-    ]
-    
-    # Calculate BER confidence intervals
-    ber_mean, ber_lower, ber_upper, ber_margin, t_crit = \
-        calculate_confidence_intervals(config_data['ber'].values)
-\end{verbatim}
-}
+\end{lstlisting}
 
 \chapter{Ethics Checklist}
 \label{app:EthicsChecklist}
