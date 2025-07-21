@@ -530,17 +530,17 @@ The methodology balances comprehensive evaluation with practical constraints, en
 \chapter{Results and Analysis}
 \label{cha:Results}
 
-This chapter presents a comprehensive evaluation of the Gaussian Shading watermarking technique, examining its imperceptibility and robustness through  statistical analysis. The evaluation addresses the research questions concerning the viability of Gaussian Shading as a practical watermarking solution for \ac{AI}-generated images, and its place in the digital image watermarking landscape.
+This chapter presents a thorough evaluation of the Gaussian Shading watermarking technique, examining its imperceptibility and robustness through  statistical analysis. The evaluation addresses the research questions concerning the viability of Gaussian Shading as a practical watermarking solution for \ac{AI}-generated images, and its place in the digital image watermarking landscape.
 
 \section{Imperceptibility Analysis}
 \label{sec:ImperceptibilityAnalysis}
 
-The imperceptibility evaluation constitutes the foundational assessment of Gaussian Shading's main advantage: that watermarks can be embedded without degrading image quality. This analysis makes use of a varied approach, using semantic alignment metrics, and distributional statistics to provide a comprehensive understanding of the watermark's impact.
+The imperceptibility evaluation constitutes the foundational assessment of Gaussian Shading's main advantage: that watermarks can be embedded without degrading image quality. This analysis makes use of a varied approach, using semantic alignment metrics and distributional statistics to provide a comprehensive understanding of the watermark's impact.
 
 \subsection{Visual and Semantic Preservation}
 \label{subsec:VisualSemanticPreservation}
 
-Qualitative assessment confirms that the watermarking process consistently produces hig quality images. Figure \ref{fig:visual_comparison} demonstrates the framework's ability to generate visually appealing images across diverse categories, including landscapes, urban scenes, and food, with no additional artifacts or degradation. While a direct visual comparison of identical seeds is not feasible due to the nature of the sampling process, the consistent high quality across a wide range of content strongly suggests that the method preserves visual fidelity.
+Qualitative assessment confirms that the watermarking process consistently produces high quality images. Figure \ref{fig:visual_comparison} demonstrates the framework's ability to generate visually appealing images across diverse categories, including landscapes, urban scenes and food, with no additional artifacts or degradation. While a direct visual comparison of identical seeds is not feasible due to the nature of the sampling process, the consistent high quality generation across a wide range of content strongly suggests that the method preserves visual fidelity.
 
 \begin{figure}[htb]
     \centering
@@ -549,7 +549,7 @@ Qualitative assessment confirms that the watermarking process consistently produ
     \label{fig:visual_comparison}
 \end{figure}
 
-To quantify semantic preservation, the evaluation uses \ac{CLIP} scores, which measure the semantic alignment between text prompts and the generated images. The results, presented in Table \ref{tab:semantic_metrics}, show remarkable semantic consistency. The negligible difference of $-0.0008$ between the watermarked $(0.3091)$ and non-watermarked $(0.3099)$ image sets is well within the bounds of natural variation and meets the success threshold of $< 0.05$. This confirms that the watermarking process does not interfere with the model's ability to generate images that remain faithful to their textual descriptions.
+To quantify semantic preservation, the evaluation uses \ac{CLIP} scores, which measure the semantic alignment between text prompts and the generated images. The results, presented in Table \ref{tab:semantic_metrics}, show desirable semantic consistency. The negligible difference of $-0.0008$ between the watermarked $(0.3091)$ and non-watermarked $(0.3099)$ image sets is well within the bounds of natural variation and meets the success threshold of $< 0.05$. This confirms that the watermarking process does not interfere with the model's ability to generate images that remain faithful to their textual prompt descriptions.
 
 \begin{table}[htb]
     \caption{Semantic Preservation Analysis using CLIP Score}
@@ -564,8 +564,6 @@ To quantify semantic preservation, the evaluation uses \ac{CLIP} scores, which m
     \end{tabular}
     \end{center}
 \end{table}
-
-The negligible difference in \ac{CLIP} scores (0.0008) demonstrates that the watermarking process preserves the semantic integrity of the generation process, ensuring that the resulting images remain faithful to their textual descriptions.
 
 \subsection{Distributional Impact}
 \label{subsec:DistributionalImpact}
