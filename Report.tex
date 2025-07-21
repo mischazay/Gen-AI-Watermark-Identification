@@ -39,7 +39,7 @@
 \BSc
 
 \dedication{
-    To my parents, for their love and support.
+    To my parents for their love and support, and to my cat Orie.
 }
 
 \acknowledgements{
@@ -496,18 +496,16 @@ Therefore, distribution based metrics are more appropriate. The \ac{FID} score i
 
 \subsection{Comparative Analysis Strategy}
 \label{subsec:ComparativeAnalysisStrategy}
-
-Rather than implementing competing methods, the evaluation strategy employs \textbf{benchmark extraction} from published literature:
+A fundamental challenge in watermarking research is that differing papers will apply their own evaluation metrics and criteria, therefore making reliable comparisons difficult, without also implementing other methods using the same tests, which would be difficult for numerous reasons, for example, Stable Signature is not training agnostic, meaning deployment requires retraining of \ac{GAIM} training data. Acknowledging these limitations we shall compare methodological approaches rather than direct numerical benchmarking:
 
 \begin{enumerate}
-    \item \textbf{Literature Analysis:} Extract performance metrics from Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} and Stable Signature \cite{fernandezStableSignatureRooting2023b} papers.
-    \item \textbf{Standardised Comparison:} Align evaluation datasets and attack parameters with published benchmarks.
+    \item \textbf{Methodological Analysis:} Focus on fundamental characteristics and tradeoffs of different approaches (Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} and Stable Signature \cite{fernandezStableSignatureRooting2023b}).
+    \item \textbf{Cross-Study Limitation Recognition:} Acknowledge that differences in experimental protocols, datasets, attack implementations, hardware configurations, and evaluation metrics can significantly influence reported performance figures.
     \item \textbf{Statistical Analysis:} Calculate $95\%$ confidence intervals for all key metrics using the 200 individual measurements per attack configuration. Perform statistical significance tests (paired t-tests, \ac{ANOVA}) to assess performance differences across attack types and intensities.
-    \item \textbf{Performance Tables:} Create comparative tables showing relative performance across methods with confidence bounds and significance indicators.
+    \item \textbf{Independent Rigorous Evaluation:} Provide comprehensive statistical analysis of Gaussian Shading with $95\%$ confidence intervals and significance testing to enable future research to make informed comparisons.
 \end{enumerate}
 
-This approach enables rigorous comparison while remaining feasible within project constraints.
-
+This approach prioritises methodological transparency and acknowledges the current limitations in \ac{AI} image watermarking.
 \subsection{Statistical Rigor and Reproducibility}
 \label{subsec:StatisticalRigor}
 
@@ -740,33 +738,40 @@ Table \ref{tab:comprehensive_robustness} provides a complete overview of the rob
     \footnotesize{\textit{Confidence intervals calculated using t-distribution for n=200 samples per attack configuration.}}
 \end{table}
 
-To contextualise these findings, Table \ref{tab:comparative_robustness} compares Gaussian Shading's performance against published results for Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} and Stable Signature \cite{fernandezStableSignatureRooting2023b}. This comparison highlights the unique trade-offs of each method. Gaussian Shading outperforms Tree-Ring in terms of capacity (256 bits vs. 1 bit) and shows comparable or superior robustness to signal processing attacks. Compared to Stable Signature, its training-free nature is a significant advantage, but it pays a clear price in geometric robustness.
+To contextualise these findings, Table \ref{tab:comparative_robustness} presents a methodological comparison with Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023} and Stable Signature \cite{fernandezStableSignatureRooting2023b}.
+
+The comparison reveals distinct positioning within the watermarking landscape. Gaussian Shading shares with Tree-Ring the advantage of training-free deployment, enabling rapid integration into existing systems without requiring model retraining. However, it substantially exceeds its capacity limitations (256 bits vs. 1 bit), making it more suitable for detailed attribution and traceability applications. Compared to Stable Signature, Gaussian Shading's plug-and-play deployment represents a practical advantage, though this simplicity may come at the cost of the geometric robustness that finetuned approaches can achieve.
+
+This methodological analysis highlights a key challenge in watermarking research: the difficulty of making reliable cross-study performance comparisons due to variations in experimental protocols, datasets, attack implementations, and evaluation metrics. Such differences can significantly influence reported performance figures, for direct numerical comparisons an identical evaluation framework should be used.
 
 \begin{table}[htb]
-    \caption{Comparative Robustness Against Benchmark Methods}
+    \caption{Comparison of Watermarking Techniques}
     \label{tab:comparative_robustness}
     \begin{center}
     \resizebox{\textwidth}{!}{%
-    \begin{tabular}{|l|c|c|c|c|}
+    \begin{tabular}{|l|c|c|c|}
     \hline
-    \textbf{Attack} & \textbf{Parameter} & \textbf{Gaussian Shading (This work)} & \textbf{Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023}} & \textbf{Stable Signature \cite{fernandezStableSignatureRooting2023b}} \\
+    \textbf{Characteristic} & \textbf{Gaussian Shading (This work)} & \textbf{Tree-Ring \cite{wenTreeRingsWatermarksInvisible2023}} & \textbf{Stable Signature \cite{fernandezStableSignatureRooting2023b}} \\
     \hline
-    \textbf{Metric} & - & \textbf{BER} & \textbf{BER} & \textbf{BER} \\
+    \textbf{Embedding Domain} & Latent (Initial Sampling) & Latent (Initial Noise) & Model (VAE Fine-tuning) \\
     \hline
-    JPEG Compression & QF=$50$ & \textbf{0.0050} & $\sim0.01$ & $\sim0.01$ \\
-    JPEG Compression & QF=$25$ & \textbf{0.0135} & $\sim0.02$ & $\sim0.03$ \\
+    \textbf{Training Required} & None & None & Yes (VAE fine-tuning) \\
     \hline
-    Gaussian Blur & Radius=$4$ & \textbf{0.0180} & $\sim0.01$ & $\sim0.02$ \\
+    \textbf{Watermark Capacity} & 256 bits & 1 bit & 64 bits \\
     \hline
-    Crop & $80\%$ retention & \textbf{0.4852} & $\sim0.05$ & \textbf{< 0.05} \\
+    \textbf{Integration Approach} & Distribution-preserving sampling & DDIM noise injection & Decoder modification \\
     \hline
-    \textbf{Capacity} & - & \textbf{256 bits} & 1 bit & 64 bits \\
-    \textbf{Training-Free} & - & \textbf{Yes} & Yes & No \\
+    \textbf{Signal Processing Robustness} & High (BER < 2\%) & Reported as high & Reported as high \\
+    \hline
+    \textbf{Geometric Attack Robustness} & Poor (Crop: BER 48.5\%) & Reported as moderate & Reported as good \\
+    \hline
+    \textbf{Deployment Complexity} & Low (plug-and-play) & Low (plug-and-play) & High (requires retraining) \\
+    \hline
+    \textbf{Model Architecture} & Any LDM & Diffusion Models & Stable Diffusion specific \\
     \hline
     \end{tabular}%
     }
     \end{center}
-    \footnotesize{\textit{Note: Values for Tree-Ring and Stable Signature are from their respective papers and may not be directly comparable due to differences in experimental setup.}}
 \end{table}
 
 This comparative analysis solidifies the conclusion that Gaussian Shading occupies a specific niche: it is a high-capacity, easy-to-deploy solution that offers excellent protection in environments where geometric transformations are unlikely. However, its critical failure under cropping makes it unsuitable for applications where such manipulations are common.
@@ -776,7 +781,7 @@ This comparative analysis solidifies the conclusion that Gaussian Shading occupi
 
 The robustness evaluation was based on 200 images per attack configuration totaling 2400 individual experiments, providing a substantial dataset for statistical analysis. The imperceptibility assessment was conducted on 1000 image pairs for the \ac{FID} calculation and \ac{CLIP} score comparison.
 
-The comprehensive nature of the evaluation, spanning multiple attack types and intensities, enables reliable conclusions about the method's performance characteristics across different scenarios. The substantial sample sizes ($n=200$ per attack) provide sufficient statistical power for calculating meaningful $95\%$ confidence intervals using t-distribution and conducting significance testing through \ac{ANOVA} and paired t-tests. This analysis ensures that the observed performance patterns are representative and statistically validated rather than artifacts of limited testing or random variation.
+The comprehensive nature of the evaluation, spanning multiple attack types and intensities, enables reliable conclusions about the method's performance across differing scenarios. The sample sizes ($n=200$ per attack) provide adequate data for calculating meaningful $95\%$ confidence intervals using t-distribution and conducting significance testing through \ac{ANOVA} and paired t-tests. This analysis ensures that the observed performance patterns are representative and statistically validated rather than artifacts of limited testing or random variation.
 
 \section{Comparative Contextualisation}
 \label{sec:ComparativeContext}
@@ -790,7 +795,7 @@ The distributional impact revealed through \ac{FID} analysis positions Gaussian 
 \section{Key Research Questions: Empirical Answers}
 \label{sec:ResearchAnswers}
 
-The comprehensive evaluation provides definitive empirical answers to the study's fundamental research questions:
+The evaluation provides definitive empirical answers to the study's fundamental research questions:
 
 \textbf{Research Question 1: Robustness Extent}
 Gaussian Shading demonstrates exceptional robustness against signal processing attacks, with \ac{BER} consistently below $2\%$ even under severe conditions. However, it exhibits catastrophic vulnerability to geometric attacks, particularly cropping, where performance degrades to random-chance levels.
@@ -804,7 +809,7 @@ Gaussian Shading offers unique advantages in training-free deployment and high c
 \chapter{Conclusion}
 \label{cha:conclusion}
 
-This dissertation has conducted a comprehensive, independent evaluation of the Gaussian Shading watermarking technique, providing critical empirical insights into its performance and practical viability. Through rigorous implementation and systematic evaluation against established benchmarks, this research makes several novel contributions to the field of \ac{AI} watermarking. The findings challenge the absolute nature of "performance-lossless" claims by revealing a measurable distributional impact despite perceptual imperceptibility. Furthermore, the research provides a definitive analysis of the method's robustness, highlighting exceptional resilience to signal processing attacks but a critical vulnerability to geometric transformations.
+This dissertation has conducted a comprehensive, independent evaluation of the Gaussian Shading watermarking technique, providing critical empirical insights into its performance and practical viability. Through rigorous implementation and systematic evaluation against established benchmarks, this research makes several novel contributions to the field of \ac{AI} watermarking. The findings challenge the absolute nature of "performance-lossless" claims by revealing a measurable distributional impact despite perceptual imperceptibility. Furthermore, the research provides a definitive analysis of the method's robustness, highlighting exceptional resilience to signal processing attacks but a vulnerability to geometric transformations.
 
 This work offers a nuanced understanding of the trade-offs inherent in training-free watermarking systems. By providing detailed performance data, this study equips researchers and practitioners with actionable insights for technology selection and informs future development priorities, particularly the need to enhance geometric robustness. Ultimately, this dissertation underscores the importance of multi-dimensional evaluation and contributes to the development of more reliable and effective solutions for ensuring the authenticity and traceability of \ac{AI}-generated media.
 
@@ -822,6 +827,19 @@ The findings from this research open several promising avenues for future invest
 
 \subsection{Future Research Directions}
 The most critical area for future work is enhancing \textbf{geometric robustness}. This could be achieved by integrating advanced error correction codes (e.g., Reed-Solomon), developing hierarchical spatial redundancy schemes, or exploring geometric-invariant feature spaces for embedding. Another key direction is \textbf{mitigating the distributional impact} identified by the high \ac{FID} score. This involves investigating more advanced distribution-preserving sampling techniques or adaptive watermarking strategies that adjust strength based on image content. Finally, future work should focus on \textbf{cross-model generalisation} by evaluating the technique across a diverse range of generative architectures and assessing resistance against sophisticated \textbf{adversarial attacks}.
+
+\subsubsection{Universal Benchmarking Framework Development}
+A critical priority for the watermarking research community is the development of standardised benchmarking frameworks. This research has highlighted significant challenges in making reliable cross-study comparisons due to variations in experimental protocols, datasets, and evaluation methodologies. Future work should focus on:
+
+\begin{itemize}
+    \item \textbf{Standardised Dataset Curation:} Establishing community-accepted prompt sets, image generation parameters, and evaluation datasets that span diverse content categories while maintaining reproducibility.
+    \item \textbf{Unified Attack Implementation:} Developing reference implementations of common attacks with precisely defined parameters to ensure consistency across studies.
+    \item \textbf{Standardised Evaluation Protocols:} Creating comprehensive evaluation frameworks that specify statistical analysis methods, confidence interval calculations, and significance testing procedures.
+    \item \textbf{Benchmarking Platform Development:} Building centralised platforms where researchers can submit their methods for evaluation against standardised test suites, similar to competitions in other AI domains.
+    \item \textbf{Reproducibility Requirements:} Establishing community standards for code availability, experimental documentation, and result reproducibility to enable meaningful comparative analysis.
+\end{itemize}
+
+Such frameworks would enable the research community to make meaningful progress assessments, identify genuine technical advances, and guide practical deployment decisions based on reliable comparative data rather than potentially incomparable study-specific results.
 
 \subsection{Implications for Responsible AI}
 This research provides crucial insights for the broader development of responsible \ac{AI} systems. For \textbf{policy and regulation}, the findings demonstrate that while watermarking is a promising tool, its current limitations (e.g., geometric vulnerability) must be considered when mandating its use. For \textbf{industry implementation}, the clear performance characterisation enables informed technology selection, guiding practitioners to use Gaussian Shading in scenarios where signal processing attacks are the primary concern. For the \textbf{academic community}, this work highlights the need for more nuanced, multi-dimensional evaluation frameworks and pinpoints geometric robustness as a key priority for future research. By contributing a rigorous, independent assessment, this study helps build a foundation for developing more reliable and effective technologies for digital content authentication in the age of \ac{AI}.
