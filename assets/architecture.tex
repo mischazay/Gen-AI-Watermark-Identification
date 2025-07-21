@@ -31,7 +31,8 @@
         
         % Row 4
         \node[data, below=of gaussian_shading] (watermarked_latent) {WM Latent};
-        \node[embedding, right=of watermarked_latent] (unet) {U-Net\\50 steps};
+        % --- MODIFICATION 1: Reposition the U-Net node to align with Text Emb. ---
+        \node[embedding] (unet) at (text_emb |- watermarked_latent) {U-Net\\50 steps};
         \node[embedding, right=of unet] (vae_dec) {VAE Dec.};
         
         % Final output
@@ -44,7 +45,7 @@
         \draw[arrow] (encryption) -- (gaussian_shading);
         \draw[arrow] (gaussian_shading) -- (watermarked_latent);
         \draw[arrow] (watermarked_latent) -- (unet);
-        \draw[arrow] (text_emb) -- (unet); % Corrected: Text Emb. conditions the U-Net
+        \draw[arrow] (text_emb.south) -- (unet.north);
         \draw[arrow] (unet) -- (vae_dec);
         \draw[arrow] (vae_dec) -- (wm_image);
     \end{tikzpicture}
