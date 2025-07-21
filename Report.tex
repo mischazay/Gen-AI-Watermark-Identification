@@ -570,7 +570,7 @@ To quantify semantic preservation, the evaluation uses \ac{CLIP} scores, which m
 
 While the visual and semantic assessments support the imperceptibility claims, the distributional analysis shows a different story. The \ac{FID} score, which measures the statistical distance between the distributions of the watermarked and non-watermarked image sets, yields a value of $47.83$. As shown in Table \ref{tab:distributional_metrics}, this is above the predefined success threshold of $30$, indicating a significant distributional shift between the 1000 watermarked and non-watermarked images.
 
-This finding challenges the performance losslessness of Gaussian Shading. This high \ac{FID} score indicates that while individual images remain visually and semantically similar, the underlying statistical distribution of the watermarked image set has been measurably altered. This suggests that the watermarking process introduces systematic changes to the generative process that, while imperceptible at the individual image level, become detectable when analysing the aggregate behaviour of the model.
+This finding challenges the performance losslessness of the Gaussian Shading method. This high \ac{FID} score indicates that while individual images remain visually and semantically similar, the underlying statistical distribution of the watermarked image set has been measurably altered. This suggests that the watermarking process introduces systematic changes to the generative process which, while imperceptible at the individual image level, become detectable when analysing the aggregate behaviour of the model.
 
 \begin{table}[htb]
     \caption{Distributional Metrics (FID Score)}
@@ -585,24 +585,25 @@ This finding challenges the performance losslessness of Gaussian Shading. This h
 \end{table}
 
 \subsubsection{Understanding the FID Score}
-The relatively high \ac{FID} score does not necessarily imply a degradation in the quality of individual images, but rather a shift in the overall distribution of the generated content. Several factors may contribute to this result:
+The relatively high \ac{FID} score does not necessarily imply a degradation in the quality of individual images, but rather a shift in the overall distribution of the generated content. 
 
+\newpage
+Several factors may contribute to this result:
 \begin{enumerate}
     \item \textbf{Distributional Shift vs. Quality Degradation:} The high \ac{FID} score indicates a distributional shift rather than a drop in quality. The watermarking process modifies the initial latent sampling, which could alter the model's latent space in a way that affects overall statistics without compromising the quality of individual images.
-    \item \textbf{Sample Size Sensitivity:} \ac{FID} scores are sensitive to sample size. This evaluation used 1000 images, whereas the original paper used 5000. This difference in scale may contribute to the elevated score through reduced statistical stability, although the core finding of a measurable impact remains valid.
-    \item \textbf{Methodological Differences:} Minor variations in the \ac{FID} calculation methodology, such as the choice of feature extraction network or preprocessing steps, can also significantly impact results.
+    \item \textbf{Sample Size Sensitivity:} \ac{FID} scores are sensitive to sample size. This evaluation used 1000 images, whereas the original paper used 5000. This difference in scale may contribute to the elevated score through reduced statistical stability.
 \end{enumerate}
 
 \section{Statistical Analysis and Detection Performance}
 \label{sec:StatisticalAnalysis}
-This section provides comprehensive statistical analysis of the watermark detection performance, including \ac{FPR}/\ac{TPR} analysis under the algorithm's detection framework, confidence intervals for all key metrics, and statistical significance testing across attack types.
+This section provides comprehensive statistical analysis of the watermark detection performance, including \ac{FPR}/\ac{TPR} analysis following the methodologies established detection framework, confidence intervals for all key metrics and statistical significance testing across attack types.
 
 \subsection{FPR-Controlled Detection Framework}
 \label{subsec:FPRControlledDetection}
 
-The Gaussian Shading algorithm operates with an \ac{FPR}-controlled detection threshold, targeting an \ac{FPR} of $10^{-6}$ for statistical significance. Under this, the \ac{TPR} represents the algorithm's ability to correctly detect watermarked images at the controlled \ac{FPR}.
+The Gaussian Shading algorithm operates with an \ac{FPR} controlled detection threshold, targeting an \ac{FPR} of $10^{-6}$ for statistical significance. Under this, the \ac{TPR} represents the algorithm's ability to correctly detect watermarked images at the controlled \ac{FPR}.
 
-Table \ref{tab:fpr_tpr_analysis} presents the \ac{TPR} analysis derived from the accuracy measurements across all attack configurations, calculated from 200 samples per attack configuration using actual evaluation data. The results show excellent detection performance across all signal processing attacks, with \ac{TPR} values consistently above 98\%, except for failure under the geometric attack tested.
+Table \ref{tab:fpr_tpr_analysis} presents \ac{TPR} analysis derived from accuracy measurements across all attack configurations, calculated from 200 samples per configuration using actual evaluation data. Results show excellent detection performance across all signal processing attacks, with \ac{TPR} values consistently above $98\%$, except for the failure under the geometric attack tested.
 
 \begin{table}[htbp]
 \centering
@@ -668,7 +669,7 @@ This analysis suggests that while Gaussian Shading achieves excellent visual and
 \section{Robustness Evaluation}
 \label{sec:RobustnessEvaluation}
 
-The robustness assessment evaluates the watermark's resilience against a comprehensive suite of attacks designed to simulate real world image manipulations. This analysis reveals the methods exceptional strength against signal processing attacks but vulnerability to geometric transformations. This section discusses these results, providing a detailed analysis of the method's strengths and its limitations.
+The robustness assessment evaluates the watermark's resilience against a comprehensive suite of attacks designed to simulate real world image manipulations. This analysis reveals the method's exceptional strength against signal processing attacks but vulnerability to geometric transformations. This section discusses these results, providing a detailed analysis of the method's strengths and its limitations.
 
 \subsection{Robustness to Signal Processing Attacks}
 \label{subsec:SignalProcessingRobustness}
