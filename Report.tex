@@ -830,9 +830,7 @@ This research provides crucial insights for the broader development of responsib
 \chapter{Additional Results and Implementation Details}
 \label{app:AdditionalContent}
 
-\section{Key Algorithm Implementation}
-This section provides the Python code for the core distribution-preserving sampling function, which is the central innovation of the Gaussian Shading technique.
-
+\section{Gaussian Shading sampling function.}
 \begin{lstlisting}[language=Python, caption={Distribution-Preserving Sampling Implementation}]
 def distribution_preserving_sampling(z_t, m, alpha=0.5):
     # Convert to uniform using normal CDF
@@ -857,33 +855,80 @@ def distribution_preserving_sampling(z_t, m, alpha=0.5):
     return z_watermarked
 \end{lstlisting}
 
-\section{Full Robustness Data}
-Table \ref{tab:full_robustness_data} provides the complete summary of the robustness evaluation, including the mean accuracy and mean Bit Error Rate (BER) for all 12 attack configurations performed on the 200-image test set.
+\section{Statistical Analysis Code Snippets}
+This section provides key Python code snippets from the statistical analysis script for reproducibility.
 
-\begin{table}[htb]
-\caption{Complete Robustness Evaluation Summary.}
-\label{tab:full_robustness_data}
-\begin{center}
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Attack Name} & \textbf{Attack Parameter} & \textbf{Mean Accuracy} & \textbf{Mean BER} \\
-\hline
-brightness & 0.50 & 0.9994 & 0.0006 \\
-brightness & 2.00 & 0.9977 & 0.0023 \\
-crop & 0.80 & 0.5148 & 0.4852 \\
-gaussian\_blur & 2.00 & 0.9983 & 0.0017 \\
-gaussian\_blur & 4.00 & 0.9820 & 0.0180 \\
-gaussian\_noise & 0.01 & 0.9985 & 0.0015 \\
-gaussian\_noise & 0.03 & 0.9963 & 0.0037 \\
-gaussian\_noise & 0.05 & 0.9931 & 0.0069 \\
-jpeg & 25.00 & 0.9865 & 0.0135 \\
-jpeg & 50.00 & 0.9950 & 0.0050 \\
-jpeg & 75.00 & 0.9972 & 0.0028 \\
-jpeg & 90.00 & 0.9983 & 0.0017 \\
-\hline
-\end{tabular}
-\end{center}
-\end{table}
+\subsection{Confidence Interval Calculation}
+{\footnotesize
+\begin{verbatim}
+import scipy.stats as stats
+import numpy as np
+
+def calculate_confidence_intervals(data, confidence=0.95):
+    n = len(data)
+    mean = np.mean(data)
+    std_err = stats.sem(data)
+    t_critical = stats.t.ppf((1 + confidence) / 2, n - 1)
+    margin = t_critical * std_err
+    
+    lower_bound = max(0, mean - margin)
+    upper_bound = min(1, mean + margin)
+    
+    return mean, lower_bound, upper_bound, margin, t_critical
+\end{verbatim}
+}
+
+\subsection{ANOVA Analysis}
+{\footnotesize
+\begin{verbatim}
+from scipy.stats import f_oneway
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+
+# Group data by attack type
+attack_groups = []
+attack_types = ['brightness', 'crop', 'gaussian_blur',
+                'gaussian_noise', 'jpeg']
+for attack_type in attack_types:
+    attack_data = detailed_data[
+        detailed_data['attack_name'] == attack_type
+    ]['ber'].values
+    attack_groups.append(attack_data)
+
+# Perform one-way ANOVA
+f_stat, p_value = f_oneway(*attack_groups)
+
+# Tukey HSD post-hoc test
+tukey_results = pairwise_tukeyhsd(
+    endog=detailed_data['ber'],
+    groups=detailed_data['attack_name'],
+    alpha=0.05
+)
+\end{verbatim}
+}
+
+\subsection{TPR Calculation from Accuracy}
+{\footnotesize
+\begin{verbatim}
+# Convert accuracy to TPR (True Positive Rate)
+detailed_data['tpr'] = detailed_data['accuracy']
+detailed_data['fpr'] = 1 - detailed_data['accuracy']
+
+# Calculate confidence intervals per attack configuration
+confidence_results = []
+configs = detailed_data[['attack_name', 'attack_param']
+                      ].drop_duplicates().itertuples()
+
+for config in configs:
+    config_data = detailed_data[
+        (detailed_data['attack_name'] == config.attack_name) &
+        (detailed_data['attack_param'] == config.attack_param)
+    ]
+    
+    # Calculate BER confidence intervals
+    ber_mean, ber_lower, ber_upper, ber_margin, t_crit = \
+        calculate_confidence_intervals(config_data['ber'].values)
+\end{verbatim}
+}
 
 \chapter{Ethics Checklist}
 \label{app:EthicsChecklist}
