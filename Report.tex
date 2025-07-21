@@ -372,10 +372,10 @@ The \textbf{extraction pipeline} reverses the embedding process to recover the w
 
 The architecture is designed to be modular, allowing for adjustments to parameters such as the number of diffusion steps, watermark length, and diffusion redundancy factors without requiring structural changes.
 
-\begin{figure}[htb]
+\begin{figure}[H]
     \centering
     \input{assets/architecture}
-    \caption{Architecture diagram showing: embedding pipeline (top) \& extraction pipeline (bottom). The embedding pipeline integrates the watermark within the generation process by modifying initial latent sampling, while the extraction pipeline uses DDIM inversion to recover the watermark.}
+    \caption{Architecture diagram showing: embedding pipeline (top) \& extraction pipeline (bottom).}
     \label{fig:system_architecture}
 \end{figure}
 
@@ -482,6 +482,13 @@ Random Crop & Retention Ratio & 0.8 \\
 \end{table}
 
 This configuration yields 12 attack scenarios, each evaluated on 200 images, totaling 2400 robustness experiments. The parameter ranges are selected to align with previous watermarking studies while covering mild to severe attack intensities.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{assets/image_attacks.pdf}
+    \caption{A visual summary of the twelve digital attacks applied to evaluate watermark robustness.}
+    \label{fig:image_attacks}
+\end{figure}
 
 \subsection{Evaluation Metrics}
 \label{subsec:EvaluationMetrics}
