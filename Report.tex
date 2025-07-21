@@ -546,15 +546,15 @@ Qualitative assessment confirms that the watermarking process consistently produ
 To quantify semantic preservation, the evaluation uses \ac{CLIP} scores, which measure the semantic alignment between text prompts and the generated images. The results, presented in Table \ref{tab:semantic_metrics}, show remarkable semantic consistency. The negligible difference of $-0.0008$ between the watermarked $(0.3091)$ and non-watermarked $(0.3099)$ image sets is well within the bounds of natural variation and meets the success threshold of $< 0.05$. This confirms that the watermarking process does not interfere with the model's ability to generate images that remain faithful to their textual descriptions.
 
 \begin{table}[htb]
-    \caption{Semantic Preservation Analysis using CLIP Score with Statistical Confidence}
+    \caption{Semantic Preservation Analysis using CLIP Score}
     \label{tab:semantic_metrics}
     \begin{center}
-    \begin{tabular}{|l|c|c|c|c|}
+    \begin{tabular}{|l|c|c|c|}
     \hline
-    \textbf{Condition} & \textbf{Mean \ac{CLIP} Score} & \textbf{95\% CI} & \textbf{Difference} & \textbf{Assessment} \\ \hline
-    Non-watermarked & $0.3099$ & $\pm 0.0012$ & - & Baseline \\ \hline
-    Watermarked & $0.3091$ & $\pm 0.0011$ & $-0.0008$ & \textbf{Imperceptible} \\ \hline
-    Success Threshold & - & - & $< 0.05$ & \textbf{Met} \\ \hline
+    \textbf{Condition} & \textbf{Mean \ac{CLIP} Score} & \textbf{Difference} & \textbf{Assessment} \\ \hline
+    Non-watermarked & $0.3099$ & - & Baseline \\ \hline
+    Watermarked & $0.3091$ & $-0.0008$ & \textbf{Imperceptible} \\ \hline
+    Success Threshold & - & $< 0.05$ & \textbf{Met} \\ \hline
     \end{tabular}
     \end{center}
 \end{table}
@@ -722,18 +722,18 @@ Table \ref{tab:comprehensive_robustness} provides a complete overview of the rob
     \begin{tabular}{|l|l|c|c|c|c|}
     \hline
     \textbf{Attack Category} & \textbf{Attack Configuration} & \textbf{Mean \ac{BER}} & \textbf{95\% CI} & \textbf{Performance} & \textbf{Assessment} \\ \hline
-    \multirow{4}{*}{JPEG Compression} & Quality=$90$ & $0.0017$ & $\pm 0.0018$ & Excellent & \textbf{Pass} \\
-     & Quality=$75$ & $0.0028$ & $\pm 0.0024$ & Excellent & \textbf{Pass} \\
-     & Quality=$50$ & $0.0050$ & $\pm 0.0032$ & Excellent & \textbf{Pass} \\
-     & Quality=$25$ & $0.0135$ & $\pm 0.0052$ & Very Good & \textbf{Pass} \\ \hline
-    \multirow{3}{*}{Gaussian Noise} & $\sigma=0.01$ & $0.0015$ & $\pm 0.0017$ & Excellent & \textbf{Pass} \\
-     & $\sigma=0.03$ & $0.0037$ & $\pm 0.0027$ & Excellent & \textbf{Pass} \\
-     & $\sigma=0.05$ & $0.0069$ & $\pm 0.0036$ & Excellent & \textbf{Pass} \\ \hline
-    \multirow{2}{*}{Gaussian Blur} & Radius=$2$ & $0.0017$ & $\pm 0.0018$ & Excellent & \textbf{Pass} \\
-     & Radius=$4$ & $0.0180$ & $\pm 0.0060$ & Very Good & \textbf{Pass} \\ \hline
-    \multirow{2}{*}{Brightness} & Factor=$0.5$ & $0.0006$ & $\pm 0.0011$ & Excellent & \textbf{Pass} \\
-     & Factor=$2.0$ & $0.0023$ & $\pm 0.0021$ & Excellent & \textbf{Pass} \\ \hline
-    \textbf{Geometric} & \textbf{Crop (80\% retention)} & \textbf{0.4852} & $\pm 0.0701$ & \textbf{Very Poor} & \textbf{Fail} \\ \hline
+    \multirow{4}{*}{JPEG Compression} & Quality=$90$ & $0.0017$ & $\pm 0.0027$ & Excellent & \textbf{Pass} \\
+     & Quality=$75$ & $0.0028$ & $\pm 0.0034$ & Excellent & \textbf{Pass} \\
+     & Quality=$50$ & $0.0050$ & $\pm 0.0045$ & Excellent & \textbf{Pass} \\
+     & Quality=$25$ & $0.0135$ & $\pm 0.0055$ & Very Good & \textbf{Pass} \\ \hline
+    \multirow{3}{*}{Gaussian Noise} & $\sigma=0.01$ & $0.0015$ & $\pm 0.0024$ & Excellent & \textbf{Pass} \\
+     & $\sigma=0.03$ & $0.0037$ & $\pm 0.0040$ & Excellent & \textbf{Pass} \\
+     & $\sigma=0.05$ & $0.0069$ & $\pm 0.0041$ & Excellent & \textbf{Pass} \\ \hline
+    \multirow{2}{*}{Gaussian Blur} & Radius=$2$ & $0.0017$ & $\pm 0.0020$ & Excellent & \textbf{Pass} \\
+     & Radius=$4$ & $0.0180$ & $\pm 0.0043$ & Very Good & \textbf{Pass} \\ \hline
+    \multirow{2}{*}{Brightness} & Factor=$0.5$ & $0.0006$ & $\pm 0.0009$ & Excellent & \textbf{Pass} \\
+     & Factor=$2.0$ & $0.0023$ & $\pm 0.0027$ & Excellent & \textbf{Pass} \\ \hline
+    \textbf{Geometric} & \textbf{Crop (80\% retention)} & \textbf{0.4852} & $\pm 0.0046$ & \textbf{Very Poor} & \textbf{Fail} \\ \hline
     \end{tabular}%
     }
     \end{center}
