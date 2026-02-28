@@ -1,0 +1,59 @@
+# master_config.yaml: Single source of truth for all experiments.
+
+paths:
+  # Root directory for all generated outputs.
+  output_dir: "Code/Gaussian-Shading/output/"
+
+  # Directories for the COCO dataset production run.
+  watermarked_coco_dir: "Code/Gaussian-Shading/output/coco/watermarked/"
+  ground_truth_coco_dir: "Code/Gaussian-Shading/output/coco/ground_truth/"
+
+  # Directories for the Gustavosta dataset production run.
+  watermarked_gustavosta_dir: "Code/Gaussian-Shading/output/gustavosta/watermarked/"
+  ground_truth_gustavosta_dir: "Code/Gaussian-Shading/output/gustavosta/ground_truth/"
+
+  # Directories for evaluation outputs.
+  attacked_dir: "Code/Gaussian-Shading/output/evaluation/attacked/"
+  results_dir: "Code/Gaussian-Shading/output/evaluation/results/"
+
+  # Paths to the curated and validated lists of prompts for generation.
+  coco_prompts_file: "Code/Gaussian-Shading/data/prompts/coco_prompts_master.json"
+  gustavosta_prompts_file: "Code/Gaussian-Shading/data/prompts/gustavosta_prompts_master.json"
+
+model:
+  # Stable Diffusion model identifier from Hugging Face.
+  name: "stabilityai/stable-diffusion-2-1-base"
+  # All images will be generated at this resolution.
+  resolution: 512
+
+generation:
+  # Number of images to generate in a single batch.
+  batch_size: 4
+  # Number of denoising steps for the diffusion model.
+  inference_steps: 50
+  # Guidance scale for classifier-free guidance.
+  guidance_scale: 7.5
+  # The master seed for generating the initial watermarked and non-watermarked images.
+  # Individual prompts will use their own seeds as defined in the prompts_file for reproducibility.
+  master_seed: 42
+
+watermark:
+  # The length of the watermark bitstring.
+  bit_length: 256
+  # Redundancy factor for the watermark signal.
+  channel_copy: 1
+  hw_copy: 8
+  # Target False Positive Rate for the watermark detector.
+  detection_fpr: 1.0e-6
+
+attacks:
+  # List of quality factors for JPEG compression attack.
+  jpeg: [90, 75, 50, 25]
+  # List of standard deviations for Gaussian noise attack.
+  gaussian_noise: [0.01, 0.03, 0.05]
+  # List of sigma values for Gaussian blur attack.
+  gaussian_blur: [2, 4]
+  # List of factors for brightness adjustment attack.
+  brightness: [0.5, 2.0]
+  # List of crop ratios (center crop).
+  crop: [0.8]
